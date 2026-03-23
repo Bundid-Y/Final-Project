@@ -83,76 +83,77 @@
 
                         <div class="form-row row-2">
                             <div class="form-group">
-                                <label><span data-i18n="quotation.productType">Items inside your box
-                                        (ประเภทสินค้าที่บรรจุ)</span> <span class="required">*</span></label>
-                                <select name="product_type" required>
+                                <label><span data-i18n="quotation.productType">Logistics Service Type (ประเภทบริการขนส่ง)</span> <span class="required">*</span></label>
+                                <select name="service_type" required>
                                     <option value="" disabled selected data-i18n="quotation.productTypeSelect">
-                                        เลือกประเภทสินค้าที่บรรจุ</option>
-                                    <option value="Engine Parts" data-i18n="quotation.ptEngine">ชิ้นส่วนเครื่องยนต์
-                                        (Engine Parts)</option>
-                                    <option value="Body Parts" data-i18n="quotation.ptBody">ชิ้นส่วนตัวถัง (Body Parts)
-                                    </option>
-                                    <option value="Suspension and Transmission" data-i18n="quotation.ptSuspension">
-                                        ชิ้นส่วนช่วงล่างและระบบส่งกำลัง
-                                        (Suspension & Transmission)</option>
-                                    <option value="Electrical Parts" data-i18n="quotation.ptElectrical">
-                                        ชิ้นส่วนระบบไฟฟ้า (Electrical Parts)</option>
-                                    <option value="Car Accessories" data-i18n="quotation.ptAccessories">
-                                        อุปกรณ์ตกแต่งรถยนต์ (Car Accessories)</option>
-                                    <option value="Other Auto Parts" data-i18n="quotation.ptOther">ชิ้นส่วนรถยนต์อื่นๆ
-                                        (Other Auto Parts)</option>
+                                        เลือกประเภทบริการขนส่ง</option>
+                                    <option value="Container Transport" data-i18n="quotation.ptContainer">บริการขนส่งตู้คอนเทนเนอร์
+                                        (Container Transport)</option>
+                                    <option value="Domestic Transport" data-i18n="quotation.ptDomestic">บริการขนส่งสินค้าในประเทศ
+                                        (Domestic Transport)</option>
+                                    <option value="Import Export" data-i18n="quotation.ptImportExport">บริการนำเข้า-ส่งออก
+                                        (Import-Export Service)</option>
+                                    <option value="Warehouse Shuttle" data-i18n="quotation.ptShuttle">บริการรถรับ-ส่งระหว่างคลังสินค้า
+                                        (Warehouse Shuttle)</option>
+                                    <option value="Truck Parking" data-i18n="quotation.ptParking">บริการจอดรถบรรทุก
+                                        (Truck Parking)</option>
+                                    <option value="Last Mile Delivery" data-i18n="quotation.ptLastMile">บริการจัดส่งปลายทาง
+                                        (Last Mile Delivery)</option>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label><span data-i18n="quotation.weight">Total Weight (น้ำหนักสินค้า)</span> <span
+                                <label><span data-i18n="quotation.weight">Cargo Weight (น้ำหนักสินค้าโดยประมาณ)</span> <span
                                         class="required">*</span></label>
                                 <input type="text" name="weight" data-i18n-placeholder="quotation.weightPlaceholder"
-                                    placeholder="น้ำหนักรวมสินค้า (กก.) ที่บรรจุภายในกล่อง" required>
+                                    placeholder="น้ำหนักสินค้าโดยประมาณ (กก.)" required>
                             </div>
                         </div>
 
                         <div class="form-row row-2">
                             <div class="form-group">
-                                <label><span data-i18n="quotation.brand">Brand name (ชื่อแบรนด์)</span> <span
+                                <label><span data-i18n="quotation.brand">Origin - Destination (จุดเริ่มต้น - จุดหมายปลายทาง)</span> <span
                                         class="required">*</span></label>
-                                <input type="text" name="brand" data-i18n-placeholder="quotation.brandPlaceholder"
-                                    placeholder="Mazda, Toyota, Honda, Isuzu, BMW" required>
+                                <input type="text" name="route" data-i18n-placeholder="quotation.brandPlaceholder"
+                                    placeholder="เช่น กรุงเทพฯ - เชียงใหม่ หรือ ท่าเรือแหลมฉบัง - โรงงาน" required>
                             </div>
                             <div class="form-group">
-                                <label><span data-i18n="quotation.packagingType">Packaging Type
-                                        (ประเภทบรรจุภัณฑ์)</span> <span class="required">*</span></label>
-                                <select name="packaging_type" required>
+                                <label><span data-i18n="quotation.packagingType">Vehicle Type Required (ประเภทรถที่ต้องการ)</span> <span class="required">*</span></label>
+                                <select name="vehicle_type" required>
                                     <option value="" disabled selected data-i18n="quotation.pkgSelect">
-                                        เลือกประเภทบรรจุภัณฑ์</option>
-                                    <option value="Paper Box" data-i18n="quotation.pkgPaper">กล่องกระดาษ (Paper Box)
-                                    </option>
-                                    <option value="Wooden Packaging" data-i18n="quotation.pkgWooden">บรรจุภัณฑ์ไม้
-                                        (Wooden Packaging)</option>
-                                    <option value="Plastic Packaging" data-i18n="quotation.pkgPlastic">บรรจุภัณฑ์พลาสติก
-                                        (Plastic Packaging)</option>
-                                    <option value="Steel Packaging" data-i18n="quotation.pkgSteel">บรรจุภัณฑ์เหล็ก
-                                        (Steel Packaging)</option>
+                                        เลือกประเภทรถบรรทุก</option>
+                                    <option value="6 Wheel Truck" data-i18n="quotation.pkg6Wheel">รถบรรทุก 6 ล้อ
+                                        (6 Wheel Truck)</option>
+                                    <option value="10 Wheel Truck" data-i18n="quotation.pkg10Wheel">รถบรรทุก 10 ล้อ
+                                        (10 Wheel Truck)</option>
+                                    <option value="6 Wheel Trailer" data-i18n="quotation.pkg6WheelTrailer">รถพ่วง 6 ล้อ
+                                        (6 Wheel Trailer)</option>
+                                    <option value="10 Wheel Trailer" data-i18n="quotation.pkg10WheelTrailer">รถพ่วง 10 ล้อ
+                                        (10 Wheel Trailer)</option>
+                                    <option value="Pickup Truck" data-i18n="quotation.pkgPickup">รถกระบะ
+                                        (Pickup Truck)</option>
+                                    <option value="Container Truck" data-i18n="quotation.pkgContainer">รถลากตู้คอนเทนเนอร์
+                                        (Container Truck)</option>
                                 </select>
                             </div>
                         </div>
 
                         <div class="form-row row-2">
                             <div class="form-group">
-                                <label><span data-i18n="quotation.boxSize">Box Size (ขนาดกล่องที่ต้องการ)</span> <span
+                                <label><span data-i18n="quotation.boxSize">Cargo Dimensions (ขนาดสินค้าโดยประมาณ)</span> <span
                                         class="required">*</span></label>
                                 <div style="display: flex; gap: 8px; align-items: center;">
-                                    <input type="number" step="0.01" name="box_width"
+                                    <input type="number" step="0.01" name="cargo_width"
                                         data-i18n-placeholder="quotation.width" placeholder="กว้าง" required
                                         style="min-width: 0;">
                                     <span style="color: #666; font-size: 14px;">x</span>
-                                    <input type="number" step="0.01" name="box_length"
+                                    <input type="number" step="0.01" name="cargo_length"
                                         data-i18n-placeholder="quotation.length" placeholder="ยาว" required
                                         style="min-width: 0;">
                                     <span style="color: #666; font-size: 14px;">x</span>
-                                    <input type="number" step="0.01" name="box_height"
+                                    <input type="number" step="0.01" name="cargo_height"
                                         data-i18n-placeholder="quotation.height" placeholder="สูง" required
                                         style="min-width: 0;">
-                                    <select name="box_unit" required style="min-width: 70px; padding: 10px 8px;">
+                                    <select name="cargo_unit" required style="min-width: 70px; padding: 10px 8px;">
                                         <option value="cm" data-i18n="quotation.unitCm">ซม.</option>
                                         <option value="mm" data-i18n="quotation.unitMm">มม.</option>
                                         <option value="inch" data-i18n="quotation.unitInch">นิ้ว</option>
@@ -160,7 +161,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label><span data-i18n="quotation.quantity">Order quantity (จำนวนสั่งซื้อ)</span> <span
+                                <label><span data-i18n="quotation.quantity">Quantity for Transport (จำนวนที่ต้องการขนส่ง)</span> <span
                                         class="required">*</span></label>
                                 <input type="number" name="quantity" min="1" required>
                             </div>
@@ -168,7 +169,7 @@
 
                         <div class="form-row row-1">
                             <div class="form-group file-group">
-                                <label data-i18n="quotation.reference">Reference (แนบไฟล์ตัวอย่างอ้างอิงที่ชอบ)</label>
+                                <label data-i18n="quotation.reference">Attach Reference Files (แนบไฟล์ข้อมูลเพิ่มเติม)</label>
                                 <div class="file-upload-wrapper">
                                     <input type="file" name="reference_file" id="reference_file" class="file-input"
                                         accept="image/*, .pdf">
@@ -180,9 +181,8 @@
 
                         <div class="form-row row-1">
                             <div class="form-group">
-                                <label><span data-i18n="quotation.comments">Other Comments
-                                        (อื่นที่ต้องการแจ้งทีมงาน)</span> <span class="required">*</span></label>
-                                <textarea name="comments" rows="5" required></textarea>
+                                <label><span data-i18n="quotation.comments">Additional Requirements (รายละเอียดเพิ่มเติม)</span> <span class="required">*</span></label>
+                                <textarea name="comments" rows="5" data-i18n-placeholder="quotation.commentsPlaceholder" placeholder="กรุณาระบุรายละเอียดเพิ่มเติมเกี่ยวกับการขนส่ง เช่น เวลาที่ต้องการ จุดรับส่งพิเศษ หรือข้อกำหนดอื่นๆ" required></textarea>
                             </div>
                         </div>
 
