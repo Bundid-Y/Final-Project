@@ -146,7 +146,7 @@ CREATE TABLE koch_quotations (
     INDEX idx_user_status (user_id, status),
     INDEX idx_quotation_number (quotation_number),
     INDEX idx_status_priority (status, priority),
-    INDEX idx_created_date (DATE(created_at))
+    INDEX idx_created_date (created_at)
 );
 
 -- 7. ตารางใบเสนอราคา TNB (จาก tnb/main/quotation.php)
@@ -390,7 +390,7 @@ CREATE TABLE activity_logs (
     INDEX idx_user_action (user_id, action),
     INDEX idx_table_record (table_name, record_id),
     INDEX idx_created_at (created_at),
-    INDEX idx_action_date (action, DATE(created_at))
+    INDEX idx_action_date (action, created_at)
 );
 
 -- 16. ตารางการแจ้งเตือน (Notifications)
