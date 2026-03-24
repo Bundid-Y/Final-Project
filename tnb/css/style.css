@@ -3271,7 +3271,7 @@ body:has(.login-page-wrapper) {
 
   flex-direction: column;
 
-  padding: 0rem 5rem;
+  padding: 2rem 3rem 3rem;
 
   transition: all 0.2s 0.7s;
 

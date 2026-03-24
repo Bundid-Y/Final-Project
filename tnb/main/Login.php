@@ -1,3 +1,27 @@
+<?php
+require_once __DIR__ . '/../../admin/includes/bootstrap.php';
+
+$loggedInUser = authenticated_user();
+if ($loggedInUser !== null) {
+    $targetUrl = in_array((string) ($loggedInUser['role'] ?? 'user'), ['super_admin', 'admin', 'manager'], true)
+        ? project_url('admin/dashboard.php')
+        : user_page_by_company((string) ($loggedInUser['company_code'] ?? 'TNB'));
+
+    redirect_to($targetUrl);
+}
+
+$successMessage = flash('success_message');
+$errorMessage = flash('error_message');
+$showRegister = $errorMessage !== null && (
+    old_input('register_username') !== ''
+    || old_input('register_email') !== ''
+    || old_input('register_first_name') !== ''
+    || old_input('register_last_name') !== ''
+    || old_input('register_phone') !== ''
+    || old_input('register_nick_name') !== ''
+    || old_input('register_accept_terms') === '1'
+);
+?>
 <!DOCTYPE html>
 <html lang="th">
 
@@ -42,18 +66,25 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
   <div class="login-page-wrapper">
-    <div class="login-container">
+    <div class="login-container<?php echo $showRegister ? ' sign-up-mode' : ''; ?>">
+      <?php if ($successMessage || $errorMessage): ?>
+        <div style="position:absolute;top:16px;left:50%;transform:translateX(-50%);z-index:100;width:90%;max-width:420px;padding:14px 18px;border-radius:14px;background:<?php echo $successMessage ? '#e8f7ee' : '#fdecec'; ?>;color:<?php echo $successMessage ? '#0f7a3a' : '#b42318'; ?>;box-shadow:0 4px 16px rgba(0,0,0,.12);text-align:center;font-weight:600;">
+          <?php echo h((string) ($successMessage ?: $errorMessage)); ?>
+        </div>
+      <?php endif; ?>
       <div class="forms-container">
         <div class="signin-signup">
-          <form action="#" class="sign-in-form login-form">
+          <form action="../../admin/api/auth/login.php" method="POST" class="sign-in-form login-form">
             <h2 class="login-title" data-i18n="login.titleIn">เข้าสู่ระบบ</h2>
+            <input type="hidden" name="_csrf" value="<?php echo h(csrf_token()); ?>" />
+            <input type="hidden" name="company" value="tnb" />
             <div class="input-field">
               <i class="fas fa-user"></i>
-              <input type="text" data-i18n-placeholder="login.username" placeholder="ชื่อผู้ใช้" />
+              <input type="text" name="identifier" value="<?php echo h(old_input('identifier')); ?>" data-i18n-placeholder="login.username" placeholder="ชื่อผู้ใช้หรืออีเมล" />
             </div>
             <div class="input-field">
               <i class="fas fa-lock"></i>
-              <input type="password" data-i18n-placeholder="login.password" placeholder="รหัสผ่าน" />
+              <input type="password" name="password" data-i18n-placeholder="login.password" placeholder="รหัสผ่าน" />
             </div>
             <button type="submit" data-i18n="login.submitIn" class="login-btn solid">เข้าสู่ระบบ</button>
             <p class="social-text" data-i18n="login.socialInText">หรือเข้าสู่ระบบด้วยแพลตฟอร์มโซเชียล</p>
@@ -69,20 +100,42 @@
               </a>
             </div>
           </form>
-          <form action="#" class="sign-up-form login-form">
+          <form action="../../admin/api/auth/register.php" method="POST" class="sign-up-form login-form">
             <h2 class="login-title" data-i18n="login.titleUp">ลงทะเบียน</h2>
+            <input type="hidden" name="_csrf" value="<?php echo h(csrf_token()); ?>" />
+            <input type="hidden" name="company" value="tnb" />
             <div class="input-field">
               <i class="fas fa-user"></i>
-              <input type="text" data-i18n-placeholder="login.username" placeholder="ชื่อผู้ใช้" />
+              <input type="text" name="username" value="<?php echo h(old_input('register_username')); ?>" data-i18n-placeholder="login.username" placeholder="ชื่อผู้ใช้" />
             </div>
             <div class="input-field">
               <i class="fas fa-envelope"></i>
-              <input type="email" data-i18n-placeholder="login.email" placeholder="อีเมล" />
+              <input type="email" name="email" value="<?php echo h(old_input('register_email')); ?>" data-i18n-placeholder="login.email" placeholder="อีเมล" />
+            </div>
+            <div class="input-field">
+              <i class="fas fa-id-card"></i>
+              <input type="text" name="first_name" value="<?php echo h(old_input('register_first_name')); ?>" placeholder="ชื่อ" />
+            </div>
+            <div class="input-field">
+              <i class="fas fa-id-card"></i>
+              <input type="text" name="last_name" value="<?php echo h(old_input('register_last_name')); ?>" placeholder="นามสกุล" />
+            </div>
+            <div class="input-field">
+              <i class="fas fa-phone"></i>
+              <input type="tel" name="phone" value="<?php echo h(old_input('register_phone')); ?>" placeholder="เบอร์โทรศัพท์" />
             </div>
             <div class="input-field">
               <i class="fas fa-lock"></i>
-              <input type="password" data-i18n-placeholder="login.password" placeholder="รหัสผ่าน" />
+              <input type="password" name="password" data-i18n-placeholder="login.password" placeholder="รหัสผ่าน" />
             </div>
+            <div class="input-field">
+              <i class="fas fa-lock"></i>
+              <input type="password" name="confirm_password" placeholder="ยืนยันรหัสผ่าน" />
+            </div>
+            <label style="display:flex; gap:10px; align-items:flex-start; font-size:14px; color:#555; margin: 8px 0 14px;">
+              <input type="checkbox" name="accept_terms" value="1" <?php echo old_input('register_accept_terms') === '1' ? 'checked' : ''; ?> style="margin-top:3px;" />
+              <span>ฉันยอมรับเงื่อนไขการใช้งานและนโยบายความเป็นส่วนตัว</span>
+            </label>
             <button type="submit" class="login-btn" data-i18n="login.submitUp">ลงทะเบียน</button>
             <p class="social-text" data-i18n="login.socialUpText">หรือลงทะเบียนด้วยแพลตฟอร์มโซเชียล</p>
             <div class="social-media">
@@ -133,6 +186,7 @@
 
 
   <?php include '../component/footer.php'; ?>
+  <?php clear_old_input(); ?>
 </body>
 
 </html>
