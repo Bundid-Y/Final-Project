@@ -3,23 +3,44 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/includes/bootstrap.php';
 require_once __DIR__ . '/includes/admin.php';
+require_once __DIR__ . '/includes/crud.php';
+require_once __DIR__ . '/includes/content.php';
 
 $pdo = Database::connection();
 $user = require_admin_user();
 $isSuperAdmin = in_array((string) $user['role'], ['super_admin'], true);
 $companyId = $isSuperAdmin ? null : (int) $user['company_id'];
-$stats = admin_dashboard_stats($pdo, $companyId);
-$ext = admin_extended_stats($pdo, $companyId);
-$activities = latest_admin_activities($pdo, $companyId, 8);
-$recentKoch = admin_recent_koch_quotations($pdo, $companyId, 5);
-$recentTnb = admin_recent_tnb_quotations($pdo, $companyId, 5);
-$recentUsers = admin_recent_users($pdo, $companyId, 5);
+$section = $_GET['section'] ?? 'overview';
+$validSections = ['overview','users','koch_quotations','tnb_quotations','notifications','activity','settings','sliders','partners','products','truck_types','branches','email_templates','email_recipients','contact_messages'];
+if (!in_array($section, $validSections, true)) $section = 'overview';
+
+// Company mode toggle
+$companyMode = $_GET['company_mode'] ?? ($_SESSION['admin_company_mode'] ?? 'all');
+if (in_array($companyMode, ['all', 'koch', 'tnb'], true)) {
+    $_SESSION['admin_company_mode'] = $companyMode;
+}
+$filterCompanyId = match($companyMode) {
+    'koch' => get_company_id_by_code($pdo, 'KOCH'),
+    'tnb' => get_company_id_by_code($pdo, 'TNB'),
+    default => null,
+};
+$stats = admin_dashboard_stats($pdo, $filterCompanyId);
+$ext = admin_extended_stats($pdo, $filterCompanyId);
+$activities = latest_admin_activities($pdo, $filterCompanyId, 8);
+$recentKoch = admin_recent_koch_quotations($pdo, $filterCompanyId, 5);
+$recentTnb = admin_recent_tnb_quotations($pdo, $filterCompanyId, 5);
+$recentUsers = admin_recent_users($pdo, $filterCompanyId, 5);
 $successMessage = flash('success_message');
 $errorMessage = flash('error_message');
 $totalPending = $ext['koch_pending'] + $ext['tnb_pending'];
-$section = $_GET['section'] ?? 'overview';
-$validSections = ['overview','users','koch_quotations','tnb_quotations','notifications','activity','settings'];
-if (!in_array($section, $validSections, true)) $section = 'overview';
+$csrfToken = csrf_token();
+$kochId = get_company_id_by_code($pdo, 'KOCH');
+$tnbId = get_company_id_by_code($pdo, 'TNB');
+$modeColors = match($companyMode) {
+    'koch' => ['--primary:#ED2A2A','--primary-dark:#c41f1f','--primary-light:#fef2f2','--secondary:#325662'],
+    'tnb' => ['--primary:#0d2d6b','--primary-dark:#091f4a','--primary-light:#eff6ff','--secondary:#325662'],
+    default => ['--primary:#4f46e5','--primary-dark:#4338ca','--primary-light:#eef2ff','--secondary:#0f172a'],
+};
 
 function admin_status_badge(string $status): string {
     $m = ['pending'=>['#fff3e0','#e65100','Pending'],'processing'=>['#e3f2fd','#1565c0','Processing'],'quoted'=>['#f3e5f5','#7b1fa2','Quoted'],'approved'=>['#e8f5e9','#2e7d32','Approved'],'in_transit'=>['#e0f7fa','#00838f','In Transit'],'delivered'=>['#e8f5e9','#1b5e20','Delivered'],'completed'=>['#e0f2f1','#00695c','Completed'],'rejected'=>['#fbe9e7','#bf360c','Rejected'],'cancelled'=>['#efebe9','#4e342e','Cancelled'],'active'=>['#dcfce7','#166534','Active'],'inactive'=>['#f1f5f9','#64748b','Inactive'],'suspended'=>['#fee2e2','#991b1b','Suspended']];
@@ -31,7 +52,7 @@ function admin_action_label(string $a): string {
     return $m[$a] ?? $a;
 }
 
-$sectionTitles = ['overview'=>'Dashboard Overview','users'=>'User Management','koch_quotations'=>'KOCH Quotations','tnb_quotations'=>'TNB Requests','notifications'=>'Notifications','activity'=>'Activity Logs','settings'=>'System Settings'];
+$sectionTitles = ['overview'=>'Dashboard Overview','users'=>'User Management','koch_quotations'=>'KOCH Quotations','tnb_quotations'=>'TNB Requests','notifications'=>'Notifications','activity'=>'Activity Logs','settings'=>'System Settings','sliders'=>'Slider Management','partners'=>'Partner Management','products'=>'Product Management','truck_types'=>'Truck Type Management','branches'=>'Branch Management','email_templates'=>'Email Templates','email_recipients'=>'Email Recipients','contact_messages'=>'Contact Messages'];
 ?>
 <!DOCTYPE html>
 <html lang="th">
@@ -43,7 +64,7 @@ $sectionTitles = ['overview'=>'Dashboard Overview','users'=>'User Management','k
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 <style>
-:root{--primary:#4f46e5;--primary-dark:#4338ca;--primary-light:#eef2ff;--secondary:#0f172a;--bg:#f1f5f9;--card:#fff;--text:#0f172a;--muted:#64748b;--border:#e2e8f0;--success:#16a34a;--warning:#ea580c;--danger:#dc2626;--info:#2563eb;--radius:16px;--shadow:0 1px 3px rgba(0,0,0,.05),0 4px 12px rgba(0,0,0,.04);--sw:260px}
+:root{<?php echo implode(';', $modeColors); ?>;--bg:#f1f5f9;--card:#fff;--text:#0f172a;--muted:#64748b;--border:#e2e8f0;--success:#16a34a;--warning:#ea580c;--danger:#dc2626;--info:#2563eb;--radius:16px;--shadow:0 1px 3px rgba(0,0,0,.05),0 4px 12px rgba(0,0,0,.04);--sw:260px}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.5}
 ::selection{background:var(--primary);color:#fff}
@@ -140,6 +161,46 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
 @media(max-width:1200px){.stats-row{grid-template-columns:repeat(2,1fr)}.qa-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:1024px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.sb-overlay.show{display:block}.main{margin-left:0}.mob-toggle{display:block}.content{padding:20px 16px 40px}.topbar{padding:12px 16px}.grid-2,.grid-3{grid-template-columns:1fr}}
 @media(max-width:600px){.stats-row{grid-template-columns:1fr}.qa-grid{grid-template-columns:1fr}}
+
+/* Modal */
+.modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:2000;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.show{display:flex}
+.modal{background:#fff;border-radius:16px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:modalIn .25s ease}
+@keyframes modalIn{from{opacity:0;transform:scale(.95) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-head{padding:18px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.modal-head h3{font-size:16px;font-weight:700;display:flex;align-items:center;gap:8px}
+.modal-head h3 i{color:var(--primary)}
+.modal-close{background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted);padding:4px 8px;border-radius:6px;transition:all .15s}
+.modal-close:hover{background:var(--bg);color:var(--text)}
+.modal-body{padding:24px}
+.fm-group{margin-bottom:16px}
+.fm-group label{display:block;font-size:12px;font-weight:600;color:var(--text);margin-bottom:6px}
+.fm-group label span{color:var(--danger);margin-left:2px}
+.fm-input{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:13px;font-family:inherit;transition:border-color .2s;background:#fff;color:var(--text)}
+.fm-input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(79,70,229,.1)}
+select.fm-input{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
+textarea.fm-input{resize:vertical;min-height:80px}
+.fm-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fm-check{display:flex;align-items:center;gap:8px;margin-top:8px}
+.fm-check input[type=checkbox]{width:18px;height:18px;accent-color:var(--primary);cursor:pointer}
+.fm-check label{margin-bottom:0;cursor:pointer}
+.modal-foot{padding:16px 24px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px}
+.btn{padding:9px 18px;border-radius:10px;font-size:13px;font-weight:600;border:none;cursor:pointer;font-family:inherit;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+.btn-primary{background:var(--primary);color:#fff}.btn-primary:hover{background:var(--primary-dark)}
+.btn-danger{background:var(--danger);color:#fff}.btn-danger:hover{background:#b91c1c}
+.btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border)}.btn-ghost:hover{border-color:var(--text);color:var(--text)}
+.btn-sm{padding:5px 12px;font-size:11px;border-radius:8px}
+.btn-xs{padding:3px 8px;font-size:10px;border-radius:6px}
+.act-btns{display:flex;gap:4px}
+
+/* Role badge colors */
+.role-super_admin{background:#fef3c7;color:#92400e}.role-admin{background:#dbeafe;color:#1e40af}.role-manager{background:#e0e7ff;color:#3730a3}.role-user{background:#f1f5f9;color:#475569}
+
+/* Permission table */
+.perm-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:12px}
+.perm-table th{background:var(--bg);padding:8px 12px;text-align:left;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
+.perm-table td{padding:8px 12px;border-bottom:1px solid var(--border)}
+.perm-table .perm-yes{color:var(--success);font-weight:700}.perm-table .perm-no{color:var(--muted)}
 </style>
 </head>
 <body>
@@ -156,17 +217,36 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
             <span><?php echo h(ucfirst((string) $user['role'])); ?> &middot; <?php echo h((string) $user['company_name']); ?></span>
         </div>
     </div>
+    <div style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.08)">
+        <div style="display:flex;gap:4px;background:rgba(255,255,255,.08);border-radius:8px;padding:3px">
+            <a href="?section=<?php echo h($section);?>&company_mode=all" style="flex:1;text-align:center;padding:5px 8px;border-radius:6px;font-size:11px;font-weight:600;text-decoration:none;transition:all .2s;<?php echo $companyMode==='all'?'background:var(--primary);color:#fff':'color:rgba(255,255,255,.5)';?>">All</a>
+            <a href="?section=<?php echo h($section);?>&company_mode=koch" style="flex:1;text-align:center;padding:5px 8px;border-radius:6px;font-size:11px;font-weight:600;text-decoration:none;transition:all .2s;<?php echo $companyMode==='koch'?'background:#ED2A2A;color:#fff':'color:rgba(255,255,255,.5)';?>">KOCH</a>
+            <a href="?section=<?php echo h($section);?>&company_mode=tnb" style="flex:1;text-align:center;padding:5px 8px;border-radius:6px;font-size:11px;font-weight:600;text-decoration:none;transition:all .2s;<?php echo $companyMode==='tnb'?'background:#0d2d6b;color:#fff':'color:rgba(255,255,255,.5)';?>">TNB</a>
+        </div>
+    </div>
     <nav class="sb-nav">
         <div class="label">Main</div>
         <a href="?section=overview" class="<?php echo $section==='overview'?'active':'';?>"><i class="fas fa-chart-pie"></i> Dashboard<?php if($totalPending>0):?><span class="badge warn"><?php echo $totalPending;?></span><?php endif;?></a>
         <div class="divider"></div>
-        <div class="label">Management</div>
+        <div class="label">Business</div>
         <a href="?section=users" class="<?php echo $section==='users'?'active':'';?>"><i class="fas fa-users"></i> Users<span class="badge"><?php echo number_format((int)$stats['users']);?></span></a>
         <a href="?section=koch_quotations" class="<?php echo $section==='koch_quotations'?'active':'';?>"><i class="fas fa-box"></i> KOCH Quotations<?php if($ext['koch_pending']>0):?><span class="badge warn"><?php echo $ext['koch_pending'];?></span><?php endif;?></a>
         <a href="?section=tnb_quotations" class="<?php echo $section==='tnb_quotations'?'active':'';?>"><i class="fas fa-truck"></i> TNB Requests<?php if($ext['tnb_pending']>0):?><span class="badge warn"><?php echo $ext['tnb_pending'];?></span><?php endif;?></a>
+        <a href="?section=contact_messages" class="<?php echo $section==='contact_messages'?'active':'';?>"><i class="fas fa-envelope-open-text"></i> Contact Messages</a>
+        <div class="divider"></div>
+        <div class="label">Content</div>
+        <a href="?section=sliders" class="<?php echo $section==='sliders'?'active':'';?>"><i class="fas fa-images"></i> Sliders</a>
+        <a href="?section=partners" class="<?php echo $section==='partners'?'active':'';?>"><i class="fas fa-handshake"></i> Partners</a>
+        <a href="?section=products" class="<?php echo $section==='products'?'active':'';?>"><i class="fas fa-boxes-stacked"></i> Products</a>
+        <a href="?section=truck_types" class="<?php echo $section==='truck_types'?'active':'';?>"><i class="fas fa-truck-moving"></i> Truck Types</a>
+        <a href="?section=branches" class="<?php echo $section==='branches'?'active':'';?>"><i class="fas fa-map-marker-alt"></i> Branches</a>
+        <div class="divider"></div>
+        <div class="label">Communications</div>
+        <a href="?section=notifications" class="<?php echo $section==='notifications'?'active':'';?>"><i class="fas fa-bell"></i> Notifications<?php if((int)$stats['unread_notifications']>0):?><span class="badge"><?php echo (int)$stats['unread_notifications'];?></span><?php endif;?></a>
+        <a href="?section=email_templates" class="<?php echo $section==='email_templates'?'active':'';?>"><i class="fas fa-file-alt"></i> Email Templates</a>
+        <a href="?section=email_recipients" class="<?php echo $section==='email_recipients'?'active':'';?>"><i class="fas fa-at"></i> Email Recipients</a>
         <div class="divider"></div>
         <div class="label">System</div>
-        <a href="?section=notifications" class="<?php echo $section==='notifications'?'active':'';?>"><i class="fas fa-bell"></i> Notifications<?php if((int)$stats['unread_notifications']>0):?><span class="badge"><?php echo (int)$stats['unread_notifications'];?></span><?php endif;?></a>
         <a href="?section=activity" class="<?php echo $section==='activity'?'active':'';?>"><i class="fas fa-history"></i> Activity Logs</a>
         <a href="?section=settings" class="<?php echo $section==='settings'?'active':'';?>"><i class="fas fa-cog"></i> Settings</a>
     </nav>
@@ -299,21 +379,55 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
     <div class="stat-card blue"><div class="sc-top"><div class="sc-icon"><i class="fas fa-user-plus"></i></div></div><div class="sc-num"><?php echo number_format($ext['new_users_month']);?></div><div class="sc-label">New This Month</div></div>
     <div class="stat-card orange"><div class="sc-top"><div class="sc-icon"><i class="fas fa-bell"></i></div></div><div class="sc-num"><?php echo number_format((int)$stats['unread_notifications']);?></div><div class="sc-label">Unread Notifications</div></div>
 </div>
+
+<!-- RBAC Permission Reference -->
+<div class="card" style="margin-bottom:20px">
+    <div class="card-h"><h2><i class="fas fa-shield-alt"></i> Role Permissions Reference</h2></div>
+    <div class="card-b" style="padding:12px 20px">
+        <table class="perm-table">
+            <thead><tr><th>Permission</th><th>Super Admin</th><th>Admin</th><th>Manager</th><th>User</th></tr></thead>
+            <tbody>
+                <tr><td>View all companies data</td><td class="perm-yes"><i class="fas fa-check"></i> Yes</td><td class="perm-no"><i class="fas fa-times"></i> Own company</td><td class="perm-no"><i class="fas fa-times"></i> Own team</td><td class="perm-no"><i class="fas fa-times"></i> Own data</td></tr>
+                <tr><td>Manage users</td><td class="perm-yes"><i class="fas fa-check"></i> All</td><td class="perm-yes"><i class="fas fa-check"></i> Own company</td><td class="perm-no"><i class="fas fa-times"></i> Own team</td><td class="perm-no"><i class="fas fa-times"></i> No</td></tr>
+                <tr><td>Change user roles</td><td class="perm-yes"><i class="fas fa-check"></i> All roles</td><td class="perm-yes"><i class="fas fa-check"></i> Manager/User</td><td class="perm-no"><i class="fas fa-times"></i> No</td><td class="perm-no"><i class="fas fa-times"></i> No</td></tr>
+                <tr><td>Content Management (CRUD)</td><td class="perm-yes"><i class="fas fa-check"></i> All</td><td class="perm-yes"><i class="fas fa-check"></i> Own company</td><td class="perm-yes"><i class="fas fa-check"></i> View only</td><td class="perm-no"><i class="fas fa-times"></i> No</td></tr>
+                <tr><td>View quotations</td><td class="perm-yes"><i class="fas fa-check"></i> All</td><td class="perm-yes"><i class="fas fa-check"></i> Own company</td><td class="perm-yes"><i class="fas fa-check"></i> Own team</td><td class="perm-yes"><i class="fas fa-check"></i> Own only</td></tr>
+                <tr><td>Activity logs</td><td class="perm-yes"><i class="fas fa-check"></i> All</td><td class="perm-yes"><i class="fas fa-check"></i> Own company</td><td class="perm-no"><i class="fas fa-times"></i> No</td><td class="perm-no"><i class="fas fa-times"></i> No</td></tr>
+                <tr><td>System settings</td><td class="perm-yes"><i class="fas fa-check"></i> Full</td><td class="perm-no"><i class="fas fa-times"></i> View only</td><td class="perm-no"><i class="fas fa-times"></i> No</td><td class="perm-no"><i class="fas fa-times"></i> No</td></tr>
+                <tr><td>Email config</td><td class="perm-yes"><i class="fas fa-check"></i> Full</td><td class="perm-yes"><i class="fas fa-check"></i> Own company</td><td class="perm-no"><i class="fas fa-times"></i> No</td><td class="perm-no"><i class="fas fa-times"></i> No</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
 <div class="card">
     <div class="card-h"><h2><i class="fas fa-users"></i> All Users</h2></div>
-    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>User</th><th>Email</th><th>Company</th><th>Role</th><th>Status</th><th>Joined</th></tr></thead><tbody>
+    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>User</th><th>Email</th><th>Company</th><th>Role</th><th>Status</th><th>Joined</th><th>Actions</th></tr></thead><tbody>
     <?php
-    $allUsers = $pdo->prepare('SELECT u.*, c.name AS company_name FROM users u LEFT JOIN companies c ON c.id = u.company_id' . ($companyId !== null ? ' WHERE u.company_id = :cid' : '') . ' ORDER BY u.created_at DESC LIMIT 50');
-    $allUsers->execute($companyId !== null ? [':cid' => $companyId] : []);
+    $allUsers = $pdo->prepare('SELECT u.*, c.name AS company_name FROM users u LEFT JOIN companies c ON c.id = u.company_id' . ($filterCompanyId !== null ? ' WHERE u.company_id = :cid' : '') . ' ORDER BY u.created_at DESC LIMIT 50');
+    $allUsers->execute($filterCompanyId !== null ? [':cid' => $filterCompanyId] : []);
     $allUsersList = $allUsers->fetchAll();
-    if($allUsersList===[]):?><tr class="empty"><td colspan="6">No users found</td></tr>
+    if($allUsersList===[]):?><tr class="empty"><td colspan="7">No users found</td></tr>
     <?php else: foreach($allUsersList as $u):?><tr>
         <td><div class="user-row"><div class="u-avatar"><?php echo strtoupper(substr((string)($u['first_name']??$u['username']),0,1));?></div><div class="u-info"><h4><?php echo h(trim(($u['first_name']??'').' '.($u['last_name']??''))?:$u['username']);?></h4><span>@<?php echo h((string)$u['username']);?></span></div></div></td>
         <td style="font-size:12px"><?php echo h((string)$u['email']);?></td>
         <td style="font-size:12px"><?php echo h((string)($u['company_name']??'-'));?></td>
-        <td><span style="font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px;background:var(--primary-light);color:var(--primary)"><?php echo h(ucfirst((string)$u['role']));?></span></td>
+        <td><span class="btn-xs role-<?php echo h((string)$u['role']);?>" style="display:inline-block;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:600"><?php echo h(ucfirst(str_replace('_',' ',(string)$u['role'])));?></span></td>
         <td><?php echo admin_status_badge((string)$u['status']);?></td>
         <td style="font-size:12px;white-space:nowrap"><?php echo h(date('d/m/Y',strtotime((string)$u['created_at'])));?></td>
+        <td>
+            <div class="act-btns">
+                <button class="btn btn-sm btn-ghost" onclick="openUserModal(<?php echo (int)$u['id'];?>,'<?php echo h((string)$u['username']);?>','<?php echo h((string)$u['role']);?>','<?php echo h((string)$u['status']);?>')"><i class="fas fa-edit"></i></button>
+                <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete user <?php echo h((string)$u['username']);?>?')">
+                    <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>">
+                    <input type="hidden" name="entity" value="user">
+                    <input type="hidden" name="action" value="delete">
+                    <input type="hidden" name="id" value="<?php echo (int)$u['id'];?>">
+                    <input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=users'));?>">
+                    <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                </form>
+            </div>
+        </td>
     </tr><?php endforeach; endif;?>
     </tbody></table></div></div>
 </div>
@@ -330,8 +444,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
     <div class="card-h"><h2><i class="fas fa-box"></i> All KOCH Quotations</h2><a href="<?php echo h(project_url('koch/main/quotation.php'));?>" class="tb-btn primary" style="font-size:11px;padding:6px 12px"><i class="fas fa-plus"></i> New</a></div>
     <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Number</th><th>Customer</th><th>Product</th><th>Quantity</th><th>Price</th><th>Status</th><th>Date</th></tr></thead><tbody>
     <?php
-    $kAll = $pdo->prepare('SELECT * FROM koch_quotations' . ($companyId !== null ? ' WHERE user_id IN (SELECT id FROM users WHERE company_id = :cid)' : '') . ' ORDER BY created_at DESC LIMIT 50');
-    $kAll->execute($companyId !== null ? [':cid' => $companyId] : []);
+    $kAll = $pdo->prepare('SELECT * FROM koch_quotations ORDER BY created_at DESC LIMIT 50');
+    $kAll->execute();
     $kList = $kAll->fetchAll();
     if($kList===[]):?><tr class="empty"><td colspan="7">No KOCH quotations found</td></tr>
     <?php else: foreach($kList as $q):?><tr>
@@ -358,8 +472,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
     <div class="card-h"><h2><i class="fas fa-truck"></i> All TNB Requests</h2><a href="<?php echo h(project_url('tnb/main/quotation.php'));?>" class="tb-btn primary" style="font-size:11px;padding:6px 12px"><i class="fas fa-plus"></i> New</a></div>
     <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Number</th><th>Customer</th><th>Service</th><th>Route</th><th>Price</th><th>Tracking</th><th>Status</th><th>Date</th></tr></thead><tbody>
     <?php
-    $tAll = $pdo->prepare('SELECT * FROM tnb_quotations' . ($companyId !== null ? ' WHERE user_id IN (SELECT id FROM users WHERE company_id = :cid)' : '') . ' ORDER BY created_at DESC LIMIT 50');
-    $tAll->execute($companyId !== null ? [':cid' => $companyId] : []);
+    $tAll = $pdo->prepare('SELECT * FROM tnb_quotations ORDER BY created_at DESC LIMIT 50');
+    $tAll->execute();
     $tList = $tAll->fetchAll();
     if($tList===[]):?><tr class="empty"><td colspan="8">No TNB requests found</td></tr>
     <?php else: foreach($tList as $q):?><tr>
@@ -376,19 +490,44 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
 </div>
 
 <?php elseif($section==='activity'): ?>
-<!-- =================== ACTIVITY LOGS =================== -->
+<!-- =================== ACTIVITY LOGS WITH FILTERS =================== -->
+<?php
+$actFilters = [
+    'date_from' => $_GET['date_from'] ?? '',
+    'date_to' => $_GET['date_to'] ?? '',
+    'user_id' => $_GET['filter_user'] ?? '',
+    'company_id' => $filterCompanyId ?? '',
+    'action' => $_GET['filter_action'] ?? '',
+    'ip_address' => $_GET['filter_ip'] ?? '',
+];
+$actResult = get_activity_logs_filtered($pdo, $actFilters, 50, 0);
+$distinctActions = get_distinct_actions($pdo);
+?>
+<div class="card" style="margin-bottom:16px">
+    <div class="card-h"><h2><i class="fas fa-filter"></i> Filters</h2></div>
+    <div class="card-b">
+        <form method="GET" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;align-items:end">
+            <input type="hidden" name="section" value="activity">
+            <div><label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">Date From</label><input type="date" name="date_from" value="<?php echo h($actFilters['date_from']);?>" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:inherit"></div>
+            <div><label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">Date To</label><input type="date" name="date_to" value="<?php echo h($actFilters['date_to']);?>" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:inherit"></div>
+            <div><label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">Action</label><select name="filter_action" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:inherit"><option value="">All Actions</option><?php foreach($distinctActions as $da):?><option value="<?php echo h($da);?>" <?php echo $actFilters['action']===$da?'selected':'';?>><?php echo h($da);?></option><?php endforeach;?></select></div>
+            <div><label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">IP Address</label><input type="text" name="filter_ip" value="<?php echo h($actFilters['ip_address']);?>" placeholder="e.g. 192.168" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:inherit"></div>
+            <div style="display:flex;gap:6px"><button type="submit" class="tb-btn primary" style="flex:1"><i class="fas fa-search"></i> Filter</button><a href="?section=activity" class="tb-btn ghost" style="flex:1;text-align:center"><i class="fas fa-times"></i> Clear</a></div>
+        </form>
+    </div>
+</div>
 <div class="card">
-    <div class="card-h"><h2><i class="fas fa-history"></i> All Activity Logs</h2></div>
-    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Date</th><th>User</th><th>Action</th><th>Table</th><th>Record ID</th></tr></thead><tbody>
-    <?php
-    $allAct = latest_admin_activities($pdo, $companyId, 50);
-    if($allAct===[]):?><tr class="empty"><td colspan="5">No activity logs found</td></tr>
-    <?php else: foreach($allAct as $a):?><tr>
+    <div class="card-h"><h2><i class="fas fa-history"></i> Activity Logs</h2><span style="font-size:12px;color:var(--muted)"><?php echo number_format($actResult['total']);?> records</span></div>
+    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Date</th><th>User</th><th>Company</th><th>Action</th><th>Table</th><th>Record</th><th>IP</th></tr></thead><tbody>
+    <?php if($actResult['data']===[]):?><tr class="empty"><td colspan="7">No activity logs found</td></tr>
+    <?php else: foreach($actResult['data'] as $a):?><tr>
         <td style="font-size:12px;white-space:nowrap"><?php echo h(date('d/m/Y H:i',strtotime((string)$a['created_at'])));?></td>
-        <td style="font-size:12px;font-weight:600"><?php echo h((string)($a['username']??'-'));?></td>
+        <td style="font-size:12px;font-weight:600"><?php echo h((string)($a['username']??'System'));?></td>
+        <td style="font-size:12px"><?php echo h((string)($a['company_code']??'-'));?></td>
         <td style="font-size:12px"><?php echo h(admin_action_label((string)$a['action']));?></td>
         <td style="font-size:12px;color:var(--muted)"><?php echo h((string)($a['table_name']??'-'));?></td>
         <td style="font-size:12px"><?php echo h((string)($a['record_id']??'-'));?></td>
+        <td style="font-size:11px;color:var(--muted);font-family:monospace"><?php echo h((string)($a['ip_address']??'-'));?></td>
     </tr><?php endforeach; endif;?>
     </tbody></table></div></div>
 </div>
@@ -396,14 +535,28 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
 <?php elseif($section==='notifications'): ?>
 <!-- =================== NOTIFICATIONS =================== -->
 <div class="card">
-    <div class="card-h"><h2><i class="fas fa-bell"></i> System Notifications</h2><?php if((int)$stats['unread_notifications']>0):?><span style="background:var(--primary);color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:10px"><?php echo (int)$stats['unread_notifications'];?> unread</span><?php endif;?></div>
-    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Type</th><th>Title</th><th>Message</th><th>User</th><th>Date</th><th>Status</th></tr></thead><tbody>
+    <div class="card-h">
+        <h2><i class="fas fa-bell"></i> System Notifications</h2>
+        <div style="display:flex;gap:8px;align-items:center">
+            <?php if((int)$stats['unread_notifications']>0):?><span style="background:var(--primary);color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:10px"><?php echo (int)$stats['unread_notifications'];?> unread</span>
+            <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline">
+                <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>">
+                <input type="hidden" name="entity" value="notification">
+                <input type="hidden" name="action" value="mark_all_read">
+                <input type="hidden" name="id" value="0">
+                <input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=notifications'));?>">
+                <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-check-double"></i> Mark All Read</button>
+            </form>
+            <?php endif;?>
+        </div>
+    </div>
+    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Type</th><th>Title</th><th>Message</th><th>User</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead><tbody>
     <?php
-    $nSql = 'SELECT n.*, u.username FROM notifications n LEFT JOIN users u ON u.id = n.user_id' . ($companyId !== null ? ' WHERE n.user_id IN (SELECT id FROM users WHERE company_id = :cid)' : '') . ' ORDER BY n.created_at DESC LIMIT 50';
+    $nSql = 'SELECT n.*, u.username FROM notifications n LEFT JOIN users u ON u.id = n.user_id' . ($filterCompanyId !== null ? ' WHERE n.user_id IN (SELECT id FROM users WHERE company_id = :cid)' : '') . ' ORDER BY n.created_at DESC LIMIT 50';
     $nStmt = $pdo->prepare($nSql);
-    $nStmt->execute($companyId !== null ? [':cid' => $companyId] : []);
+    $nStmt->execute($filterCompanyId !== null ? [':cid' => $filterCompanyId] : []);
     $nList = $nStmt->fetchAll();
-    if($nList===[]):?><tr class="empty"><td colspan="6">No notifications found</td></tr>
+    if($nList===[]):?><tr class="empty"><td colspan="7">No notifications found</td></tr>
     <?php else: foreach($nList as $n):?><tr style="<?php echo !$n['is_read']?'background:#f0f9ff':'';?>">
         <td><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:<?php echo match((string)($n['type']??'info')){'success'=>'var(--success)','warning'=>'var(--warning)','error'=>'var(--danger)',default=>'var(--info)'};?>"></span></td>
         <td style="font-size:12px;font-weight:600"><?php echo h((string)$n['title']);?></td>
@@ -411,6 +564,216 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
         <td style="font-size:12px"><?php echo h((string)($n['username']??'-'));?></td>
         <td style="font-size:12px;white-space:nowrap"><?php echo h(date('d/m/Y H:i',strtotime((string)$n['created_at'])));?></td>
         <td><?php echo !$n['is_read']?'<span style="font-size:11px;font-weight:600;padding:2px 8px;border-radius:6px;background:#dbeafe;color:var(--info)">Unread</span>':'<span style="font-size:11px;color:var(--muted)">Read</span>';?></td>
+        <td>
+            <div class="act-btns">
+                <?php if(!$n['is_read']):?>
+                <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline">
+                    <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>">
+                    <input type="hidden" name="entity" value="notification">
+                    <input type="hidden" name="action" value="mark_read">
+                    <input type="hidden" name="id" value="<?php echo (int)$n['id'];?>">
+                    <input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=notifications'));?>">
+                    <button type="submit" class="btn btn-xs btn-ghost" title="Mark Read"><i class="fas fa-check"></i></button>
+                </form>
+                <?php endif;?>
+                <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete this notification?')">
+                    <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>">
+                    <input type="hidden" name="entity" value="notification">
+                    <input type="hidden" name="action" value="delete">
+                    <input type="hidden" name="id" value="<?php echo (int)$n['id'];?>">
+                    <input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=notifications'));?>">
+                    <button type="submit" class="btn btn-xs btn-danger" title="Delete"><i class="fas fa-trash"></i></button>
+                </form>
+            </div>
+        </td>
+    </tr><?php endforeach; endif;?>
+    </tbody></table></div></div>
+</div>
+
+<?php elseif($section==='sliders'): ?>
+<!-- =================== SLIDERS =================== -->
+<?php $allSliders = get_all_sliders($pdo, $filterCompanyId); ?>
+<div class="card">
+    <div class="card-h"><h2><i class="fas fa-images"></i> Slider Contents</h2><div style="display:flex;gap:8px;align-items:center"><span style="font-size:12px;color:var(--muted)"><?php echo count($allSliders);?> items</span><button class="btn btn-sm btn-primary" onclick="openModal('sliderModal')"><i class="fas fa-plus"></i> Add Slider</button></div></div>
+    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>ID</th><th>Image</th><th>Title</th><th>Subtitle</th><th>Company</th><th>Order</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+    <?php if($allSliders===[]):?><tr class="empty"><td colspan="8">No sliders found</td></tr>
+    <?php else: foreach($allSliders as $s):?><tr>
+        <td style="font-size:12px;font-weight:600">#<?php echo (int)$s['id'];?></td>
+        <td><?php if($s['image_url']):?><img src="<?php echo h((string)$s['image_url']);?>" style="width:60px;height:35px;object-fit:cover;border-radius:6px" alt=""><?php else:?><span style="color:var(--muted);font-size:11px">No image</span><?php endif;?></td>
+        <td style="font-size:12px;font-weight:600"><?php echo h((string)$s['title']);?></td>
+        <td style="font-size:12px;color:var(--muted);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><?php echo h((string)($s['subtitle']??''));?></td>
+        <td style="font-size:12px"><?php echo h((string)($s['company_name']??'-'));?></td>
+        <td style="font-size:12px;text-align:center"><?php echo (int)$s['slide_order'];?></td>
+        <td><?php echo admin_status_badge($s['is_active']?'active':'inactive');?></td>
+        <td><div class="act-btns">
+            <button class="btn btn-xs btn-ghost" onclick="openEditSlider(<?php echo (int)$s['id'];?>,'<?php echo h(addslashes((string)$s['title']));?>','<?php echo h(addslashes((string)($s['subtitle']??'')));?>','<?php echo h(addslashes((string)($s['image_url']??'')));?>','<?php echo h(addslashes((string)($s['button_text']??'')));?>','<?php echo h(addslashes((string)($s['button_url']??'')));?>',<?php echo (int)($s['company_id']??0);?>,<?php echo (int)$s['slide_order'];?>,<?php echo $s['is_active']?1:0;?>)"><i class="fas fa-edit"></i></button>
+            <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete this slider?')"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="entity" value="slider"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?php echo (int)$s['id'];?>"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=sliders'));?>"><button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></button></form>
+        </div></td>
+    </tr><?php endforeach; endif;?>
+    </tbody></table></div></div>
+</div>
+
+<?php elseif($section==='partners'): ?>
+<!-- =================== PARTNERS =================== -->
+<?php $allPartners = get_all_partners($pdo, $filterCompanyId); ?>
+<div class="card">
+    <div class="card-h"><h2><i class="fas fa-handshake"></i> Partners</h2><div style="display:flex;gap:8px;align-items:center"><span style="font-size:12px;color:var(--muted)"><?php echo count($allPartners);?> partners</span><button class="btn btn-sm btn-primary" onclick="openModal('partnerModal')"><i class="fas fa-plus"></i> Add Partner</button></div></div>
+    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>ID</th><th>Logo</th><th>Name</th><th>Website</th><th>Company</th><th>Order</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+    <?php if($allPartners===[]):?><tr class="empty"><td colspan="8">No partners found</td></tr>
+    <?php else: foreach($allPartners as $p):?><tr>
+        <td style="font-size:12px;font-weight:600">#<?php echo (int)$p['id'];?></td>
+        <td><?php if($p['logo_url']):?><img src="<?php echo h((string)$p['logo_url']);?>" style="width:40px;height:40px;object-fit:contain;border-radius:6px;background:#f8fafc;padding:4px" alt=""><?php else:?><span style="color:var(--muted);font-size:11px">-</span><?php endif;?></td>
+        <td style="font-size:12px;font-weight:600"><?php echo h((string)$p['name']);?></td>
+        <td style="font-size:11px;color:var(--muted)"><?php echo $p['website_url']?'<a href="'.h((string)$p['website_url']).'" target="_blank" style="color:var(--primary)">Visit</a>':'-';?></td>
+        <td style="font-size:12px"><?php echo h((string)($p['company_name']??'-'));?></td>
+        <td style="font-size:12px;text-align:center"><?php echo (int)$p['partner_order'];?></td>
+        <td><?php echo admin_status_badge($p['is_active']?'active':'inactive');?></td>
+        <td><div class="act-btns">
+            <button class="btn btn-xs btn-ghost" onclick="openEditPartner(<?php echo (int)$p['id'];?>,'<?php echo h(addslashes((string)$p['name']));?>','<?php echo h(addslashes((string)($p['logo_url']??'')));?>','<?php echo h(addslashes((string)($p['website_url']??'')));?>',<?php echo (int)($p['company_id']??0);?>,<?php echo (int)$p['partner_order'];?>,<?php echo $p['is_active']?1:0;?>)"><i class="fas fa-edit"></i></button>
+            <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete?')"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="entity" value="partner"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?php echo (int)$p['id'];?>"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=partners'));?>"><button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></button></form>
+        </div></td>
+    </tr><?php endforeach; endif;?>
+    </tbody></table></div></div>
+</div>
+
+<?php elseif($section==='products'): ?>
+<!-- =================== PRODUCTS =================== -->
+<?php $allProducts = get_all_products_admin($pdo); ?>
+<div class="card">
+    <div class="card-h"><h2><i class="fas fa-boxes-stacked"></i> Products (KOCH)</h2><div style="display:flex;gap:8px;align-items:center"><span style="font-size:12px;color:var(--muted)"><?php echo count($allProducts);?> products</span><button class="btn btn-sm btn-primary" onclick="openModal('productModal')"><i class="fas fa-plus"></i> Add Product</button></div></div>
+    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>ID</th><th>Image</th><th>Name</th><th>Category</th><th>Price</th><th>Order</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+    <?php if($allProducts===[]):?><tr class="empty"><td colspan="8">No products found</td></tr>
+    <?php else: foreach($allProducts as $p):?><tr>
+        <td style="font-size:12px;font-weight:600">#<?php echo (int)$p['id'];?></td>
+        <td><?php if($p['image_url']):?><img src="<?php echo h((string)$p['image_url']);?>" style="width:40px;height:40px;object-fit:cover;border-radius:6px" alt=""><?php else:?><span style="color:var(--muted);font-size:11px">-</span><?php endif;?></td>
+        <td style="font-size:12px;font-weight:600"><?php echo h((string)$p['name']);?></td>
+        <td style="font-size:12px"><?php echo h(ucfirst((string)($p['category']??'')));?></td>
+        <td style="font-size:12px"><?php echo $p['price']!==null?h(number_format((float)$p['price'],2)).' ฿':'-';?></td>
+        <td style="font-size:12px;text-align:center"><?php echo (int)$p['display_order'];?></td>
+        <td><?php echo admin_status_badge($p['is_active']?'active':'inactive');?></td>
+        <td><div class="act-btns">
+            <button class="btn btn-xs btn-ghost" onclick="openEditProduct(<?php echo (int)$p['id'];?>,'<?php echo h(addslashes((string)$p['name']));?>','<?php echo h(addslashes((string)($p['description']??'')));?>','<?php echo h(addslashes((string)($p['image_url']??'')));?>','<?php echo h(addslashes((string)($p['category']??'')));?>',<?php echo $p['price']!==null?(float)$p['price']:0;?>,<?php echo (int)$p['display_order'];?>,<?php echo $p['is_active']?1:0;?>)"><i class="fas fa-edit"></i></button>
+            <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete?')"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="entity" value="product"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?php echo (int)$p['id'];?>"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=products'));?>"><button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></button></form>
+        </div></td>
+    </tr><?php endforeach; endif;?>
+    </tbody></table></div></div>
+</div>
+
+<?php elseif($section==='truck_types'): ?>
+<!-- =================== TRUCK TYPES =================== -->
+<?php $allTrucks = get_all_truck_types_admin($pdo); ?>
+<div class="card">
+    <div class="card-h"><h2><i class="fas fa-truck-moving"></i> Truck Types (TNB)</h2><div style="display:flex;gap:8px;align-items:center"><span style="font-size:12px;color:var(--muted)"><?php echo count($allTrucks);?> types</span><button class="btn btn-sm btn-primary" onclick="openModal('truckModal')"><i class="fas fa-plus"></i> Add Truck Type</button></div></div>
+    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>ID</th><th>Image</th><th>Name</th><th>Capacity</th><th>Order</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+    <?php if($allTrucks===[]):?><tr class="empty"><td colspan="7">No truck types found</td></tr>
+    <?php else: foreach($allTrucks as $t):?><tr>
+        <td style="font-size:12px;font-weight:600">#<?php echo (int)$t['id'];?></td>
+        <td><?php if($t['image_url']):?><img src="<?php echo h((string)$t['image_url']);?>" style="width:50px;height:35px;object-fit:cover;border-radius:6px" alt=""><?php else:?><span style="color:var(--muted);font-size:11px">-</span><?php endif;?></td>
+        <td style="font-size:12px;font-weight:600"><?php echo h((string)$t['name']);?></td>
+        <td style="font-size:12px"><?php echo h((string)($t['capacity']??'-'));?></td>
+        <td style="font-size:12px;text-align:center"><?php echo (int)$t['display_order'];?></td>
+        <td><?php echo admin_status_badge($t['is_active']?'active':'inactive');?></td>
+        <td><div class="act-btns">
+            <button class="btn btn-xs btn-ghost" onclick="openEditTruck(<?php echo (int)$t['id'];?>,'<?php echo h(addslashes((string)$t['name']));?>','<?php echo h(addslashes((string)($t['description']??'')));?>','<?php echo h(addslashes((string)($t['image_url']??'')));?>','<?php echo h(addslashes((string)($t['capacity']??'')));?>',<?php echo (int)$t['display_order'];?>,<?php echo $t['is_active']?1:0;?>)"><i class="fas fa-edit"></i></button>
+            <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete?')"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="entity" value="truck_type"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?php echo (int)$t['id'];?>"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=truck_types'));?>"><button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></button></form>
+        </div></td>
+    </tr><?php endforeach; endif;?>
+    </tbody></table></div></div>
+</div>
+
+<?php elseif($section==='branches'): ?>
+<!-- =================== BRANCHES =================== -->
+<?php $allBranches = get_all_branches_admin($pdo, $filterCompanyId); ?>
+<div class="card">
+    <div class="card-h"><h2><i class="fas fa-map-marker-alt"></i> Branches</h2><div style="display:flex;gap:8px;align-items:center"><span style="font-size:12px;color:var(--muted)"><?php echo count($allBranches);?> branches</span><button class="btn btn-sm btn-primary" onclick="openModal('branchModal')"><i class="fas fa-plus"></i> Add Branch</button></div></div>
+    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>ID</th><th>Name</th><th>Company</th><th>Address</th><th>Phone</th><th>Email</th><th>HQ</th><th>Staff</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+    <?php if($allBranches===[]):?><tr class="empty"><td colspan="10">No branches found</td></tr>
+    <?php else: foreach($allBranches as $b):?><tr>
+        <td style="font-size:12px;font-weight:600">#<?php echo (int)$b['id'];?></td>
+        <td style="font-size:12px;font-weight:600"><?php echo h((string)$b['name']);?><?php if($b['name_en']):?><br><span style="font-size:10px;color:var(--muted)"><?php echo h((string)$b['name_en']);?></span><?php endif;?></td>
+        <td style="font-size:12px"><?php echo h((string)($b['company_name']??'-'));?></td>
+        <td style="font-size:11px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><?php echo h((string)($b['address']??'-'));?></td>
+        <td style="font-size:12px"><?php echo h((string)($b['phone']??'-'));?></td>
+        <td style="font-size:11px"><?php echo h((string)($b['email']??'-'));?></td>
+        <td style="text-align:center"><?php echo $b['is_headquarters']?'<i class="fas fa-star" style="color:var(--warning)"></i>':'-';?></td>
+        <td style="font-size:12px;text-align:center"><?php echo (int)$b['staff_count'];?></td>
+        <td><?php echo admin_status_badge($b['is_active']?'active':'inactive');?></td>
+        <td><div class="act-btns">
+            <button class="btn btn-xs btn-ghost" onclick="openEditBranch(<?php echo (int)$b['id'];?>,'<?php echo h(addslashes((string)$b['name']));?>','<?php echo h(addslashes((string)($b['name_en']??'')));?>','<?php echo h(addslashes((string)($b['address']??'')));?>','<?php echo h(addslashes((string)($b['phone']??'')));?>','<?php echo h(addslashes((string)($b['email']??'')));?>',<?php echo (int)($b['company_id']??0);?>,<?php echo $b['is_headquarters']?1:0;?>,<?php echo (int)$b['staff_count'];?>,<?php echo $b['is_active']?1:0;?>)"><i class="fas fa-edit"></i></button>
+            <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete?')"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="entity" value="branch"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?php echo (int)$b['id'];?>"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=branches'));?>"><button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></button></form>
+        </div></td>
+    </tr><?php endforeach; endif;?>
+    </tbody></table></div></div>
+</div>
+
+<?php elseif($section==='email_templates'): ?>
+<!-- =================== EMAIL TEMPLATES =================== -->
+<?php $allTemplates = get_all_email_templates($pdo, $filterCompanyId); ?>
+<div class="card">
+    <div class="card-h"><h2><i class="fas fa-file-alt"></i> Email Templates</h2><div style="display:flex;gap:8px;align-items:center"><span style="font-size:12px;color:var(--muted)"><?php echo count($allTemplates);?> templates</span><button class="btn btn-sm btn-primary" onclick="openModal('emailTplModal')"><i class="fas fa-plus"></i> Add Template</button></div></div>
+    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>ID</th><th>Name</th><th>Subject</th><th>Company</th><th>Variables</th><th>Status</th><th>Updated</th><th>Actions</th></tr></thead><tbody>
+    <?php if($allTemplates===[]):?><tr class="empty"><td colspan="8">No email templates found</td></tr>
+    <?php else: foreach($allTemplates as $et):?><tr>
+        <td style="font-size:12px;font-weight:600">#<?php echo (int)$et['id'];?></td>
+        <td style="font-size:12px;font-weight:600;font-family:monospace"><?php echo h((string)$et['name']);?></td>
+        <td style="font-size:12px"><?php echo h((string)$et['subject']);?></td>
+        <td style="font-size:12px"><?php echo h((string)($et['company_name']??'Global'));?></td>
+        <td style="font-size:11px;color:var(--muted);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><?php echo h((string)($et['variables']??'-'));?></td>
+        <td><?php echo admin_status_badge($et['is_active']?'active':'inactive');?></td>
+        <td style="font-size:11px;white-space:nowrap"><?php echo h(date('d/m/Y H:i',strtotime((string)$et['updated_at'])));?></td>
+        <td><div class="act-btns">
+            <button class="btn btn-xs btn-ghost" onclick="openEditEmailTpl(<?php echo (int)$et['id'];?>,'<?php echo h(addslashes((string)$et['name']));?>','<?php echo h(addslashes((string)$et['subject']));?>','<?php echo h(addslashes((string)($et['variables']??'')));?>',<?php echo (int)($et['company_id']??0);?>,<?php echo $et['is_active']?1:0;?>)"><i class="fas fa-edit"></i></button>
+            <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete?')"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="entity" value="email_template"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?php echo (int)$et['id'];?>"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=email_templates'));?>"><button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></button></form>
+        </div></td>
+    </tr><?php endforeach; endif;?>
+    </tbody></table></div></div>
+</div>
+
+<?php elseif($section==='email_recipients'): ?>
+<!-- =================== EMAIL RECIPIENTS =================== -->
+<?php $allRecipients = get_all_email_recipients($pdo, $filterCompanyId); ?>
+<div class="card">
+    <div class="card-h"><h2><i class="fas fa-at"></i> Email Recipients</h2><div style="display:flex;gap:8px;align-items:center"><span style="font-size:12px;color:var(--muted)"><?php echo count($allRecipients);?> recipients</span><button class="btn btn-sm btn-primary" onclick="openModal('emailRecModal')"><i class="fas fa-plus"></i> Add Recipient</button></div></div>
+    <div class="card-b" style="padding:12px 20px;background:#fffbeb;border-bottom:1px solid var(--border)">
+        <p style="font-size:12px;color:#92400e;margin:0"><i class="fas fa-info-circle"></i> <strong>Email Recipients</strong> are the email addresses that receive notifications when customers submit quotation requests. Admin must add at least one email to receive quotation data.</p>
+    </div>
+    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>ID</th><th>Event Type</th><th>Name</th><th>Email</th><th>Company</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+    <?php if($allRecipients===[]):?><tr class="empty"><td colspan="7">No email recipients found — Add at least one email to receive quotation notifications</td></tr>
+    <?php else: foreach($allRecipients as $er):?><tr>
+        <td style="font-size:12px;font-weight:600">#<?php echo (int)$er['id'];?></td>
+        <td><span style="font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px;background:var(--primary-light);color:var(--primary)"><?php echo h((string)$er['event_type']);?></span></td>
+        <td style="font-size:12px;font-weight:600"><?php echo h((string)$er['recipient_name']);?></td>
+        <td style="font-size:12px"><?php echo h((string)$er['recipient_email']);?></td>
+        <td style="font-size:12px"><?php echo h((string)($er['company_name']??'-'));?></td>
+        <td><?php echo admin_status_badge($er['is_active']?'active':'inactive');?></td>
+        <td><div class="act-btns">
+            <button class="btn btn-xs btn-ghost" onclick="openEditEmailRec(<?php echo (int)$er['id'];?>,'<?php echo h(addslashes((string)$er['event_type']));?>','<?php echo h(addslashes((string)$er['recipient_name']));?>','<?php echo h(addslashes((string)$er['recipient_email']));?>',<?php echo (int)($er['company_id']??0);?>,<?php echo $er['is_active']?1:0;?>)"><i class="fas fa-edit"></i></button>
+            <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete?')"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="entity" value="email_recipient"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?php echo (int)$er['id'];?>"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=email_recipients'));?>"><button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></button></form>
+        </div></td>
+    </tr><?php endforeach; endif;?>
+    </tbody></table></div></div>
+</div>
+
+<?php elseif($section==='contact_messages'): ?>
+<!-- =================== CONTACT MESSAGES =================== -->
+<?php $allContacts = get_all_contact_messages($pdo, $filterCompanyId); ?>
+<div class="card">
+    <div class="card-h"><h2><i class="fas fa-envelope-open-text"></i> Contact Messages</h2><span style="font-size:12px;color:var(--muted)"><?php echo count($allContacts);?> messages</span></div>
+    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Subject</th><th>Message</th><th>Company</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead><tbody>
+    <?php if($allContacts===[]):?><tr class="empty"><td colspan="9">No contact messages found</td></tr>
+    <?php else: foreach($allContacts as $cm):?><tr>
+        <td style="font-size:12px;font-weight:600">#<?php echo (int)$cm['id'];?></td>
+        <td style="font-size:12px;font-weight:600"><?php echo h((string)$cm['name']);?></td>
+        <td style="font-size:12px"><?php echo h((string)$cm['email']);?></td>
+        <td style="font-size:12px;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><?php echo h((string)($cm['subject']??'-'));?></td>
+        <td style="font-size:11px;color:var(--muted);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><?php echo h((string)($cm['message']??'-'));?></td>
+        <td style="font-size:12px"><?php echo h((string)($cm['company_name']??'-'));?></td>
+        <td><?php echo admin_status_badge((string)($cm['status']??'new'));?></td>
+        <td style="font-size:11px;white-space:nowrap"><?php echo h(date('d/m/Y H:i',strtotime((string)$cm['created_at'])));?></td>
+        <td><div class="act-btns">
+            <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="entity" value="contact_message"><input type="hidden" name="action" value="update_status"><input type="hidden" name="id" value="<?php echo (int)$cm['id'];?>"><input type="hidden" name="status" value="read"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=contact_messages'));?>"><button type="submit" class="btn btn-xs btn-ghost" title="Mark Read"><i class="fas fa-eye"></i></button></form>
+            <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete?')"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="entity" value="contact_message"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?php echo (int)$cm['id'];?>"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=contact_messages'));?>"><button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></button></form>
+        </div></td>
     </tr><?php endforeach; endif;?>
     </tbody></table></div></div>
 </div>
@@ -449,8 +812,344 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-
 
     </div>
 </div>
+<!-- =================== MODAL FORMS =================== -->
+<?php $crudUrl = project_url('admin/api/crud/handler.php'); ?>
+
+<!-- User Edit Modal -->
+<div class="modal-overlay" id="userModal" onclick="if(event.target===this)closeModal('userModal')">
+<div class="modal">
+    <div class="modal-head"><h3><i class="fas fa-user-edit"></i> Edit User</h3><button class="modal-close" onclick="closeModal('userModal')">&times;</button></div>
+    <form method="POST" action="<?php echo h($crudUrl);?>">
+        <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>">
+        <input type="hidden" name="entity" value="user">
+        <input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=users'));?>">
+        <input type="hidden" name="id" id="um_id">
+        <div class="modal-body">
+            <div class="fm-group"><label>Username</label><input type="text" class="fm-input" id="um_name" disabled></div>
+            <div class="fm-row">
+                <div class="fm-group"><label>Role<span>*</span></label><select name="role" id="um_role" class="fm-input" required><option value="user">User</option><option value="manager">Manager</option><option value="admin">Admin</option><option value="super_admin">Super Admin</option></select></div>
+                <div class="fm-group"><label>Status<span>*</span></label><select name="status" id="um_status" class="fm-input" required><option value="active">Active</option><option value="inactive">Inactive</option><option value="suspended">Suspended</option></select></div>
+            </div>
+            <div style="background:var(--bg);border-radius:10px;padding:14px;margin-top:8px">
+                <p style="font-size:11px;font-weight:600;color:var(--muted);margin:0 0 8px;text-transform:uppercase;letter-spacing:.5px">Role Description</p>
+                <div style="font-size:12px;line-height:1.7;color:var(--text)">
+                    <div><strong style="color:#92400e">Super Admin</strong> — Full access to all companies, users, settings, and system configuration</div>
+                    <div><strong style="color:#1e40af">Admin</strong> — Manage own company's users, content, quotations, and emails</div>
+                    <div><strong style="color:#3730a3">Manager</strong> — View own team's data, limited content access</div>
+                    <div><strong style="color:#475569">User</strong> — View own data only, submit quotations</div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-foot">
+            <button type="button" class="btn btn-ghost" onclick="closeModal('userModal')">Cancel</button>
+            <button type="submit" name="action" value="update_role" class="btn btn-primary"><i class="fas fa-save"></i> Update Role</button>
+            <button type="submit" name="action" value="update_status" class="btn btn-primary" style="background:var(--success)"><i class="fas fa-toggle-on"></i> Update Status</button>
+        </div>
+    </form>
+</div></div>
+
+<!-- Slider Modal -->
+<div class="modal-overlay" id="sliderModal" onclick="if(event.target===this)closeModal('sliderModal')">
+<div class="modal">
+    <div class="modal-head"><h3><i class="fas fa-images"></i> <span id="sm_title">Add Slider</span></h3><button class="modal-close" onclick="closeModal('sliderModal')">&times;</button></div>
+    <form method="POST" action="<?php echo h($crudUrl);?>">
+        <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>">
+        <input type="hidden" name="entity" value="slider">
+        <input type="hidden" name="action" id="sm_action" value="create">
+        <input type="hidden" name="id" id="sm_id" value="0">
+        <input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=sliders'));?>">
+        <div class="modal-body">
+            <div class="fm-group"><label>Title<span>*</span></label><input type="text" name="title" id="sm_name" class="fm-input" required maxlength="255"></div>
+            <div class="fm-group"><label>Subtitle</label><input type="text" name="subtitle" id="sm_subtitle" class="fm-input" maxlength="500"></div>
+            <div class="fm-group"><label>Image URL<span>*</span></label><input type="url" name="image_url" id="sm_image" class="fm-input" required placeholder="https://..."></div>
+            <div class="fm-row">
+                <div class="fm-group"><label>Button Text</label><input type="text" name="button_text" id="sm_btn_text" class="fm-input" maxlength="100"></div>
+                <div class="fm-group"><label>Button URL</label><input type="text" name="button_url" id="sm_btn_url" class="fm-input" maxlength="500"></div>
+            </div>
+            <div class="fm-row">
+                <div class="fm-group"><label>Company<span>*</span></label><select name="company_id" id="sm_company" class="fm-input" required><option value="<?php echo $kochId;?>">KOCH</option><option value="<?php echo $tnbId;?>">TNB</option></select></div>
+                <div class="fm-group"><label>Display Order</label><input type="number" name="slide_order" id="sm_order" class="fm-input" value="0" min="0"></div>
+            </div>
+            <div class="fm-check"><input type="checkbox" name="is_active" id="sm_active" value="1" checked><label for="sm_active">Active</label></div>
+        </div>
+        <div class="modal-foot"><button type="button" class="btn btn-ghost" onclick="closeModal('sliderModal')">Cancel</button><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save</button></div>
+    </form>
+</div></div>
+
+<!-- Partner Modal -->
+<div class="modal-overlay" id="partnerModal" onclick="if(event.target===this)closeModal('partnerModal')">
+<div class="modal">
+    <div class="modal-head"><h3><i class="fas fa-handshake"></i> <span id="pm_title">Add Partner</span></h3><button class="modal-close" onclick="closeModal('partnerModal')">&times;</button></div>
+    <form method="POST" action="<?php echo h($crudUrl);?>">
+        <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>">
+        <input type="hidden" name="entity" value="partner">
+        <input type="hidden" name="action" id="pm_action" value="create">
+        <input type="hidden" name="id" id="pm_id" value="0">
+        <input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=partners'));?>">
+        <div class="modal-body">
+            <div class="fm-group"><label>Partner Name<span>*</span></label><input type="text" name="name" id="pm_name" class="fm-input" required maxlength="255"></div>
+            <div class="fm-group"><label>Logo URL</label><input type="url" name="logo_url" id="pm_logo" class="fm-input" placeholder="https://..."></div>
+            <div class="fm-group"><label>Website URL</label><input type="url" name="website_url" id="pm_website" class="fm-input" placeholder="https://..."></div>
+            <div class="fm-row">
+                <div class="fm-group"><label>Company<span>*</span></label><select name="company_id" id="pm_company" class="fm-input" required><option value="<?php echo $kochId;?>">KOCH</option><option value="<?php echo $tnbId;?>">TNB</option></select></div>
+                <div class="fm-group"><label>Display Order</label><input type="number" name="partner_order" id="pm_order" class="fm-input" value="0" min="0"></div>
+            </div>
+            <div class="fm-check"><input type="checkbox" name="is_active" id="pm_active" value="1" checked><label for="pm_active">Active</label></div>
+        </div>
+        <div class="modal-foot"><button type="button" class="btn btn-ghost" onclick="closeModal('partnerModal')">Cancel</button><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save</button></div>
+    </form>
+</div></div>
+
+<!-- Product Modal -->
+<div class="modal-overlay" id="productModal" onclick="if(event.target===this)closeModal('productModal')">
+<div class="modal">
+    <div class="modal-head"><h3><i class="fas fa-boxes-stacked"></i> <span id="prd_title">Add Product</span></h3><button class="modal-close" onclick="closeModal('productModal')">&times;</button></div>
+    <form method="POST" action="<?php echo h($crudUrl);?>">
+        <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>">
+        <input type="hidden" name="entity" value="product">
+        <input type="hidden" name="action" id="prd_action" value="create">
+        <input type="hidden" name="id" id="prd_id" value="0">
+        <input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=products'));?>">
+        <div class="modal-body">
+            <div class="fm-group"><label>Product Name<span>*</span></label><input type="text" name="name" id="prd_name" class="fm-input" required maxlength="255"></div>
+            <div class="fm-group"><label>Description</label><textarea name="description" id="prd_desc" class="fm-input"></textarea></div>
+            <div class="fm-group"><label>Image URL</label><input type="url" name="image_url" id="prd_image" class="fm-input" placeholder="https://..."></div>
+            <div class="fm-row">
+                <div class="fm-group"><label>Category</label><input type="text" name="category" id="prd_cat" class="fm-input" maxlength="100" placeholder="e.g. chemical, equipment"></div>
+                <div class="fm-group"><label>Price (฿)</label><input type="number" name="price" id="prd_price" class="fm-input" step="0.01" min="0"></div>
+            </div>
+            <div class="fm-group"><label>Display Order</label><input type="number" name="display_order" id="prd_order" class="fm-input" value="0" min="0"></div>
+            <div class="fm-check"><input type="checkbox" name="is_active" id="prd_active" value="1" checked><label for="prd_active">Active</label></div>
+        </div>
+        <div class="modal-foot"><button type="button" class="btn btn-ghost" onclick="closeModal('productModal')">Cancel</button><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save</button></div>
+    </form>
+</div></div>
+
+<!-- Truck Type Modal -->
+<div class="modal-overlay" id="truckModal" onclick="if(event.target===this)closeModal('truckModal')">
+<div class="modal">
+    <div class="modal-head"><h3><i class="fas fa-truck-moving"></i> <span id="tt_title">Add Truck Type</span></h3><button class="modal-close" onclick="closeModal('truckModal')">&times;</button></div>
+    <form method="POST" action="<?php echo h($crudUrl);?>">
+        <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>">
+        <input type="hidden" name="entity" value="truck_type">
+        <input type="hidden" name="action" id="tt_action" value="create">
+        <input type="hidden" name="id" id="tt_id" value="0">
+        <input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=truck_types'));?>">
+        <div class="modal-body">
+            <div class="fm-group"><label>Truck Name<span>*</span></label><input type="text" name="name" id="tt_name" class="fm-input" required maxlength="255"></div>
+            <div class="fm-group"><label>Description</label><textarea name="description" id="tt_desc" class="fm-input"></textarea></div>
+            <div class="fm-group"><label>Image URL</label><input type="url" name="image_url" id="tt_image" class="fm-input" placeholder="https://..."></div>
+            <div class="fm-row">
+                <div class="fm-group"><label>Capacity</label><input type="text" name="capacity" id="tt_cap" class="fm-input" maxlength="100" placeholder="e.g. 10 tons"></div>
+                <div class="fm-group"><label>Display Order</label><input type="number" name="display_order" id="tt_order" class="fm-input" value="0" min="0"></div>
+            </div>
+            <div class="fm-check"><input type="checkbox" name="is_active" id="tt_active" value="1" checked><label for="tt_active">Active</label></div>
+        </div>
+        <div class="modal-foot"><button type="button" class="btn btn-ghost" onclick="closeModal('truckModal')">Cancel</button><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save</button></div>
+    </form>
+</div></div>
+
+<!-- Branch Modal -->
+<div class="modal-overlay" id="branchModal" onclick="if(event.target===this)closeModal('branchModal')">
+<div class="modal">
+    <div class="modal-head"><h3><i class="fas fa-map-marker-alt"></i> <span id="bm_title">Add Branch</span></h3><button class="modal-close" onclick="closeModal('branchModal')">&times;</button></div>
+    <form method="POST" action="<?php echo h($crudUrl);?>">
+        <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>">
+        <input type="hidden" name="entity" value="branch">
+        <input type="hidden" name="action" id="bm_action" value="create">
+        <input type="hidden" name="id" id="bm_id" value="0">
+        <input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=branches'));?>">
+        <div class="modal-body">
+            <div class="fm-row">
+                <div class="fm-group"><label>Branch Name (TH)<span>*</span></label><input type="text" name="name" id="bm_name" class="fm-input" required maxlength="255"></div>
+                <div class="fm-group"><label>Branch Name (EN)</label><input type="text" name="name_en" id="bm_name_en" class="fm-input" maxlength="255"></div>
+            </div>
+            <div class="fm-group"><label>Address</label><textarea name="address" id="bm_address" class="fm-input"></textarea></div>
+            <div class="fm-row">
+                <div class="fm-group"><label>Phone</label><input type="text" name="phone" id="bm_phone" class="fm-input" maxlength="20"></div>
+                <div class="fm-group"><label>Email</label><input type="email" name="email" id="bm_email" class="fm-input" maxlength="255"></div>
+            </div>
+            <div class="fm-row">
+                <div class="fm-group"><label>Company<span>*</span></label><select name="company_id" id="bm_company" class="fm-input" required><option value="<?php echo $kochId;?>">KOCH</option><option value="<?php echo $tnbId;?>">TNB</option></select></div>
+                <div class="fm-group"><label>Staff Count</label><input type="number" name="staff_count" id="bm_staff" class="fm-input" value="0" min="0"></div>
+            </div>
+            <div class="fm-row">
+                <div class="fm-check"><input type="checkbox" name="is_headquarters" id="bm_hq" value="1"><label for="bm_hq">Headquarters</label></div>
+                <div class="fm-check"><input type="checkbox" name="is_active" id="bm_active" value="1" checked><label for="bm_active">Active</label></div>
+            </div>
+        </div>
+        <div class="modal-foot"><button type="button" class="btn btn-ghost" onclick="closeModal('branchModal')">Cancel</button><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save</button></div>
+    </form>
+</div></div>
+
+<!-- Email Template Modal -->
+<div class="modal-overlay" id="emailTplModal" onclick="if(event.target===this)closeModal('emailTplModal')">
+<div class="modal">
+    <div class="modal-head"><h3><i class="fas fa-file-alt"></i> <span id="etm_title">Add Email Template</span></h3><button class="modal-close" onclick="closeModal('emailTplModal')">&times;</button></div>
+    <form method="POST" action="<?php echo h($crudUrl);?>">
+        <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>">
+        <input type="hidden" name="entity" value="email_template">
+        <input type="hidden" name="action" id="etm_action" value="create">
+        <input type="hidden" name="id" id="etm_id" value="0">
+        <input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=email_templates'));?>">
+        <div class="modal-body">
+            <div class="fm-group"><label>Template Name<span>*</span></label><input type="text" name="name" id="etm_name" class="fm-input" required maxlength="100" placeholder="e.g. quotation_confirmation"></div>
+            <div class="fm-group"><label>Subject<span>*</span></label><input type="text" name="subject" id="etm_subject" class="fm-input" required maxlength="255"></div>
+            <div class="fm-group"><label>HTML Content</label><textarea name="html_content" id="etm_html" class="fm-input" style="min-height:120px" placeholder="Email body HTML..."></textarea></div>
+            <div class="fm-group"><label>Variables</label><input type="text" name="variables" id="etm_vars" class="fm-input" placeholder="e.g. {{name}}, {{email}}, {{quotation_number}}"></div>
+            <div class="fm-row">
+                <div class="fm-group"><label>Company</label><select name="company_id" id="etm_company" class="fm-input"><option value="">Global (All)</option><option value="<?php echo $kochId;?>">KOCH</option><option value="<?php echo $tnbId;?>">TNB</option></select></div>
+                <div class="fm-check" style="margin-top:24px"><input type="checkbox" name="is_active" id="etm_active" value="1" checked><label for="etm_active">Active</label></div>
+            </div>
+        </div>
+        <div class="modal-foot"><button type="button" class="btn btn-ghost" onclick="closeModal('emailTplModal')">Cancel</button><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save</button></div>
+    </form>
+</div></div>
+
+<!-- Email Recipient Modal -->
+<div class="modal-overlay" id="emailRecModal" onclick="if(event.target===this)closeModal('emailRecModal')">
+<div class="modal">
+    <div class="modal-head"><h3><i class="fas fa-at"></i> <span id="erm_title">Add Email Recipient</span></h3><button class="modal-close" onclick="closeModal('emailRecModal')">&times;</button></div>
+    <form method="POST" action="<?php echo h($crudUrl);?>">
+        <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>">
+        <input type="hidden" name="entity" value="email_recipient">
+        <input type="hidden" name="action" id="erm_action" value="create">
+        <input type="hidden" name="id" id="erm_id" value="0">
+        <input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=email_recipients'));?>">
+        <div class="modal-body">
+            <div style="background:#eff6ff;border-radius:10px;padding:14px;margin-bottom:16px">
+                <p style="font-size:12px;color:#1e40af;margin:0"><i class="fas fa-info-circle"></i> Add recipient emails that should receive notifications for specific events. For example, add your sales team email to receive new quotation alerts.</p>
+            </div>
+            <div class="fm-group"><label>Event Type<span>*</span></label><select name="event_type" id="erm_event" class="fm-input" required>
+                <option value="new_quotation">New Quotation</option>
+                <option value="quotation_approved">Quotation Approved</option>
+                <option value="new_contact">New Contact Message</option>
+                <option value="login_failed">Login Failed Alert</option>
+                <option value="new_registration">New User Registration</option>
+                <option value="system_alert">System Alert</option>
+            </select></div>
+            <div class="fm-row">
+                <div class="fm-group"><label>Recipient Name<span>*</span></label><input type="text" name="recipient_name" id="erm_name" class="fm-input" required maxlength="255" placeholder="e.g. Sales Team"></div>
+                <div class="fm-group"><label>Email<span>*</span></label><input type="email" name="recipient_email" id="erm_email" class="fm-input" required maxlength="255" placeholder="e.g. sales@koch.co.th"></div>
+            </div>
+            <div class="fm-row">
+                <div class="fm-group"><label>Company</label><select name="company_id" id="erm_company" class="fm-input"><option value="">Global (All)</option><option value="<?php echo $kochId;?>">KOCH</option><option value="<?php echo $tnbId;?>">TNB</option></select></div>
+                <div class="fm-check" style="margin-top:24px"><input type="checkbox" name="is_active" id="erm_active" value="1" checked><label for="erm_active">Active</label></div>
+            </div>
+        </div>
+        <div class="modal-foot"><button type="button" class="btn btn-ghost" onclick="closeModal('emailRecModal')">Cancel</button><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save</button></div>
+    </form>
+</div></div>
+
 <script>
 function toggleSB(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('sbOverlay').classList.toggle('show')}
+function openModal(id){document.getElementById(id).classList.add('show')}
+function closeModal(id){document.getElementById(id).classList.remove('show')}
+
+function openUserModal(id,name,role,status){
+    document.getElementById('um_id').value=id;
+    document.getElementById('um_name').value=name;
+    document.getElementById('um_role').value=role;
+    document.getElementById('um_status').value=status;
+    openModal('userModal');
+}
+
+function openEditSlider(id,title,subtitle,image,btnText,btnUrl,companyId,order,active){
+    document.getElementById('sm_title').textContent='Edit Slider #'+id;
+    document.getElementById('sm_action').value='update';
+    document.getElementById('sm_id').value=id;
+    document.getElementById('sm_name').value=title;
+    document.getElementById('sm_subtitle').value=subtitle;
+    document.getElementById('sm_image').value=image;
+    document.getElementById('sm_btn_text').value=btnText;
+    document.getElementById('sm_btn_url').value=btnUrl;
+    document.getElementById('sm_company').value=companyId;
+    document.getElementById('sm_order').value=order;
+    document.getElementById('sm_active').checked=!!active;
+    openModal('sliderModal');
+}
+
+function openEditPartner(id,name,logo,website,companyId,order,active){
+    document.getElementById('pm_title').textContent='Edit Partner #'+id;
+    document.getElementById('pm_action').value='update';
+    document.getElementById('pm_id').value=id;
+    document.getElementById('pm_name').value=name;
+    document.getElementById('pm_logo').value=logo;
+    document.getElementById('pm_website').value=website;
+    document.getElementById('pm_company').value=companyId;
+    document.getElementById('pm_order').value=order;
+    document.getElementById('pm_active').checked=!!active;
+    openModal('partnerModal');
+}
+
+function openEditProduct(id,name,desc,image,category,price,order,active){
+    document.getElementById('prd_title').textContent='Edit Product #'+id;
+    document.getElementById('prd_action').value='update';
+    document.getElementById('prd_id').value=id;
+    document.getElementById('prd_name').value=name;
+    document.getElementById('prd_desc').value=desc;
+    document.getElementById('prd_image').value=image;
+    document.getElementById('prd_cat').value=category;
+    document.getElementById('prd_price').value=price||'';
+    document.getElementById('prd_order').value=order;
+    document.getElementById('prd_active').checked=!!active;
+    openModal('productModal');
+}
+
+function openEditTruck(id,name,desc,image,capacity,order,active){
+    document.getElementById('tt_title').textContent='Edit Truck Type #'+id;
+    document.getElementById('tt_action').value='update';
+    document.getElementById('tt_id').value=id;
+    document.getElementById('tt_name').value=name;
+    document.getElementById('tt_desc').value=desc;
+    document.getElementById('tt_image').value=image;
+    document.getElementById('tt_cap').value=capacity;
+    document.getElementById('tt_order').value=order;
+    document.getElementById('tt_active').checked=!!active;
+    openModal('truckModal');
+}
+
+function openEditBranch(id,name,nameEn,address,phone,email,companyId,isHq,staff,active){
+    document.getElementById('bm_title').textContent='Edit Branch #'+id;
+    document.getElementById('bm_action').value='update';
+    document.getElementById('bm_id').value=id;
+    document.getElementById('bm_name').value=name;
+    document.getElementById('bm_name_en').value=nameEn;
+    document.getElementById('bm_address').value=address;
+    document.getElementById('bm_phone').value=phone;
+    document.getElementById('bm_email').value=email;
+    document.getElementById('bm_company').value=companyId;
+    document.getElementById('bm_hq').checked=!!isHq;
+    document.getElementById('bm_staff').value=staff;
+    document.getElementById('bm_active').checked=!!active;
+    openModal('branchModal');
+}
+
+function openEditEmailTpl(id,name,subject,vars,companyId,active){
+    document.getElementById('etm_title').textContent='Edit Template #'+id;
+    document.getElementById('etm_action').value='update';
+    document.getElementById('etm_id').value=id;
+    document.getElementById('etm_name').value=name;
+    document.getElementById('etm_subject').value=subject;
+    document.getElementById('etm_vars').value=vars;
+    document.getElementById('etm_company').value=companyId||'';
+    document.getElementById('etm_active').checked=!!active;
+    openModal('emailTplModal');
+}
+
+function openEditEmailRec(id,eventType,name,email,companyId,active){
+    document.getElementById('erm_title').textContent='Edit Recipient #'+id;
+    document.getElementById('erm_action').value='update';
+    document.getElementById('erm_id').value=id;
+    document.getElementById('erm_event').value=eventType;
+    document.getElementById('erm_name').value=name;
+    document.getElementById('erm_email').value=email;
+    document.getElementById('erm_company').value=companyId||'';
+    document.getElementById('erm_active').checked=!!active;
+    openModal('emailRecModal');
+}
+
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){document.querySelectorAll('.modal-overlay.show').forEach(m=>m.classList.remove('show'))}});
 </script>
 </body>
 </html>

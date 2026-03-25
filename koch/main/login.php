@@ -15,11 +15,6 @@ $errorMessage = flash('error_message');
 $showRegister = $errorMessage !== null && (
     old_input('register_username') !== ''
     || old_input('register_email') !== ''
-    || old_input('register_first_name') !== ''
-    || old_input('register_last_name') !== ''
-    || old_input('register_phone') !== ''
-    || old_input('register_nick_name') !== ''
-    || old_input('register_accept_terms') === '1'
 );
 ?>
 <!DOCTYPE html>
@@ -98,36 +93,20 @@ $showRegister = $errorMessage !== null && (
             <input type="hidden" name="company" value="koch" />
             <div class="input-field">
               <i class="fas fa-user"></i>
-              <input type="text" name="username" value="<?php echo h(old_input('register_username')); ?>" data-i18n-placeholder="login.username" placeholder="ชื่อผู้ใช้" />
+              <input type="text" name="username" value="<?php echo h(old_input('register_username')); ?>" data-i18n-placeholder="login.username" placeholder="ชื่อผู้ใช้" required />
             </div>
             <div class="input-field">
               <i class="fas fa-envelope"></i>
-              <input type="email" name="email" value="<?php echo h(old_input('register_email')); ?>" data-i18n-placeholder="login.email" placeholder="อีเมล" />
-            </div>
-            <div class="input-field">
-              <i class="fas fa-id-card"></i>
-              <input type="text" name="first_name" value="<?php echo h(old_input('register_first_name')); ?>" placeholder="ชื่อ" />
-            </div>
-            <div class="input-field">
-              <i class="fas fa-id-card"></i>
-              <input type="text" name="last_name" value="<?php echo h(old_input('register_last_name')); ?>" placeholder="นามสกุล" />
-            </div>
-            <div class="input-field">
-              <i class="fas fa-phone"></i>
-              <input type="tel" name="phone" value="<?php echo h(old_input('register_phone')); ?>" placeholder="เบอร์โทรศัพท์" />
+              <input type="email" name="email" value="<?php echo h(old_input('register_email')); ?>" data-i18n-placeholder="login.email" placeholder="อีเมล" required />
             </div>
             <div class="input-field">
               <i class="fas fa-lock"></i>
-              <input type="password" name="password" data-i18n-placeholder="login.password" placeholder="รหัสผ่าน" />
+              <input type="password" name="password" data-i18n-placeholder="login.password" placeholder="รหัสผ่าน" required />
             </div>
             <div class="input-field">
               <i class="fas fa-lock"></i>
-              <input type="password" name="confirm_password" placeholder="ยืนยันรหัสผ่าน" />
+              <input type="password" name="confirm_password" placeholder="ยืนยันรหัสผ่าน" required />
             </div>
-            <label style="display:flex; gap:10px; align-items:flex-start; font-size:14px; color:#555; margin: 8px 0 14px;">
-              <input type="checkbox" name="accept_terms" value="1" <?php echo old_input('register_accept_terms') === '1' ? 'checked' : ''; ?> style="margin-top:3px;" />
-              <span>ฉันยอมรับเงื่อนไขการใช้งานและนโยบายความเป็นส่วนตัว</span>
-            </label>
             <button type="submit" class="login-btn" data-i18n="login.submitUp">ลงทะเบียน</button>
             <p class="social-text" data-i18n="login.socialUpText">หรือลงทะเบียนด้วยแพลตฟอร์มโซเชียล</p>
             <div class="social-media">

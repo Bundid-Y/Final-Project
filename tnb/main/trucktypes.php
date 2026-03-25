@@ -1,3 +1,11 @@
+<?php
+require_once __DIR__ . '/../../admin/includes/bootstrap.php';
+require_once __DIR__ . '/../../admin/includes/content.php';
+
+$pdo = Database::connection();
+$companyId = get_company_id_by_code($pdo, 'TNB');
+$dbTruckTypes = get_active_truck_types($pdo);
+?>
 <!DOCTYPE html>
 <html lang="th">
 
@@ -52,77 +60,39 @@
     <!-- Truck Cards Grid Section -->
     <section class="trucktypes-cards-section">
         <div class="trucktypes-interactive__grid">
-
+            <?php if (!empty($dbTruckTypes)): foreach ($dbTruckTypes as $truck): ?>
             <div class="truck-card">
                 <div class="truck-card__img-container">
-                    <img class="truck-card__img" src="../img/alltruck/picipjumbo/picup5.png" alt="Pickup Jumbo">
+                    <?php if (!empty($truck['image_url'])): ?>
+                    <img class="truck-card__img" src="<?php echo htmlspecialchars((string)$truck['image_url']); ?>" alt="<?php echo htmlspecialchars((string)$truck['name']); ?>">
+                    <?php else: ?>
+                    <div style="height:200px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:13px">No Image</div>
+                    <?php endif; ?>
                 </div>
                 <div class="truck-card__body">
-                    <h3 class="truck-card__name" data-i18n="trucktypes.pickup_name">Pickup Jumbo</h3>
-                    <p class="truck-card__desc" data-i18n="trucktypes.pickup_desc">รถกระบะจัมโบ้สำหรับขนส่งสินค้าขนาดเล็กถึงกลาง เหมาะกับการจัดส่งในเขตเมืองและพื้นที่จำกัด</p>
+                    <h3 class="truck-card__name"><?php echo htmlspecialchars((string)$truck['name']); ?></h3>
+                    <?php if (!empty($truck['description'])): ?><p class="truck-card__desc"><?php echo htmlspecialchars((string)$truck['description']); ?></p><?php endif; ?>
                     <ul class="truck-card__specs">
-                        <li><strong>น้ำหนักบรรทุก:</strong> 1 – 2 ตัน</li>
-                        <li><strong>ขนาดตู้:</strong> 2.5 x 1.7 x 1.8 ม.</li>
+                        <?php if (!empty($truck['capacity'])): ?><li><strong>น้ำหนักบรรทุก:</strong> <?php echo htmlspecialchars((string)$truck['capacity']); ?></li><?php endif; ?>
+                        <?php if (!empty($truck['dimensions'])): ?><li><strong>ขนาดตู้:</strong> <?php echo htmlspecialchars((string)$truck['dimensions']); ?></li><?php endif; ?>
+                        <?php if (!empty($truck['price_range'])): ?><li><strong>ราคา:</strong> <?php echo htmlspecialchars((string)$truck['price_range']); ?></li><?php endif; ?>
                     </ul>
                 </div>
             </div>
-
+            <?php endforeach; else: ?>
             <div class="truck-card">
-                <div class="truck-card__img-container">
-                    <img class="truck-card__img" src="../img/alltruck/6 wheel/6wheel7.png" alt="6 Wheel">
-                </div>
-                <div class="truck-card__body">
-                    <h3 class="truck-card__name" data-i18n="trucktypes.6wheel_name">6 Wheel</h3>
-                    <p class="truck-card__desc" data-i18n="trucktypes.6wheel_desc">รถ 6 ล้อสำหรับขนส่งสินค้าทั่วไป รองรับน้ำหนักปานกลาง เหมาะสำหรับการกระจายสินค้าในประเทศ</p>
-                    <ul class="truck-card__specs">
-                        <li><strong>น้ำหนักบรรทุก:</strong> 5 – 6 ตัน</li>
-                        <li><strong>ขนาดตู้:</strong> 6.0 x 2.3 x 2.3 ม.</li>
-                    </ul>
-                </div>
+                <div class="truck-card__img-container"><img class="truck-card__img" src="../img/alltruck/picipjumbo/picup5.png" alt="Pickup Jumbo"></div>
+                <div class="truck-card__body"><h3 class="truck-card__name">Pickup Jumbo</h3><p class="truck-card__desc">รถกระบะจัมโบ้สำหรับขนส่งสินค้าขนาดเล็กถึงกลาง</p><ul class="truck-card__specs"><li><strong>น้ำหนักบรรทุก:</strong> 1 – 2 ตัน</li></ul></div>
             </div>
-
             <div class="truck-card">
-                <div class="truck-card__img-container">
-                    <img class="truck-card__img" src="../img/alltruck/6 wheel_trailer/6wheeltrailer_5.png" alt="6 Wheel Trailer">
-                </div>
-                <div class="truck-card__body">
-                    <h3 class="truck-card__name" data-i18n="trucktypes.6wheeltrailer_name">6 Wheel Trailer</h3>
-                    <p class="truck-card__desc" data-i18n="trucktypes.6wheeltrailer_desc">รถ 6 ล้อพ่วงสำหรับสินค้าขนาดใหญ่ ให้ความยืดหยุ่นในการขนส่งด้วยพื้นที่บรรทุกที่เพิ่มขึ้น</p>
-                    <ul class="truck-card__specs">
-                        <li><strong>น้ำหนักบรรทุก:</strong> 10 – 12 ตัน</li>
-                        <li><strong>ขนาดตู้:</strong> 7.5 x 2.3 x 2.3 ม.</li>
-                    </ul>
-                </div>
+                <div class="truck-card__img-container"><img class="truck-card__img" src="../img/alltruck/6 wheel/6wheel7.png" alt="6 Wheel"></div>
+                <div class="truck-card__body"><h3 class="truck-card__name">6 Wheel</h3><p class="truck-card__desc">รถ 6 ล้อสำหรับขนส่งสินค้าทั่วไป</p><ul class="truck-card__specs"><li><strong>น้ำหนักบรรทุก:</strong> 5 – 6 ตัน</li></ul></div>
             </div>
-
             <div class="truck-card">
-                <div class="truck-card__img-container">
-                    <img class="truck-card__img" src="../img/alltruck/10 wheel_trailer/10wheeltrailer_5.png" alt="10 Wheel Trailer">
-                </div>
-                <div class="truck-card__body">
-                    <h3 class="truck-card__name" data-i18n="trucktypes.10wheeltrailer_name">10 Wheel Trailer</h3>
-                    <p class="truck-card__desc" data-i18n="trucktypes.10wheeltrailer_desc">รถ 10 ล้อพ่วงรองรับน้ำหนักบรรทุกสูง เหมาะสำหรับสินค้าอุตสาหกรรมและวัตถุดิบขนาดใหญ่</p>
-                    <ul class="truck-card__specs">
-                        <li><strong>น้ำหนักบรรทุก:</strong> 15 – 20 ตัน</li>
-                        <li><strong>ขนาดตู้:</strong> 9.5 x 2.4 x 2.5 ม.</li>
-                    </ul>
-                </div>
+                <div class="truck-card__img-container"><img class="truck-card__img" src="../img/alltruck/trailer/trailer5.png" alt="Trailer Head"></div>
+                <div class="truck-card__body"><h3 class="truck-card__name">Trailer Head</h3><p class="truck-card__desc">หัวลากสำหรับขนส่งตู้คอนเทนเนอร์</p><ul class="truck-card__specs"><li><strong>น้ำหนักบรรทุก:</strong> 20 – 30 ตัน</li></ul></div>
             </div>
-
-            <div class="truck-card">
-                <div class="truck-card__img-container">
-                    <img class="truck-card__img" src="../img/alltruck/trailer/trailer5.png" alt="Trailer Head">
-                </div>
-                <div class="truck-card__body">
-                    <h3 class="truck-card__name" data-i18n="trucktypes.trailer_name">Trailer Head</h3>
-                    <p class="truck-card__desc" data-i18n="trucktypes.trailer_desc">หัวลากสำหรับขนส่งตู้คอนเทนเนอร์ รองรับทั้งตู้ 20 ฟุตและ 40 ฟุต เชื่อมต่อท่าเรือกับคลังสินค้า</p>
-                    <ul class="truck-card__specs">
-                        <li><strong>น้ำหนักบรรทุก:</strong> 20 – 30 ตัน</li>
-                        <li><strong>รองรับ:</strong> Container 20' / 40'</li>
-                    </ul>
-                </div>
-            </div>
-
+            <?php endif; ?>
         </div>
     </section>
 

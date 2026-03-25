@@ -1,3 +1,10 @@
+<?php
+require_once __DIR__ . '/../../admin/includes/bootstrap.php';
+require_once __DIR__ . '/../../admin/includes/content.php';
+
+$pdo = Database::connection();
+$companyInfo = get_company_info($pdo, 'TNB');
+?>
 <!DOCTYPE html>
 <html lang="th">
 

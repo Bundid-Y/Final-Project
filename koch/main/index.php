@@ -1,3 +1,15 @@
+<?php
+require_once __DIR__ . '/../../admin/includes/bootstrap.php';
+require_once __DIR__ . '/../../admin/includes/content.php';
+
+$pdo = Database::connection();
+$companyId = get_company_id_by_code($pdo, 'KOCH');
+$dbSliders = get_active_sliders($pdo, $companyId);
+$dbPartners = get_active_partners($pdo, $companyId);
+$dbProducts = get_active_products($pdo);
+$dbBranches = get_active_branches($pdo, $companyId);
+$companyInfo = get_company_info($pdo, 'KOCH');
+?>
 <!doctype html>
 <html lang="th">
 
@@ -52,11 +64,24 @@
         <div class="slider-wrapper" id="sliderWrapper">
 
             <div class="slide-track" id="slideTrack">
+                <?php if (!empty($dbSliders)): foreach ($dbSliders as $sl): ?>
+                <div class="slide-item">
+                    <img src="<?php echo htmlspecialchars((string)$sl['image_url']); ?>" alt="<?php echo htmlspecialchars((string)$sl['title']); ?>">
+                    <?php if (!empty($sl['title']) || !empty($sl['subtitle'])): ?>
+                    <div class="slide-caption" style="position:absolute;bottom:20px;left:20px;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.6)">
+                        <?php if ($sl['title']): ?><h3 style="margin:0;font-size:1.4rem"><?php echo htmlspecialchars((string)$sl['title']); ?></h3><?php endif; ?>
+                        <?php if ($sl['subtitle']): ?><p style="margin:4px 0 0;font-size:.9rem;opacity:.9"><?php echo htmlspecialchars((string)$sl['subtitle']); ?></p><?php endif; ?>
+                        <?php if (!empty($sl['button_text']) && !empty($sl['button_url'])): ?><a href="<?php echo htmlspecialchars((string)$sl['button_url']); ?>" style="display:inline-block;margin-top:8px;padding:6px 16px;background:#ED2A2A;color:#fff;border-radius:6px;text-decoration:none;font-size:.8rem"><?php echo htmlspecialchars((string)$sl['button_text']); ?></a><?php endif; ?>
+                    </div>
+                    <?php endif; ?>
+                </div>
+                <?php endforeach; else: ?>
                 <div class="slide-item"><img src="../img/other/index/cardslides/cardslides-1.jpeg" alt="Slide 1"></div>
                 <div class="slide-item"><img src="../img/other/index/cardslides/cardslides-2.jpeg" alt="Slide 2"></div>
                 <div class="slide-item"><img src="../img/other/index/cardslides/cardslides-3.jpeg" alt="Slide 3"></div>
                 <div class="slide-item"><img src="../img/other/index/cardslides/cardslides-4.jpeg" alt="Slide 4"></div>
                 <div class="slide-item"><img src="../img/other/index/cardslides/cardslides-5.jpeg" alt="Slide 5"></div>
+                <?php endif; ?>
             </div>
 
             <button class="nav-btn prev" id="prevBtn">‹</button>
@@ -211,22 +236,32 @@
 
         <!-- logo ลูกค้าเลื่อน loop slides -->
         <section class="loop-images-quotation" style="--bg: white; height: auto; min-height: 220px; padding: 20px 0;">
-            <div class="login-track" style="--time: 60s; --total: 12;">
-                <div class="login-item" style="--i: 1;"><img src="../img/customer_logo/Mazda.png" alt="image"></div>
-                <div class="login-item" style="--i: 2;"><img src="../img/customer_logo/Suzuki.png" alt="image"></div>
-                <div class="login-item" style="--i: 3;"><img src="../img/customer_logo/Changan.png" alt="image"></div>
-                <div class="login-item" style="--i: 4;"><img src="../img/customer_logo/Kn.webp" alt="image"></div>
-                <div class="login-item" style="--i: 5;"><img src="../img/customer_logo/Honda.png" alt="image"></div>
-                <div class="login-item" style="--i: 6;"><img src="../img/customer_logo/Alpla.png" alt="image"></div>
-                <div class="login-item" style="--i: 7;"><img src="../img/customer_logo/BROSE_Excellence.png"
-                        alt="image"></div>
-                <div class="login-item" style="--i: 8;"><img src="../img/customer_logo/nhk.webp" alt="image"></div>
-                <div class="login-item" style="--i: 9;"><img src="../img/customer_logo/siamgoshi.jpg" alt="image"></div>
-                <div class="login-item" style="--i: 10;"><img src="../img/customer_logo/dn.png" alt="image"></div>
-                <div class="login-item" style="--i: 11;"><img src="../img/customer_logo/lat.png" alt="image"></div>
-                <div class="login-item" style="--i: 12;"><img src="../img/customer_logo/mitsuboshi.png" alt="image">
+            <?php if (!empty($dbPartners)): $pTotal = count($dbPartners); ?>
+            <div class="login-track" style="--time: <?php echo max(30, $pTotal * 5); ?>s; --total: <?php echo $pTotal; ?>;">
+                <?php foreach ($dbPartners as $pi => $partner): ?>
+                <div class="login-item" style="--i: <?php echo $pi + 1; ?>;">
+                    <?php if (!empty($partner['website_url'])): ?><a href="<?php echo htmlspecialchars((string)$partner['website_url']); ?>" target="_blank" rel="noopener noreferrer"><?php endif; ?>
+                    <img src="<?php echo htmlspecialchars((string)$partner['logo_url']); ?>" alt="<?php echo htmlspecialchars((string)$partner['name']); ?>" loading="lazy">
+                    <?php if (!empty($partner['website_url'])): ?></a><?php endif; ?>
                 </div>
+                <?php endforeach; ?>
             </div>
+            <?php else: ?>
+            <div class="login-track" style="--time: 60s; --total: 12;">
+                <div class="login-item" style="--i: 1;"><img src="../img/customer_logo/Mazda.png" alt="Mazda"></div>
+                <div class="login-item" style="--i: 2;"><img src="../img/customer_logo/Suzuki.png" alt="Suzuki"></div>
+                <div class="login-item" style="--i: 3;"><img src="../img/customer_logo/Changan.png" alt="Changan"></div>
+                <div class="login-item" style="--i: 4;"><img src="../img/customer_logo/Kn.webp" alt="KN"></div>
+                <div class="login-item" style="--i: 5;"><img src="../img/customer_logo/Honda.png" alt="Honda"></div>
+                <div class="login-item" style="--i: 6;"><img src="../img/customer_logo/Alpla.png" alt="Alpla"></div>
+                <div class="login-item" style="--i: 7;"><img src="../img/customer_logo/BROSE_Excellence.png" alt="Brose"></div>
+                <div class="login-item" style="--i: 8;"><img src="../img/customer_logo/nhk.webp" alt="NHK"></div>
+                <div class="login-item" style="--i: 9;"><img src="../img/customer_logo/siamgoshi.jpg" alt="Siam Goshi"></div>
+                <div class="login-item" style="--i: 10;"><img src="../img/customer_logo/dn.png" alt="DN"></div>
+                <div class="login-item" style="--i: 11;"><img src="../img/customer_logo/lat.png" alt="LAT"></div>
+                <div class="login-item" style="--i: 12;"><img src="../img/customer_logo/mitsuboshi.png" alt="Mitsuboshi"></div>
+            </div>
+            <?php endif; ?>
         </section>
     </div>
 
@@ -252,12 +287,25 @@
              - Performance: loading="lazy" defers off-screen images
              - SEO: Descriptive alt text for all images
         -->
-        <!-- Product Carousel: 3 pages x 6 cards — auto-slide ทุก 5 วิ -->
+        <!-- Product Carousel: dynamic pages from DB — auto-slide ทุก 5 วิ -->
         <div class="dev-carousel-root">
             <div class="dev-carousel-viewport">
                 <div class="dev-carousel-track">
-
-                    <!-- Page 1: กล่องกระดาษ -->
+                    <?php if (!empty($dbProducts)):
+                        $prodPages = array_chunk($dbProducts, 6);
+                        foreach ($prodPages as $page): ?>
+                    <div class="dev-carousel-page">
+                        <div class="dev-cards">
+                            <?php foreach ($page as $prod): ?>
+                            <div class="dev-card"><a href="../main/product.php" rel="noopener noreferrer">
+                                <?php if (!empty($prod['image_url'])): ?><img src="<?php echo htmlspecialchars((string)$prod['image_url']); ?>" alt="<?php echo htmlspecialchars((string)$prod['name']); ?>" loading="lazy"><?php else: ?><div style="height:140px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:12px">No Image</div><?php endif; ?>
+                                <div class="dev-card-title"><?php echo htmlspecialchars((string)$prod['name']); ?></div>
+                                <p class="dev-card-desc"><?php echo htmlspecialchars((string)($prod['category'] ?? $prod['name'])); ?></p>
+                            </a></div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                    <?php endforeach; else: ?>
                     <div class="dev-carousel-page">
                         <div class="dev-cards">
                             <div class="dev-card"><a href="../main/product.php" rel="noopener noreferrer"><img src="../img/products/box/rsc.png" alt="RSC Box" loading="lazy"><div class="dev-card-title">RSC Box</div><p class="dev-card-desc">RSC Box</p></a></div>
@@ -268,31 +316,7 @@
                             <div class="dev-card"><a href="../main/product.php" rel="noopener noreferrer"><img src="../img/products/box/fit_ser.png" alt="Fitting Box Service" loading="lazy"><div class="dev-card-title">Fitting Box Service</div><p class="dev-card-desc">Fitting Box Service</p></a></div>
                         </div>
                     </div>
-
-                    <!-- Page 2: บรรจุภัณฑ์ไม้ + พลาสติก -->
-                    <div class="dev-carousel-page">
-                        <div class="dev-cards">
-                            <div class="dev-card"><a href="../main/product.php" rel="noopener noreferrer"><img src="../img/products/Wooden/wooden_crates.png" alt="Wooden Crates" loading="lazy"><div class="dev-card-title">Wooden Crates</div><p class="dev-card-desc">Wooden Crates</p></a></div>
-                            <div class="dev-card"><a href="../main/product.php" rel="noopener noreferrer"><img src="../img/products/Wooden/wooden_pallet.png" alt="Wooden Pallet" loading="lazy"><div class="dev-card-title">Wooden Pallet</div><p class="dev-card-desc">Wooden Pallet</p></a></div>
-                            <div class="dev-card"><a href="../main/product.php" rel="noopener noreferrer"><img src="../img/products/Wooden/wooden_case.png" alt="Wooden Case" loading="lazy"><div class="dev-card-title">Wooden Case</div><p class="dev-card-desc">Wooden Case</p></a></div>
-                            <div class="dev-card"><a href="../main/product.php" rel="noopener noreferrer"><img src="../img/products/Plastic/plastic_container.png" alt="Plastic Container" loading="lazy"><div class="dev-card-title">Plastic Container</div><p class="dev-card-desc">Plastic Container</p></a></div>
-                            <div class="dev-card"><a href="../main/product.php" rel="noopener noreferrer"><img src="../img/products/Plastic/pp_box.png" alt="PP Box" loading="lazy"><div class="dev-card-title">PP Box</div><p class="dev-card-desc">PP Box</p></a></div>
-                            <div class="dev-card"><a href="../main/product.php" rel="noopener noreferrer"><img src="../img/products/Plastic/plastic_pallet.png" alt="Plastic Pallet" loading="lazy"><div class="dev-card-title">Plastic Pallet</div><p class="dev-card-desc">Plastic Pallet</p></a></div>
-                        </div>
-                    </div>
-
-                    <!-- Page 3: พลาสติก ESD + บรรจุภัณฑ์เหล็ก -->
-                    <div class="dev-carousel-page">
-                        <div class="dev-cards">
-                            <div class="dev-card"><a href="../main/product.php" rel="noopener noreferrer"><img src="../img/products/Plastic/pp_box_esd.png" alt="PP Box ESD" loading="lazy"><div class="dev-card-title">PP Box ESD</div><p class="dev-card-desc">PP Box ESD</p></a></div>
-                            <div class="dev-card"><a href="../main/product.php" rel="noopener noreferrer"><img src="../img/products/Plastic/pp_box_partition.png" alt="PP Box Partition" loading="lazy"><div class="dev-card-title">PP Box Partition</div><p class="dev-card-desc">PP Box Partition</p></a></div>
-                            <div class="dev-card"><a href="../main/product.php" rel="noopener noreferrer"><img src="../img/products/Plastic/pp_box_partition2.png" alt="PP Box Partition 2" loading="lazy"><div class="dev-card-title">PP Box Partition 2</div><p class="dev-card-desc">PP Box Partition 2</p></a></div>
-                            <div class="dev-card"><a href="../main/product.php" rel="noopener noreferrer"><img src="../img/products/Steel/steel_rack.png" alt="Steel Rack" loading="lazy"><div class="dev-card-title">Steel Rack</div><p class="dev-card-desc">Steel Rack</p></a></div>
-                            <div class="dev-card"><a href="../main/product.php" rel="noopener noreferrer"><img src="../img/products/Steel/steel_rack2.png" alt="Steel Rack 2" loading="lazy"><div class="dev-card-title">Steel Rack 2</div><p class="dev-card-desc">Steel Rack 2</p></a></div>
-                            <div class="dev-card"><a href="../main/product.php" rel="noopener noreferrer"><img src="../img/products/Steel/steel_rack3.png" alt="Steel Rack 3" loading="lazy"><div class="dev-card-title">Steel Rack 3</div><p class="dev-card-desc">Steel Rack 3</p></a></div>
-                        </div>
-                    </div>
-
+                    <?php endif; ?>
                 </div><!-- end .dev-carousel-track -->
             </div><!-- end .dev-carousel-viewport -->
             <div class="dev-carousel-dots" aria-label="Product carousel navigation"></div>

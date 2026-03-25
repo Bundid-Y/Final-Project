@@ -1,3 +1,28 @@
+<?php
+require_once __DIR__ . '/../../admin/includes/bootstrap.php';
+require_once __DIR__ . '/../../admin/includes/content.php';
+
+$pdo = Database::connection();
+$companyId = get_company_id_by_code($pdo, 'KOCH');
+$dbProducts = get_active_products($pdo);
+
+$categoryMap = [
+    'mail' => ['กล่องกระดาษ', 'paper', 'box', 'cardboard'],
+    'corrugated' => ['ไม้', 'wooden', 'wood'],
+    'diecut' => ['พลาสติก', 'plastic', 'pp'],
+    'accessory' => ['เหล็ก', 'steel', 'metal', 'rack'],
+];
+function resolve_category(string $cat): string {
+    global $categoryMap;
+    $catLower = strtolower($cat);
+    foreach ($categoryMap as $key => $keywords) {
+        foreach ($keywords as $kw) {
+            if (str_contains($catLower, $kw)) return $key;
+        }
+    }
+    return 'mail';
+}
+?>
 <!DOCTYPE html>
 <html lang="th">
 
@@ -62,85 +87,25 @@
 
                 <!-- Product Grid Contents -->
                 <div class="product-grid">
-                    <!-- Row 1: Mix for ALL -->
-                    <div class="product-grid-item" data-category="mail">
-                        <img src="../img/products/box/rsc.png" alt="RSC Box">
-                        <div class="product-overlay"><span class="product-title">RSC Box</span></div>
+                    <?php if (!empty($dbProducts)): foreach ($dbProducts as $prod):
+                        $cat = resolve_category((string)($prod['category'] ?? ''));
+                    ?>
+                    <div class="product-grid-item" data-category="<?php echo $cat; ?>">
+                        <?php if (!empty($prod['image_url'])): ?>
+                        <img src="<?php echo htmlspecialchars((string)$prod['image_url']); ?>" alt="<?php echo htmlspecialchars((string)$prod['name']); ?>">
+                        <?php else: ?>
+                        <div style="height:200px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:13px">No Image</div>
+                        <?php endif; ?>
+                        <div class="product-overlay"><span class="product-title"><?php echo htmlspecialchars((string)$prod['name']); ?></span></div>
                     </div>
-                    <div class="product-grid-item" data-category="corrugated">
-                        <img src="../img/products/Wooden/wooden_crates.png" alt="Wooden Crates">
-                        <div class="product-overlay"><span class="product-title">Wooden Crates</span></div>
-                    </div>
-                    <div class="product-grid-item" data-category="diecut">
-                        <img src="../img/products/Plastic/plastic_container.png" alt="Plastic Container">
-                        <div class="product-overlay"><span class="product-title">Plastic Container</span></div>
-                    </div>
-                    <div class="product-grid-item" data-category="accessory">
-                        <img src="../img/products/Steel/steel_rack.png" alt="Steel Rack">
-                        <div class="product-overlay"><span class="product-title">Steel Rack</span></div>
-                    </div>
-
-                    <div class="product-grid-item" data-category="mail">
-                        <img src="../img/products/box/die-cut.png" alt="Die-Cut Box">
-                        <div class="product-overlay"><span class="product-title">Die-Cut Box</span></div>
-                    </div>
-                    <div class="product-grid-item" data-category="corrugated">
-                        <img src="../img/products/Wooden/wooden_pallet.png" alt="Wooden Pallet">
-                        <div class="product-overlay"><span class="product-title">Wooden Pallet</span></div>
-                    </div>
-                    <div class="product-grid-item" data-category="diecut">
-                        <img src="../img/products/Plastic/pp_box.png" alt="PP Box">
-                        <div class="product-overlay"><span class="product-title">PP Box</span></div>
-                    </div>
-                    <div class="product-grid-item" data-category="accessory">
-                        <img src="../img/products/Steel/steel_rack2.png" alt="Steel Rack 2">
-                        <div class="product-overlay"><span class="product-title">Steel Rack 2</span></div>
-                    </div>
-
-                    <!-- Rest of items -->
-                    <div class="product-grid-item" data-category="mail">
-                        <img src="../img/products/box/ftd.png" alt="FTD Box">
-                        <div class="product-overlay"><span class="product-title">FTD Box</span></div>
-                    </div>
-                    <div class="product-grid-item" data-category="mail">
-                        <img src="../img/products/box/osc.png" alt="OSC Box">
-                        <div class="product-overlay"><span class="product-title">OSC Box</span></div>
-                    </div>
-                    <div class="product-grid-item" data-category="mail">
-                        <img src="../img/products/box/pallet.png" alt="Cardboard Pallet">
-                        <div class="product-overlay"><span class="product-title">Cardboard Pallet</span></div>
-                    </div>
-                    <div class="product-grid-item" data-category="mail">
-                        <img src="../img/products/box/fit_ser.png" alt="Fitting Box Service">
-                        <div class="product-overlay"><span class="product-title">Fitting Box Service</span></div>
-                    </div>
-
-                    <div class="product-grid-item" data-category="corrugated">
-                        <img src="../img/products/Wooden/wooden_case.png" alt="Wooden Case">
-                        <div class="product-overlay"><span class="product-title">Wooden Case</span></div>
-                    </div>
-
-                    <div class="product-grid-item" data-category="diecut">
-                        <img src="../img/products/Plastic/plastic_pallet.png" alt="Plastic Pallet">
-                        <div class="product-overlay"><span class="product-title">Plastic Pallet</span></div>
-                    </div>
-                    <div class="product-grid-item" data-category="diecut">
-                        <img src="../img/products/Plastic/pp_box_esd.png" alt="PP Box ESD">
-                        <div class="product-overlay"><span class="product-title">PP Box ESD</span></div>
-                    </div>
-                    <div class="product-grid-item" data-category="diecut">
-                        <img src="../img/products/Plastic/pp_box_partition.png" alt="PP Box Partition">
-                        <div class="product-overlay"><span class="product-title">PP Box Partition</span></div>
-                    </div>
-                    <div class="product-grid-item" data-category="diecut">
-                        <img src="../img/products/Plastic/pp_box_partition2.png" alt="PP Box Partition 2">
-                        <div class="product-overlay"><span class="product-title">PP Box Partition 2</span></div>
-                    </div>
-
-                    <div class="product-grid-item" data-category="accessory">
-                        <img src="../img/products/Steel/steel_rack3.png" alt="Steel Rack 3">
-                        <div class="product-overlay"><span class="product-title">Steel Rack 3</span></div>
-                    </div>
+                    <?php endforeach; else: ?>
+                    <div class="product-grid-item" data-category="mail"><img src="../img/products/box/rsc.png" alt="RSC Box"><div class="product-overlay"><span class="product-title">RSC Box</span></div></div>
+                    <div class="product-grid-item" data-category="corrugated"><img src="../img/products/Wooden/wooden_crates.png" alt="Wooden Crates"><div class="product-overlay"><span class="product-title">Wooden Crates</span></div></div>
+                    <div class="product-grid-item" data-category="diecut"><img src="../img/products/Plastic/plastic_container.png" alt="Plastic Container"><div class="product-overlay"><span class="product-title">Plastic Container</span></div></div>
+                    <div class="product-grid-item" data-category="accessory"><img src="../img/products/Steel/steel_rack.png" alt="Steel Rack"><div class="product-overlay"><span class="product-title">Steel Rack</span></div></div>
+                    <div class="product-grid-item" data-category="mail"><img src="../img/products/box/die-cut.png" alt="Die-Cut Box"><div class="product-overlay"><span class="product-title">Die-Cut Box</span></div></div>
+                    <div class="product-grid-item" data-category="corrugated"><img src="../img/products/Wooden/wooden_pallet.png" alt="Wooden Pallet"><div class="product-overlay"><span class="product-title">Wooden Pallet</span></div></div>
+                    <?php endif; ?>
                 </div>
 
             </div>

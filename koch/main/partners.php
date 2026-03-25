@@ -1,3 +1,11 @@
+<?php
+require_once __DIR__ . '/../../admin/includes/bootstrap.php';
+require_once __DIR__ . '/../../admin/includes/content.php';
+
+$pdo = Database::connection();
+$companyId = get_company_id_by_code($pdo, 'KOCH');
+$dbPartners = get_active_partners($pdo, $companyId);
+?>
 <!DOCTYPE html>
 <html lang="th">
 
@@ -79,106 +87,31 @@
                                                                 <!-- Logo Loop Inside Red Block -->
                                                                 <section class="loop-images-quotation vertical"
                                                                         style="background-color: transparent !important; --bg: transparent; height: 100%; min-height: 500px; padding: 20px 0; width: 100%;">
-                                                                        <div class="login-track vertical"
-                                                                                style="--time: 40s; --total: 24; --top: -300rem;">
-                                                                                <div class="login-item" style="--i: 1;">
-                                                                                        <img src="../img/customer_logo/Mazda.png"
-                                                                                                alt="Mazda">
-                                                                                </div>
-                                                                                <div class="login-item" style="--i: 2;">
-                                                                                        <img src="../img/customer_logo/Suzuki.png"
-                                                                                                alt="Suzuki">
-                                                                                </div>
-                                                                                <div class="login-item" style="--i: 3;">
-                                                                                        <img src="../img/customer_logo/Changan.png"
-                                                                                                alt="Changan">
-                                                                                </div>
-                                                                                <div class="login-item" style="--i: 4;">
-                                                                                        <img src="../img/customer_logo/Kn.webp"
-                                                                                                alt="Kn">
-                                                                                </div>
-                                                                                <div class="login-item" style="--i: 5;">
-                                                                                        <img src="../img/customer_logo/Honda.png"
-                                                                                                alt="Honda">
-                                                                                </div>
-                                                                                <div class="login-item" style="--i: 6;">
-                                                                                        <img src="../img/customer_logo/Alpla.png"
-                                                                                                alt="Alpla">
-                                                                                </div>
-                                                                                <div class="login-item" style="--i: 7;">
-                                                                                        <img src="../img/customer_logo/BROSE_Excellence.png"
-                                                                                                alt="Brose">
-                                                                                </div>
-                                                                                <div class="login-item" style="--i: 8;">
-                                                                                        <img src="../img/customer_logo/nhk.webp"
-                                                                                                alt="NHK">
-                                                                                </div>
-                                                                                <div class="login-item" style="--i: 9;">
-                                                                                        <img src="../img/customer_logo/siamgoshi.jpg"
-                                                                                                alt="Siam Goshi">
-                                                                                </div>
-                                                                                <div class="login-item"
-                                                                                        style="--i: 10;"><img
-                                                                                                src="../img/customer_logo/dn2.png"
-                                                                                                alt="DN"></div>
-                                                                                <div class="login-item"
-                                                                                        style="--i: 11;"><img
-                                                                                                src="../img/customer_logo/lat.png"
-                                                                                                alt="LAT"></div>
-                                                                                <div class="login-item"
-                                                                                        style="--i: 12;"><img
-                                                                                                src="../img/customer_logo/mitsuboshi.png"
-                                                                                                alt="Mitsuboshi"></div>
-                                                                                <!-- Duplicates -->
-                                                                                <div class="login-item"
-                                                                                        style="--i: 13;"><img
-                                                                                                src="../img/customer_logo/Mazda.png"
-                                                                                                alt="Mazda"></div>
-                                                                                <div class="login-item"
-                                                                                        style="--i: 14;"><img
-                                                                                                src="../img/customer_logo/Suzuki.png"
-                                                                                                alt="Suzuki"></div>
-                                                                                <div class="login-item"
-                                                                                        style="--i: 15;"><img
-                                                                                                src="../img/customer_logo/Changan.png"
-                                                                                                alt="Changan"></div>
-                                                                                <div class="login-item"
-                                                                                        style="--i: 16;"><img
-                                                                                                src="../img/customer_logo/Kn.webp"
-                                                                                                alt="Kn"></div>
-                                                                                <div class="login-item"
-                                                                                        style="--i: 17;"><img
-                                                                                                src="../img/customer_logo/Honda.png"
-                                                                                                alt="Honda"></div>
-                                                                                <div class="login-item"
-                                                                                        style="--i: 18;"><img
-                                                                                                src="../img/customer_logo/Alpla.png"
-                                                                                                alt="Alpla"></div>
-                                                                                <div class="login-item"
-                                                                                        style="--i: 19;"><img
-                                                                                                src="../img/customer_logo/BROSE_Excellence.png"
-                                                                                                alt="Brose"></div>
-                                                                                <div class="login-item"
-                                                                                        style="--i: 20;"><img
-                                                                                                src="../img/customer_logo/nhk.webp"
-                                                                                                alt="NHK"></div>
-                                                                                <div class="login-item"
-                                                                                        style="--i: 21;"><img
-                                                                                                src="../img/customer_logo/siamgoshi.jpg"
-                                                                                                alt="Siam Goshi"></div>
-                                                                                <div class="login-item"
-                                                                                        style="--i: 22;"><img
-                                                                                                src="../img/customer_logo/dn2.png"
-                                                                                                alt="DN"></div>
-                                                                                <div class="login-item"
-                                                                                        style="--i: 23;"><img
-                                                                                                src="../img/customer_logo/lat.png"
-                                                                                                alt="LAT"></div>
-                                                                                <div class="login-item"
-                                                                                        style="--i: 24;"><img
-                                                                                                src="../img/customer_logo/mitsuboshi.png"
-                                                                                                alt="Mitsuboshi"></div>
+                                                                        <?php if (!empty($dbPartners)): $pCount = count($dbPartners); $totalItems = $pCount * 2; ?>
+                                                                        <div class="login-track vertical" style="--time: <?php echo max(30, $pCount * 4); ?>s; --total: <?php echo $totalItems; ?>; --top: -300rem;">
+                                                                                <?php $idx = 1; foreach ($dbPartners as $p): ?>
+                                                                                <div class="login-item" style="--i: <?php echo $idx++; ?>;"><img src="<?php echo htmlspecialchars((string)$p['logo_url']); ?>" alt="<?php echo htmlspecialchars((string)$p['name']); ?>"></div>
+                                                                                <?php endforeach; ?>
+                                                                                <?php foreach ($dbPartners as $p): ?>
+                                                                                <div class="login-item" style="--i: <?php echo $idx++; ?>;"><img src="<?php echo htmlspecialchars((string)$p['logo_url']); ?>" alt="<?php echo htmlspecialchars((string)$p['name']); ?>"></div>
+                                                                                <?php endforeach; ?>
                                                                         </div>
+                                                                        <?php else: ?>
+                                                                        <div class="login-track vertical" style="--time: 40s; --total: 24; --top: -300rem;">
+                                                                                <div class="login-item" style="--i: 1;"><img src="../img/customer_logo/Mazda.png" alt="Mazda"></div>
+                                                                                <div class="login-item" style="--i: 2;"><img src="../img/customer_logo/Suzuki.png" alt="Suzuki"></div>
+                                                                                <div class="login-item" style="--i: 3;"><img src="../img/customer_logo/Honda.png" alt="Honda"></div>
+                                                                                <div class="login-item" style="--i: 4;"><img src="../img/customer_logo/Alpla.png" alt="Alpla"></div>
+                                                                                <div class="login-item" style="--i: 5;"><img src="../img/customer_logo/nhk.webp" alt="NHK"></div>
+                                                                                <div class="login-item" style="--i: 6;"><img src="../img/customer_logo/siamgoshi.jpg" alt="Siam Goshi"></div>
+                                                                                <div class="login-item" style="--i: 7;"><img src="../img/customer_logo/Mazda.png" alt="Mazda"></div>
+                                                                                <div class="login-item" style="--i: 8;"><img src="../img/customer_logo/Suzuki.png" alt="Suzuki"></div>
+                                                                                <div class="login-item" style="--i: 9;"><img src="../img/customer_logo/Honda.png" alt="Honda"></div>
+                                                                                <div class="login-item" style="--i: 10;"><img src="../img/customer_logo/Alpla.png" alt="Alpla"></div>
+                                                                                <div class="login-item" style="--i: 11;"><img src="../img/customer_logo/nhk.webp" alt="NHK"></div>
+                                                                                <div class="login-item" style="--i: 12;"><img src="../img/customer_logo/siamgoshi.jpg" alt="Siam Goshi"></div>
+                                                                        </div>
+                                                                        <?php endif; ?>
                                                                 </section>
                                                         </div>
                                                 </div>

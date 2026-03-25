@@ -136,9 +136,11 @@ function apply_login_failure(PDO $pdo, int $userId): void
     $maxAttempts = (int) get_setting_value($pdo, 'max_login_attempts', 5);
     $lockMinutes = (int) get_setting_value($pdo, 'account_lockout_duration', 30);
 
-    $stmt = $pdo->prepare('SELECT login_attempts FROM users WHERE id = :id LIMIT 1');
+    $stmt = $pdo->prepare('SELECT login_attempts, username FROM users WHERE id = :id LIMIT 1');
     $stmt->execute([':id' => $userId]);
-    $currentAttempts = (int) ($stmt->fetchColumn() ?: 0);
+    $row = $stmt->fetch();
+    $currentAttempts = (int) ($row['login_attempts'] ?? 0);
+    $username = (string) ($row['username'] ?? 'Unknown');
     $nextAttempts = $currentAttempts + 1;
 
     $lockedUntil = $nextAttempts >= $maxAttempts ? date('Y-m-d H:i:s', time() + ($lockMinutes * 60)) : null;
@@ -149,6 +151,20 @@ function apply_login_failure(PDO $pdo, int $userId): void
         ':locked_until' => $lockedUntil,
         ':id' => $userId,
     ]);
+
+    if ($nextAttempts >= 3) {
+        $ip = get_client_ip();
+        $admins = $pdo->prepare("SELECT id FROM users WHERE role IN ('super_admin','admin') AND status = 'active'");
+        $admins->execute();
+        foreach ($admins->fetchAll(PDO::FETCH_COLUMN) as $adminId) {
+            create_notification(
+                $pdo, (int) $adminId,
+                'Security Alert: Failed Login (' . $nextAttempts . 'x)',
+                "User '{$username}' failed login {$nextAttempts} times from IP: {$ip}",
+                'warning', 'users', $userId, 'high'
+            );
+        }
+    }
 }
 
 function user_redirect_url(array $user): string
@@ -229,29 +245,21 @@ function register_user_account(PDO $pdo, array $payload, string $companySlug): a
     $lastName = sanitize_text((string) ($payload['last_name'] ?? ''));
     $phone = sanitize_text((string) ($payload['phone'] ?? ''));
     $nickName = sanitize_text((string) ($payload['nick_name'] ?? ''));
-    $acceptedTerms = !empty($payload['accept_terms']);
 
     $errors = merge_validation_errors(
         validate_required_fields([
             'username' => $username,
             'email' => $email,
             'password' => $password,
-            'first_name' => $firstName,
-            'last_name' => $lastName,
-            'phone' => $phone,
         ], [
             'username' => 'Username',
             'email' => 'Email',
             'password' => 'Password',
-            'first_name' => 'First name',
-            'last_name' => 'Last name',
-            'phone' => 'Phone number',
         ]),
         ['email' => validate_email_address($email)],
         ['password' => validate_password_rules($password)],
-        ['phone' => validate_phone_number($phone)],
-        $password !== $confirmPassword ? ['confirm_password' => 'Password confirmation does not match.'] : [],
-        !$acceptedTerms ? ['accept_terms' => 'Please accept the terms and conditions.'] : []
+        $phone !== '' ? ['phone' => validate_phone_number($phone)] : [],
+        $password !== $confirmPassword ? ['confirm_password' => 'Password confirmation does not match.'] : []
     );
 
     if ($errors !== []) {

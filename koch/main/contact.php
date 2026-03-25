@@ -1,4 +1,15 @@
-﻿<!DOCTYPE html>
+﻿<?php
+require_once __DIR__ . '/../../admin/includes/bootstrap.php';
+require_once __DIR__ . '/../../admin/includes/content.php';
+
+$pdo = Database::connection();
+$companyId = get_company_id_by_code($pdo, 'KOCH');
+$companyInfo = get_company_info($pdo, 'KOCH');
+$dbBranches = get_active_branches($pdo, $companyId);
+$successMessage = flash('success_message');
+$errorMessage = flash('error_message');
+?>
+<!DOCTYPE html>
 <html lang="th">
 
 <head>
@@ -125,6 +136,30 @@
                                     salesteam@koch-packaging.com</p>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Contact Form -->
+                <div style="width:100%;max-width:700px;padding:0 15px;box-sizing:border-box;margin-top:50px;">
+                    <?php if($successMessage):?><div style="padding:14px 18px;border-radius:12px;background:#e8f7ee;color:#0f7a3a;font-weight:600;margin-bottom:20px;text-align:center"><?php echo h((string)$successMessage);?></div><?php endif;?>
+                    <?php if($errorMessage):?><div style="padding:14px 18px;border-radius:12px;background:#fdecec;color:#b42318;font-weight:600;margin-bottom:20px;text-align:center"><?php echo h((string)$errorMessage);?></div><?php endif;?>
+                    <div style="background:#fff;border-radius:16px;padding:40px;box-shadow:0 4px 20px rgba(0,0,0,.08)">
+                        <h2 style="font-size:24px;font-weight:700;margin-bottom:6px;color:#1c1c1c" data-i18n="contact.form_title">ส่งข้อความถึงเรา</h2>
+                        <p style="font-size:14px;color:#666;margin-bottom:24px" data-i18n="contact.form_sub">กรอกข้อมูลด้านล่าง เราจะติดต่อกลับโดยเร็วที่สุด</p>
+                        <form action="../../admin/api/contact/submit.php" method="POST">
+                            <input type="hidden" name="_csrf" value="<?php echo h(csrf_token()); ?>">
+                            <input type="hidden" name="company" value="koch">
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+                                <div><label style="font-size:12px;font-weight:600;color:#555;display:block;margin-bottom:4px">ชื่อ-นามสกุล *</label><input type="text" name="name" required style="width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;font-family:inherit;transition:border .2s" onfocus="this.style.borderColor='#ED2A2A'" onblur="this.style.borderColor='#e2e8f0'"></div>
+                                <div><label style="font-size:12px;font-weight:600;color:#555;display:block;margin-bottom:4px">อีเมล *</label><input type="email" name="email" required style="width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;font-family:inherit;transition:border .2s" onfocus="this.style.borderColor='#ED2A2A'" onblur="this.style.borderColor='#e2e8f0'"></div>
+                            </div>
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+                                <div><label style="font-size:12px;font-weight:600;color:#555;display:block;margin-bottom:4px">เบอร์โทรศัพท์</label><input type="tel" name="phone" style="width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;font-family:inherit;transition:border .2s" onfocus="this.style.borderColor='#ED2A2A'" onblur="this.style.borderColor='#e2e8f0'"></div>
+                                <div><label style="font-size:12px;font-weight:600;color:#555;display:block;margin-bottom:4px">หัวข้อ</label><input type="text" name="subject" style="width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;font-family:inherit;transition:border .2s" onfocus="this.style.borderColor='#ED2A2A'" onblur="this.style.borderColor='#e2e8f0'"></div>
+                            </div>
+                            <div style="margin-bottom:20px"><label style="font-size:12px;font-weight:600;color:#555;display:block;margin-bottom:4px">ข้อความ *</label><textarea name="message" rows="5" required style="width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;font-family:inherit;resize:vertical;transition:border .2s" onfocus="this.style.borderColor='#ED2A2A'" onblur="this.style.borderColor='#e2e8f0'"></textarea></div>
+                            <button type="submit" style="width:100%;padding:12px;background:#ED2A2A;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .2s" onmouseover="this.style.background='#c41f1f'" onmouseout="this.style.background='#ED2A2A'" data-i18n="contact.form_submit">ส่งข้อความ</button>
+                        </form>
                     </div>
                 </div>
 

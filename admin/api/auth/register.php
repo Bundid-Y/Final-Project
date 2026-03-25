@@ -13,10 +13,6 @@ $redirectBack = login_page_by_company(company_code_from_slug($company));
 $oldInput = [
     'register_username' => post_string('username'),
     'register_email' => post_string('email'),
-    'register_first_name' => post_string('first_name'),
-    'register_last_name' => post_string('last_name'),
-    'register_phone' => post_string('phone'),
-    'register_accept_terms' => !empty($_POST['accept_terms']) ? '1' : '',
 ];
 
 if (!verify_csrf_token($_POST['_csrf'] ?? null)) {

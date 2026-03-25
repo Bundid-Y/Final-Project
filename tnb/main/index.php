@@ -1,3 +1,15 @@
+<?php
+require_once __DIR__ . '/../../admin/includes/bootstrap.php';
+require_once __DIR__ . '/../../admin/includes/content.php';
+
+$pdo = Database::connection();
+$companyId = get_company_id_by_code($pdo, 'TNB');
+$dbSliders = get_active_sliders($pdo, $companyId);
+$dbPartners = get_active_partners($pdo, $companyId);
+$dbTruckTypes = get_active_truck_types($pdo);
+$dbBranches = get_active_branches($pdo, $companyId);
+$companyInfo = get_company_info($pdo, 'TNB');
+?>
 <!doctype html>
 <html lang="th">
 
@@ -65,139 +77,44 @@
 
         <!-- Slides Track -->
         <div class="tnb-panel-container">
-            <!-- Slide 1: Domestic Logistics -->
+            <?php if (!empty($dbSliders)): foreach ($dbSliders as $si => $sl): ?>
+            <div class="tnb-panel tnb-slide<?php echo $si === 0 ? ' tnb-slide--active' : ''; ?>" data-index="<?php echo $si; ?>">
+                <div class="tnb-panel__content-col">
+                    <div class="tnb-panel__content">
+                        <div class="tnb-panel__text">
+                            <h1 class="tnb-panel__title"><?php echo htmlspecialchars((string)$sl['title']); ?></h1>
+                            <?php if (!empty($sl['subtitle'])): ?><p class="tnb-panel__addr"><span></span><span><?php echo htmlspecialchars((string)$sl['subtitle']); ?></span></p><?php endif; ?>
+                            <?php if (!empty($sl['button_text']) && !empty($sl['button_url'])): ?><a href="<?php echo htmlspecialchars((string)$sl['button_url']); ?>" style="display:inline-block;margin-top:12px;padding:8px 20px;background:#0d2d6b;color:#fff;border-radius:6px;text-decoration:none;font-size:.85rem"><?php echo htmlspecialchars((string)$sl['button_text']); ?></a><?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="tnb-panel__img-col">
+                    <img src="<?php echo htmlspecialchars((string)$sl['image_url']); ?>" alt="<?php echo htmlspecialchars((string)$sl['title']); ?>" class="tnb-panel__img" />
+                </div>
+            </div>
+            <?php endforeach; else: ?>
             <div class="tnb-panel tnb-slide tnb-slide--active" data-index="0">
-                <div class="tnb-panel__content-col">
-                    <div class="tnb-panel__content">
-                        <div class="tnb-panel__text">
-                            <h1 class="tnb-panel__title">TNB Logistics</h1>
-                            <p class="tnb-panel__addr"><span></span><span
-                                    data-i18n="slide.s0">บริการขนส่งและโลจิสติกส์ครบวงจร</span>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="tnb-panel__img-col">
-                    <img src="../img/other/index/cardslides/tnb.webp" alt="tnb Logistics" class="tnb-panel__img" />
-                </div>
+                <div class="tnb-panel__content-col"><div class="tnb-panel__content"><div class="tnb-panel__text"><h1 class="tnb-panel__title">TNB Logistics</h1><p class="tnb-panel__addr"><span></span><span data-i18n="slide.s0">บริการขนส่งและโลจิสติกส์ครบวงจร</span></p></div></div></div>
+                <div class="tnb-panel__img-col"><img src="../img/other/index/cardslides/tnb.webp" alt="TNB Logistics" class="tnb-panel__img" /></div>
             </div>
-
-            <!-- Slide 2 -->
             <div class="tnb-panel tnb-slide" data-index="1">
-                <div class="tnb-panel__content-col">
-                    <div class="tnb-panel__content">
-                        <div class="tnb-panel__text">
-                            <h1 class="tnb-panel__title">Domestic Transportation</h1>
-                            <p class="tnb-panel__addr"><span></span><span
-                                    data-i18n="slide.s1">บริการขนส่งสินค้าในประเทศ</span>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="tnb-panel__img-col">
-                    <img src="../img/other/index/cardslides/show2.png" alt="Packaging Development"
-                        class="tnb-panel__img" />
-                </div>
+                <div class="tnb-panel__content-col"><div class="tnb-panel__content"><div class="tnb-panel__text"><h1 class="tnb-panel__title">Domestic Transportation</h1><p class="tnb-panel__addr"><span></span><span data-i18n="slide.s1">บริการขนส่งสินค้าในประเทศ</span></p></div></div></div>
+                <div class="tnb-panel__img-col"><img src="../img/other/index/cardslides/show2.png" alt="Domestic Transportation" class="tnb-panel__img" /></div>
             </div>
-
-            <!-- Slide 3 -->
             <div class="tnb-panel tnb-slide" data-index="2">
-                <div class="tnb-panel__content-col">
-                    <div class="tnb-panel__content">
-                        <div class="tnb-panel__text">
-                            <h1 class="tnb-panel__title">Shuttle Truck Service</h1>
-                            <p class="tnb-panel__addr"><span></span><span
-                                    data-i18n="slide.s2">บริการรถรับ–ส่งระหว่างคลังสินค้า</span>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="tnb-panel__img-col">
-                    <img src="../img/other/index/cardslides/show3.jpeg" alt="Supply Management"
-                        class="tnb-panel__img" />
-                </div>
+                <div class="tnb-panel__content-col"><div class="tnb-panel__content"><div class="tnb-panel__text"><h1 class="tnb-panel__title">Shuttle Truck Service</h1><p class="tnb-panel__addr"><span></span><span data-i18n="slide.s2">บริการรถรับ–ส่งระหว่างคลังสินค้า</span></p></div></div></div>
+                <div class="tnb-panel__img-col"><img src="../img/other/index/cardslides/show3.jpeg" alt="Shuttle Truck" class="tnb-panel__img" /></div>
             </div>
-
-            <!-- Slide 4 -->
-            <div class="tnb-panel tnb-slide" data-index="3">
-                <div class="tnb-panel__content-col">
-                    <div class="tnb-panel__content">
-                        <div class="tnb-panel__text">
-                            <h1 class="tnb-panel__title">Import & Export Container</h1>
-                            <p class="tnb-panel__addr"><span></span><span
-                                    data-i18n="slide.s3">บริการขนส่งตู้คอนเทนเนอร์นำเข้า–ส่งออก</span>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="tnb-panel__img-col">
-                    <img src="../img/other/index/cardslides/show4.png" alt="Warehouse Operation"
-                        class="tnb-panel__img" />
-                </div>
-            </div>
-
-            <!-- Slide 5 -->
-            <div class="tnb-panel tnb-slide" data-index="4">
-                <div class="tnb-panel__content-col">
-                    <div class="tnb-panel__content">
-                        <div class="tnb-panel__text">
-                            <h1 class="tnb-panel__title">Container Arrangement</h1>
-                            <p class="tnb-panel__addr"><span></span><span
-                                    data-i18n="slide.s4">บริการจัดการตู้คอนเทนเนอร์และลานตู้สินค้า</span></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="tnb-panel__img-col">
-                    <img src="../img/other/index/cardslides/show5.png" alt="Transportation Fleet"
-                        class="tnb-panel__img" />
-                </div>
-            </div>
-
-            <!-- Slide 6 -->
-            <div class="tnb-panel tnb-slide" data-index="5">
-                <div class="tnb-panel__content-col">
-                    <div class="tnb-panel__content">
-                        <div class="tnb-panel__text">
-                            <h1 class="tnb-panel__title">Nationwide Distribution</h1>
-                            <p class="tnb-panel__addr"><span></span><span
-                                    data-i18n="slide.s5">บริการกระจายสินค้าทั่วประเทศ</span>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="tnb-panel__img-col">
-                    <img src="../img/other/service/container/Container.png" alt="Container Service"
-                        class="tnb-panel__img" />
-                </div>
-            </div>
-
-            <!-- Slide 7 -->
-            <div class="tnb-panel tnb-slide" data-index="6">
-                <div class="tnb-panel__content-col">
-                    <div class="tnb-panel__content">
-                        <div class="tnb-panel__text">
-                            <h1 class="tnb-panel__title">Truck Parking</h1>
-                            <p class="tnb-panel__addr"><span></span><span
-                                    data-i18n="slide.s6">บริการที่จอดรถบรรทุกและบริหารพื้นที่จอด</span></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="tnb-panel__img-col">
-                    <img src="../img/other/index/cardslides/show7.jpeg" alt="Shuttle Truck Service"
-                        class="tnb-panel__img" />
-                </div>
-            </div>
+            <?php endif; ?>
         </div>
 
         <!-- Dots Indicator -->
         <div class="tnb-slider-dots" id="tnbSliderDots" aria-label="Slide indicators">
-            <button class="tnb-dot tnb-dot--active" data-index="0" aria-label="Slide 1"></button>
-            <button class="tnb-dot" data-index="1" aria-label="Slide 2"></button>
-            <button class="tnb-dot" data-index="2" aria-label="Slide 3"></button>
-            <button class="tnb-dot" data-index="3" aria-label="Slide 4"></button>
-            <button class="tnb-dot" data-index="4" aria-label="Slide 5"></button>
-            <button class="tnb-dot" data-index="5" aria-label="Slide 6"></button>
-            <button class="tnb-dot" data-index="6" aria-label="Slide 7"></button>
+            <?php
+            $slideCount = !empty($dbSliders) ? count($dbSliders) : 3;
+            for ($di = 0; $di < $slideCount; $di++): ?>
+            <button class="tnb-dot<?php echo $di === 0 ? ' tnb-dot--active' : ''; ?>" data-index="<?php echo $di; ?>" aria-label="Slide <?php echo $di + 1; ?>"></button>
+            <?php endfor; ?>
         </div>
     </section>
 
@@ -414,18 +331,30 @@
 
         <!-- logo ลูกค้าเลื่อน loop slides -->
         <section class="loop-images-quotation" style="--bg: white; height: auto; min-height: 160px; padding: 15px 0;">
-            <div class="login-track" style="--time: 60s; --total: 10;">
-                <div class="login-item" style="--i: 1;"><img src="../img/customer_logo/Mazda.png" alt="image"></div>
-                <div class="login-item" style="--i: 2;"><img src="../img/customer_logo/Alliance.png" alt="image"></div>
-                <div class="login-item" style="--i: 3;"><img src="../img/customer_logo/TTV.png" alt="image"></div>
-                <div class="login-item" style="--i: 4;"><img src="../img/customer_logo/toshiba.png" alt="image"></div>
-                <div class="login-item" style="--i: 5;"><img src="../img/customer_logo/tic.png" alt="image"></div>
-                <div class="login-item" style="--i: 6;"><img src="../img/customer_logo/GR.png" alt="image"></div>
-                <div class="login-item" style="--i: 7;"><img src="../img/customer_logo/CPPC.png" alt="image"></div>
-                <div class="login-item" style="--i: 8;"><img src="../img/customer_logo/Thr.png" alt="image"></div>
-                <div class="login-item" style="--i: 9;"><img src="../img/customer_logo/dn.png" alt="image"></div>
-                <div class="login-item" style="--i: 10;"><img src="../img/customer_logo/lat.png" alt="image"></div>
+            <?php if (!empty($dbPartners)): $pTotal = count($dbPartners); ?>
+            <div class="login-track" style="--time: <?php echo max(30, $pTotal * 5); ?>s; --total: <?php echo $pTotal; ?>;">
+                <?php foreach ($dbPartners as $pi => $partner): ?>
+                <div class="login-item" style="--i: <?php echo $pi + 1; ?>;">
+                    <?php if (!empty($partner['website_url'])): ?><a href="<?php echo htmlspecialchars((string)$partner['website_url']); ?>" target="_blank" rel="noopener noreferrer"><?php endif; ?>
+                    <img src="<?php echo htmlspecialchars((string)$partner['logo_url']); ?>" alt="<?php echo htmlspecialchars((string)$partner['name']); ?>" loading="lazy">
+                    <?php if (!empty($partner['website_url'])): ?></a><?php endif; ?>
+                </div>
+                <?php endforeach; ?>
             </div>
+            <?php else: ?>
+            <div class="login-track" style="--time: 60s; --total: 10;">
+                <div class="login-item" style="--i: 1;"><img src="../img/customer_logo/Mazda.png" alt="Mazda"></div>
+                <div class="login-item" style="--i: 2;"><img src="../img/customer_logo/Alliance.png" alt="Alliance"></div>
+                <div class="login-item" style="--i: 3;"><img src="../img/customer_logo/TTV.png" alt="TTV"></div>
+                <div class="login-item" style="--i: 4;"><img src="../img/customer_logo/toshiba.png" alt="Toshiba"></div>
+                <div class="login-item" style="--i: 5;"><img src="../img/customer_logo/tic.png" alt="TIC"></div>
+                <div class="login-item" style="--i: 6;"><img src="../img/customer_logo/GR.png" alt="GR"></div>
+                <div class="login-item" style="--i: 7;"><img src="../img/customer_logo/CPPC.png" alt="CPPC"></div>
+                <div class="login-item" style="--i: 8;"><img src="../img/customer_logo/Thr.png" alt="THR"></div>
+                <div class="login-item" style="--i: 9;"><img src="../img/customer_logo/dn.png" alt="DN"></div>
+                <div class="login-item" style="--i: 10;"><img src="../img/customer_logo/lat.png" alt="LAT"></div>
+            </div>
+            <?php endif; ?>
         </section>
     </div>
 
@@ -446,52 +375,37 @@
             </div>
         </div>
 
-        <!-- Product Carousel: 1 page x 5 trucks — auto-slide ทุก 5 วิ -->
+        <!-- Truck Type Carousel: dynamic from DB -->
         <div class="dev-carousel-root">
             <div class="dev-carousel-viewport">
                 <div class="dev-carousel-track">
-
-                    <!-- Page 1: ประเภทรถทั้งหมด -->
+                    <?php if (!empty($dbTruckTypes)):
+                        $truckPages = array_chunk($dbTruckTypes, 5);
+                        foreach ($truckPages as $tPage): ?>
                     <div class="dev-carousel-page">
                         <div class="dev-cards">
+                            <?php foreach ($tPage as $truck): ?>
                             <div class="dev-card">
                                 <a href="../main/trucktypes.php" rel="noopener noreferrer">
-                                    <img src="../img/alltruck/picipjumbo/picup1.png" alt="Pickup Jumbo" loading="lazy">
-                                    <div class="dev-card-title">Pickup Jumbo</div>
-                                    <p class="dev-card-desc" data-i18n="index.truck1_desc">รถกระบะจัมโบ้สำหรับขนส่งสินค้าขนาดเล็ก-กลาง</p>
+                                    <?php if (!empty($truck['image_url'])): ?><img src="<?php echo htmlspecialchars((string)$truck['image_url']); ?>" alt="<?php echo htmlspecialchars((string)$truck['name']); ?>" loading="lazy"><?php else: ?><div style="height:140px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:12px">No Image</div><?php endif; ?>
+                                    <div class="dev-card-title"><?php echo htmlspecialchars((string)$truck['name']); ?></div>
+                                    <p class="dev-card-desc"><?php echo htmlspecialchars((string)($truck['capacity'] ?? $truck['name'])); ?></p>
                                 </a>
                             </div>
-                            <div class="dev-card">
-                                <a href="../main/trucktypes.php" rel="noopener noreferrer">
-                                    <img src="../img/alltruck/6 wheel/6wheel1.png" alt="6 Wheel" loading="lazy">
-                                    <div class="dev-card-title">6 Wheel</div>
-                                    <p class="dev-card-desc" data-i18n="index.truck2_desc">รถ 6 ล้อสำหรับขนส่งสินค้าทั่วไป</p>
-                                </a>
-                            </div>
-                            <div class="dev-card">
-                                <a href="../main/trucktypes.php" rel="noopener noreferrer">
-                                    <img src="../img/alltruck/6 wheel_trailer/6wheeltrailer_1.png" alt="6 Wheel Trailer" loading="lazy">
-                                    <div class="dev-card-title">6 Wheel Trailer</div>
-                                    <p class="dev-card-desc" data-i18n="index.truck3_desc">รถ 6 ล้อพ่วงสำหรับสินค้าขนาดใหญ่</p>
-                                </a>
-                            </div>
-                            <div class="dev-card">
-                                <a href="../main/trucktypes.php" rel="noopener noreferrer">
-                                    <img src="../img/alltruck/10 wheel_trailer/10wheeltrailer_1.png" alt="10 Wheel Trailer" loading="lazy">
-                                    <div class="dev-card-title">10 Wheel Trailer</div>
-                                    <p class="dev-card-desc" data-i18n="index.truck4_desc">รถ 10 ล้อพ่วงรองรับน้ำหนักบรรทุกสูง</p>
-                                </a>
-                            </div>
-                            <div class="dev-card">
-                                <a href="../main/trucktypes.php" rel="noopener noreferrer">
-                                    <img src="../img/alltruck/trailer/trailer3.png" alt="Trailer Head" loading="lazy">
-                                    <div class="dev-card-title">Trailer Head</div>
-                                    <p class="dev-card-desc" data-i18n="index.truck5_desc">หัวลากสำหรับขนส่งตู้คอนเทนเนอร์</p>
-                                </a>
-                            </div>
+                            <?php endforeach; ?>
                         </div>
                     </div>
-
+                    <?php endforeach; else: ?>
+                    <div class="dev-carousel-page">
+                        <div class="dev-cards">
+                            <div class="dev-card"><a href="../main/trucktypes.php" rel="noopener noreferrer"><img src="../img/alltruck/picipjumbo/picup1.png" alt="Pickup Jumbo" loading="lazy"><div class="dev-card-title">Pickup Jumbo</div><p class="dev-card-desc">รถกระบะจัมโบ้</p></a></div>
+                            <div class="dev-card"><a href="../main/trucktypes.php" rel="noopener noreferrer"><img src="../img/alltruck/6 wheel/6wheel1.png" alt="6 Wheel" loading="lazy"><div class="dev-card-title">6 Wheel</div><p class="dev-card-desc">รถ 6 ล้อ</p></a></div>
+                            <div class="dev-card"><a href="../main/trucktypes.php" rel="noopener noreferrer"><img src="../img/alltruck/6 wheel_trailer/6wheeltrailer_1.png" alt="6 Wheel Trailer" loading="lazy"><div class="dev-card-title">6 Wheel Trailer</div><p class="dev-card-desc">รถ 6 ล้อพ่วง</p></a></div>
+                            <div class="dev-card"><a href="../main/trucktypes.php" rel="noopener noreferrer"><img src="../img/alltruck/10 wheel_trailer/10wheeltrailer_1.png" alt="10 Wheel Trailer" loading="lazy"><div class="dev-card-title">10 Wheel Trailer</div><p class="dev-card-desc">รถ 10 ล้อพ่วง</p></a></div>
+                            <div class="dev-card"><a href="../main/trucktypes.php" rel="noopener noreferrer"><img src="../img/alltruck/trailer/trailer3.png" alt="Trailer Head" loading="lazy"><div class="dev-card-title">Trailer Head</div><p class="dev-card-desc">หัวลาก</p></a></div>
+                        </div>
+                    </div>
+                    <?php endif; ?>
                 </div><!-- end .dev-carousel-track -->
             </div><!-- end .dev-carousel-viewport -->
             <div class="dev-carousel-dots" aria-label="Truck carousel navigation"></div>
