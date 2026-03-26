@@ -1,12 +1,13 @@
 <?php
 require_once __DIR__ . '/../../admin/includes/bootstrap.php';
 require_once __DIR__ . '/../../admin/includes/content.php';
+require_once __DIR__ . '/../../admin/includes/crud.php';
 
 $pdo = Database::connection();
 $companyId = get_company_id_by_code($pdo, 'KOCH');
 $dbSliders = get_active_sliders($pdo, $companyId);
 $dbPartners = get_active_partners($pdo, $companyId);
-$dbProducts = get_active_products($pdo);
+$dbProducts = get_active_featured_products($pdo);
 $dbBranches = get_active_branches($pdo, $companyId);
 $companyInfo = get_company_info($pdo, 'KOCH');
 ?>
@@ -292,15 +293,15 @@ $companyInfo = get_company_info($pdo, 'KOCH');
             <div class="dev-carousel-viewport">
                 <div class="dev-carousel-track">
                     <?php if (!empty($dbProducts)):
-                        $prodPages = array_chunk($dbProducts, 6);
-                        foreach ($prodPages as $page): ?>
+                        $productPages = array_chunk($dbProducts, 6);
+                        foreach ($productPages as $page): ?>
                     <div class="dev-carousel-page">
                         <div class="dev-cards">
-                            <?php foreach ($page as $prod): ?>
+                            <?php foreach ($page as $product): ?>
                             <div class="dev-card"><a href="../main/product.php" rel="noopener noreferrer">
-                                <?php if (!empty($prod['image_url'])): ?><img src="<?php echo htmlspecialchars((string)$prod['image_url']); ?>" alt="<?php echo htmlspecialchars((string)$prod['name']); ?>" loading="lazy"><?php else: ?><div style="height:140px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:12px">No Image</div><?php endif; ?>
-                                <div class="dev-card-title"><?php echo htmlspecialchars((string)$prod['name']); ?></div>
-                                <p class="dev-card-desc"><?php echo htmlspecialchars((string)($prod['category'] ?? $prod['name'])); ?></p>
+                                <?php if (!empty($product['image_url'])): ?><img src="<?php echo htmlspecialchars('../../' . (string)$product['image_url']); ?>" alt="<?php echo htmlspecialchars((string)$product['name']); ?>" loading="lazy"><?php else: ?><div style="height:140px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:12px">No Image</div><?php endif; ?>
+                                <div class="dev-card-title"><?php echo htmlspecialchars((string)$product['name']); ?></div>
+                                <p class="dev-card-desc"><?php echo htmlspecialchars((string)($product['category'] ?? $product['name'])); ?></p>
                             </a></div>
                             <?php endforeach; ?>
                         </div>
@@ -308,12 +309,12 @@ $companyInfo = get_company_info($pdo, 'KOCH');
                     <?php endforeach; else: ?>
                     <div class="dev-carousel-page">
                         <div class="dev-cards">
-                            <div class="dev-card"><a href="../main/product.php" rel="noopener noreferrer"><img src="../img/products/box/rsc.png" alt="RSC Box" loading="lazy"><div class="dev-card-title">RSC Box</div><p class="dev-card-desc">RSC Box</p></a></div>
-                            <div class="dev-card"><a href="../main/product.php" rel="noopener noreferrer"><img src="../img/products/box/ftd.png" alt="FTD Box" loading="lazy"><div class="dev-card-title">FTD Box</div><p class="dev-card-desc">FTD Box</p></a></div>
-                            <div class="dev-card"><a href="../main/product.php" rel="noopener noreferrer"><img src="../img/products/box/osc.png" alt="OSC Box" loading="lazy"><div class="dev-card-title">OSC Box</div><p class="dev-card-desc">OSC Box</p></a></div>
-                            <div class="dev-card"><a href="../main/product.php" rel="noopener noreferrer"><img src="../img/products/box/die-cut.png" alt="Die-Cut Box" loading="lazy"><div class="dev-card-title">Die-Cut Box</div><p class="dev-card-desc">Die-Cut Box</p></a></div>
-                            <div class="dev-card"><a href="../main/product.php" rel="noopener noreferrer"><img src="../img/products/box/pallet.png" alt="Cardboard Pallet" loading="lazy"><div class="dev-card-title">Cardboard Pallet</div><p class="dev-card-desc">Cardboard Pallet</p></a></div>
-                            <div class="dev-card"><a href="../main/product.php" rel="noopener noreferrer"><img src="../img/products/box/fit_ser.png" alt="Fitting Box Service" loading="lazy"><div class="dev-card-title">Fitting Box Service</div><p class="dev-card-desc">Fitting Box Service</p></a></div>
+                            <div class="dev-card"><a href="../main/product.php" rel="noopener noreferrer"><img src="../img/products/box/rsc.png" alt="RSC Box" loading="lazy"><div class="dev-card-title">RSC Box</div><p class="dev-card-desc">กล่องกระดาษ</p></a></div>
+                            <div class="dev-card"><a href="../main/product.php" rel="noopener noreferrer"><img src="../img/products/box/ftd.png" alt="FTD Box" loading="lazy"><div class="dev-card-title">FTD Box</div><p class="dev-card-desc">กล่องกระดาษ</p></a></div>
+                            <div class="dev-card"><a href="../main/product.php" rel="noopener noreferrer"><img src="../img/products/box/osc.png" alt="OSC Box" loading="lazy"><div class="dev-card-title">OSC Box</div><p class="dev-card-desc">กล่องกระดาษ</p></a></div>
+                            <div class="dev-card"><a href="../main/product.php" rel="noopener noreferrer"><img src="../img/products/Wooden/wooden_crates.png" alt="Wooden Crates" loading="lazy"><div class="dev-card-title">Wooden Crates</div><p class="dev-card-desc">บรรจุภัณฑ์ไม้</p></a></div>
+                            <div class="dev-card"><a href="../main/product.php" rel="noopener noreferrer"><img src="../img/products/Plastic/plastic_container.png" alt="Plastic Container" loading="lazy"><div class="dev-card-title">Plastic Container</div><p class="dev-card-desc">บรรจุภัณฑ์พลาสติก</p></a></div>
+                            <div class="dev-card"><a href="../main/product.php" rel="noopener noreferrer"><img src="../img/products/Steel/steel_rack.png" alt="Steel Rack" loading="lazy"><div class="dev-card-title">Steel Rack</div><p class="dev-card-desc">บรรจุภัณฑ์เหล็ก</p></a></div>
                         </div>
                     </div>
                     <?php endif; ?>

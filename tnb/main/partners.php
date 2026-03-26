@@ -88,17 +88,13 @@ $dbPartners = get_active_partners($pdo, $companyId);
                                         <?php endforeach; ?>
                                     </div>
                                     <?php else: ?>
-                                    <div class="login-track vertical" style="--time: 40s; --total: 20; --top: -300rem;">
-                                        <div class="login-item" style="--i: 1;"><img src="../img/customer_logo/Mazda.png" alt="Mazda"></div>
-                                        <div class="login-item" style="--i: 2;"><img src="../img/customer_logo/Alliance.png" alt="Alliance"></div>
-                                        <div class="login-item" style="--i: 3;"><img src="../img/customer_logo/TTV.png" alt="TTV"></div>
-                                        <div class="login-item" style="--i: 4;"><img src="../img/customer_logo/toshiba.png" alt="Toshiba"></div>
-                                        <div class="login-item" style="--i: 5;"><img src="../img/customer_logo/tic.png" alt="TIC"></div>
-                                        <div class="login-item" style="--i: 6;"><img src="../img/customer_logo/Mazda.png" alt="Mazda"></div>
-                                        <div class="login-item" style="--i: 7;"><img src="../img/customer_logo/Alliance.png" alt="Alliance"></div>
-                                        <div class="login-item" style="--i: 8;"><img src="../img/customer_logo/TTV.png" alt="TTV"></div>
-                                        <div class="login-item" style="--i: 9;"><img src="../img/customer_logo/toshiba.png" alt="Toshiba"></div>
-                                        <div class="login-item" style="--i: 10;"><img src="../img/customer_logo/tic.png" alt="TIC"></div>
+                                    <div class="login-track vertical" style="--time: 40s; --total: 6; --top: -300rem;">
+                                        <div class="login-item" style="--i: 1;"><div style="width:120px;height:60px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:12px;border-radius:8px">No Partners</div></div>
+                                        <div class="login-item" style="--i: 2;"><div style="width:120px;height:60px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:12px;border-radius:8px">No Partners</div></div>
+                                        <div class="login-item" style="--i: 3;"><div style="width:120px;height:60px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:12px;border-radius:8px">No Partners</div></div>
+                                        <div class="login-item" style="--i: 4;"><div style="width:120px;height:60px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:12px;border-radius:8px">No Partners</div></div>
+                                        <div class="login-item" style="--i: 5;"><div style="width:120px;height:60px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:12px;border-radius:8px">No Partners</div></div>
+                                        <div class="login-item" style="--i: 6;"><div style="width:120px;height:60px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:12px;border-radius:8px">No Partners</div></div>
                                     </div>
                                     <?php endif; ?>
                                 </section>

@@ -7,10 +7,10 @@ $companyId = get_company_id_by_code($pdo, 'KOCH');
 $dbProducts = get_active_products($pdo);
 
 $categoryMap = [
-    'mail' => ['กล่องกระดาษ', 'paper', 'box', 'cardboard'],
-    'corrugated' => ['ไม้', 'wooden', 'wood'],
-    'diecut' => ['พลาสติก', 'plastic', 'pp'],
-    'accessory' => ['เหล็ก', 'steel', 'metal', 'rack'],
+    'mail' => ['กล่องกระดาษ', 'paper', 'box', 'cardboard', 'mail'],
+    'corrugated' => ['ไม้', 'wooden', 'wood', 'corrugated'],
+    'diecut' => ['พลาสติก', 'plastic', 'pp', 'diecut'],
+    'accessory' => ['เหล็ก', 'steel', 'metal', 'rack', 'accessory'],
 ];
 function resolve_category(string $cat): string {
     global $categoryMap;
@@ -92,7 +92,7 @@ function resolve_category(string $cat): string {
                     ?>
                     <div class="product-grid-item" data-category="<?php echo $cat; ?>">
                         <?php if (!empty($prod['image_url'])): ?>
-                        <img src="<?php echo htmlspecialchars((string)$prod['image_url']); ?>" alt="<?php echo htmlspecialchars((string)$prod['name']); ?>">
+                        <img src="<?php echo htmlspecialchars('../../' . (string)$prod['image_url']); ?>" alt="<?php echo htmlspecialchars((string)$prod['name']); ?>">
                         <?php else: ?>
                         <div style="height:200px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:13px">No Image</div>
                         <?php endif; ?>

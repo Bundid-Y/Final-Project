@@ -6,8 +6,14 @@ require_once __DIR__ . '/helpers.php';
 
 function ensure_directory(string $path): void
 {
-    if (!is_dir($path) && !mkdir($path, 0775, true) && !is_dir($path)) {
-        throw new RuntimeException('Unable to create upload directory.');
+    if (!is_dir($path)) {
+        if (!mkdir($path, 0777, true)) {
+            throw new RuntimeException('Unable to create upload directory: ' . $path);
+        }
+        chmod($path, 0777);
+    }
+    if (!is_dir($path)) {
+        throw new RuntimeException('Directory still not accessible: ' . $path);
     }
 }
 
@@ -52,6 +58,11 @@ function handle_uploaded_file(string $fieldName, string $context): ?array
     $extension = $allowedMimeTypes[$mimeType];
     $safeName = bin2hex(random_bytes(16)) . '.' . $extension;
     $targetDirectory = UPLOAD_ROOT . DIRECTORY_SEPARATOR . trim($context, DIRECTORY_SEPARATOR);
+    
+    // Debug: log the path for troubleshooting
+    error_log("Upload directory: " . $targetDirectory);
+    error_log("UPLOAD_ROOT constant: " . UPLOAD_ROOT);
+    
     ensure_directory($targetDirectory);
 
     $targetAbsolutePath = $targetDirectory . DIRECTORY_SEPARATOR . $safeName;

@@ -64,7 +64,7 @@ $dbTruckTypes = get_active_truck_types($pdo);
             <div class="truck-card">
                 <div class="truck-card__img-container">
                     <?php if (!empty($truck['image_url'])): ?>
-                    <img class="truck-card__img" src="<?php echo htmlspecialchars((string)$truck['image_url']); ?>" alt="<?php echo htmlspecialchars((string)$truck['name']); ?>">
+                    <img class="truck-card__img" src="<?php echo htmlspecialchars('../../' . (string)$truck['image_url']); ?>" alt="<?php echo htmlspecialchars((string)$truck['name']); ?>">
                     <?php else: ?>
                     <div style="height:200px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:13px">No Image</div>
                     <?php endif; ?>
@@ -81,16 +81,13 @@ $dbTruckTypes = get_active_truck_types($pdo);
             </div>
             <?php endforeach; else: ?>
             <div class="truck-card">
-                <div class="truck-card__img-container"><img class="truck-card__img" src="../img/alltruck/picipjumbo/picup5.png" alt="Pickup Jumbo"></div>
-                <div class="truck-card__body"><h3 class="truck-card__name">Pickup Jumbo</h3><p class="truck-card__desc">รถกระบะจัมโบ้สำหรับขนส่งสินค้าขนาดเล็กถึงกลาง</p><ul class="truck-card__specs"><li><strong>น้ำหนักบรรทุก:</strong> 1 – 2 ตัน</li></ul></div>
-            </div>
-            <div class="truck-card">
-                <div class="truck-card__img-container"><img class="truck-card__img" src="../img/alltruck/6 wheel/6wheel7.png" alt="6 Wheel"></div>
-                <div class="truck-card__body"><h3 class="truck-card__name">6 Wheel</h3><p class="truck-card__desc">รถ 6 ล้อสำหรับขนส่งสินค้าทั่วไป</p><ul class="truck-card__specs"><li><strong>น้ำหนักบรรทุก:</strong> 5 – 6 ตัน</li></ul></div>
-            </div>
-            <div class="truck-card">
-                <div class="truck-card__img-container"><img class="truck-card__img" src="../img/alltruck/trailer/trailer5.png" alt="Trailer Head"></div>
-                <div class="truck-card__body"><h3 class="truck-card__name">Trailer Head</h3><p class="truck-card__desc">หัวลากสำหรับขนส่งตู้คอนเทนเนอร์</p><ul class="truck-card__specs"><li><strong>น้ำหนักบรรทุก:</strong> 20 – 30 ตัน</li></ul></div>
+                <div class="truck-card__img-container">
+                    <div style="height:200px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:13px">No Truck Types Available</div>
+                </div>
+                <div class="truck-card__body">
+                    <h3 class="truck-card__name">No Data</h3>
+                    <p class="truck-card__desc">Please add truck types from admin dashboard</p>
+                </div>
             </div>
             <?php endif; ?>
         </div>

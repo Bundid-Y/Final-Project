@@ -95,15 +95,7 @@ $companyInfo = get_company_info($pdo, 'TNB');
             <?php endforeach; else: ?>
             <div class="tnb-panel tnb-slide tnb-slide--active" data-index="0">
                 <div class="tnb-panel__content-col"><div class="tnb-panel__content"><div class="tnb-panel__text"><h1 class="tnb-panel__title">TNB Logistics</h1><p class="tnb-panel__addr"><span></span><span data-i18n="slide.s0">บริการขนส่งและโลจิสติกส์ครบวงจร</span></p></div></div></div>
-                <div class="tnb-panel__img-col"><img src="../img/other/index/cardslides/tnb.webp" alt="TNB Logistics" class="tnb-panel__img" /></div>
-            </div>
-            <div class="tnb-panel tnb-slide" data-index="1">
-                <div class="tnb-panel__content-col"><div class="tnb-panel__content"><div class="tnb-panel__text"><h1 class="tnb-panel__title">Domestic Transportation</h1><p class="tnb-panel__addr"><span></span><span data-i18n="slide.s1">บริการขนส่งสินค้าในประเทศ</span></p></div></div></div>
-                <div class="tnb-panel__img-col"><img src="../img/other/index/cardslides/show2.png" alt="Domestic Transportation" class="tnb-panel__img" /></div>
-            </div>
-            <div class="tnb-panel tnb-slide" data-index="2">
-                <div class="tnb-panel__content-col"><div class="tnb-panel__content"><div class="tnb-panel__text"><h1 class="tnb-panel__title">Shuttle Truck Service</h1><p class="tnb-panel__addr"><span></span><span data-i18n="slide.s2">บริการรถรับ–ส่งระหว่างคลังสินค้า</span></p></div></div></div>
-                <div class="tnb-panel__img-col"><img src="../img/other/index/cardslides/show3.jpeg" alt="Shuttle Truck" class="tnb-panel__img" /></div>
+                <div class="tnb-panel__img-col"><div style="height:400px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:16px">No Sliders Available</div></div>
             </div>
             <?php endif; ?>
         </div>
@@ -342,17 +334,10 @@ $companyInfo = get_company_info($pdo, 'TNB');
                 <?php endforeach; ?>
             </div>
             <?php else: ?>
-            <div class="login-track" style="--time: 60s; --total: 10;">
-                <div class="login-item" style="--i: 1;"><img src="../img/customer_logo/Mazda.png" alt="Mazda"></div>
-                <div class="login-item" style="--i: 2;"><img src="../img/customer_logo/Alliance.png" alt="Alliance"></div>
-                <div class="login-item" style="--i: 3;"><img src="../img/customer_logo/TTV.png" alt="TTV"></div>
-                <div class="login-item" style="--i: 4;"><img src="../img/customer_logo/toshiba.png" alt="Toshiba"></div>
-                <div class="login-item" style="--i: 5;"><img src="../img/customer_logo/tic.png" alt="TIC"></div>
-                <div class="login-item" style="--i: 6;"><img src="../img/customer_logo/GR.png" alt="GR"></div>
-                <div class="login-item" style="--i: 7;"><img src="../img/customer_logo/CPPC.png" alt="CPPC"></div>
-                <div class="login-item" style="--i: 8;"><img src="../img/customer_logo/Thr.png" alt="THR"></div>
-                <div class="login-item" style="--i: 9;"><img src="../img/customer_logo/dn.png" alt="DN"></div>
-                <div class="login-item" style="--i: 10;"><img src="../img/customer_logo/lat.png" alt="LAT"></div>
+            <div class="login-track" style="--time: 60s; --total: 3;">
+                <div class="login-item" style="--i: 1;"><div style="width:120px;height:60px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:12px;border-radius:8px">No Partners</div></div>
+                <div class="login-item" style="--i: 2;"><div style="width:120px;height:60px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:12px;border-radius:8px">No Partners</div></div>
+                <div class="login-item" style="--i: 3;"><div style="width:120px;height:60px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:12px;border-radius:8px">No Partners</div></div>
             </div>
             <?php endif; ?>
         </section>
@@ -387,7 +372,7 @@ $companyInfo = get_company_info($pdo, 'TNB');
                             <?php foreach ($tPage as $truck): ?>
                             <div class="dev-card">
                                 <a href="../main/trucktypes.php" rel="noopener noreferrer">
-                                    <?php if (!empty($truck['image_url'])): ?><img src="<?php echo htmlspecialchars((string)$truck['image_url']); ?>" alt="<?php echo htmlspecialchars((string)$truck['name']); ?>" loading="lazy"><?php else: ?><div style="height:140px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:12px">No Image</div><?php endif; ?>
+                                    <?php if (!empty($truck['image_url'])): ?><img src="<?php echo htmlspecialchars('../../' . (string)$truck['image_url']); ?>" alt="<?php echo htmlspecialchars((string)$truck['name']); ?>" loading="lazy"><?php else: ?><div style="height:140px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:12px">No Image</div><?php endif; ?>
                                     <div class="dev-card-title"><?php echo htmlspecialchars((string)$truck['name']); ?></div>
                                     <p class="dev-card-desc"><?php echo htmlspecialchars((string)($truck['capacity'] ?? $truck['name'])); ?></p>
                                 </a>

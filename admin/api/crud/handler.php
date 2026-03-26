@@ -39,6 +39,7 @@ try {
         'email_recipient' => handle_email_recipient($pdo, $action, $id, $_POST, $adminId),
         'user'            => handle_user($pdo, $action, $id, $_POST, $adminId),
         'contact_message' => handle_contact_message($pdo, $action, $id, $_POST, $adminId),
+        'featured_product' => handle_featured_product($pdo, $action, $id, $_POST, $adminId),
         'notification'    => handle_notification($pdo, $action, $id, $_POST, $adminId),
         default           => ['success' => false, 'message' => 'Unknown entity.'],
     };
@@ -59,8 +60,8 @@ redirect_to($back);
 function handle_slider(PDO $pdo, string $action, int $id, array $post, int $adminId): array
 {
     return match ($action) {
-        'create' => create_slider($pdo, $post, $adminId),
-        'update' => update_slider($pdo, $id, $post, $adminId),
+        'create' => create_slider($pdo, $post, $adminId, $_FILES),
+        'update' => update_slider($pdo, $id, $post, $adminId, $_FILES),
         'delete' => delete_slider($pdo, $id, $adminId),
         default  => ['success' => false, 'message' => 'Invalid action.'],
     };
@@ -69,8 +70,8 @@ function handle_slider(PDO $pdo, string $action, int $id, array $post, int $admi
 function handle_partner(PDO $pdo, string $action, int $id, array $post, int $adminId): array
 {
     return match ($action) {
-        'create' => create_partner($pdo, $post, $adminId),
-        'update' => update_partner($pdo, $id, $post, $adminId),
+        'create' => create_partner($pdo, $post, $adminId, $_FILES),
+        'update' => update_partner($pdo, $id, $post, $adminId, $_FILES),
         'delete' => delete_partner($pdo, $id, $adminId),
         default  => ['success' => false, 'message' => 'Invalid action.'],
     };
@@ -79,8 +80,8 @@ function handle_partner(PDO $pdo, string $action, int $id, array $post, int $adm
 function handle_product(PDO $pdo, string $action, int $id, array $post, int $adminId): array
 {
     return match ($action) {
-        'create' => create_product($pdo, $post, $adminId),
-        'update' => update_product($pdo, $id, $post, $adminId),
+        'create' => create_product($pdo, $post, $adminId, $_FILES),
+        'update' => update_product($pdo, $id, $post, $adminId, $_FILES),
         'delete' => delete_product($pdo, $id, $adminId),
         default  => ['success' => false, 'message' => 'Invalid action.'],
     };
@@ -89,8 +90,8 @@ function handle_product(PDO $pdo, string $action, int $id, array $post, int $adm
 function handle_truck_type(PDO $pdo, string $action, int $id, array $post, int $adminId): array
 {
     return match ($action) {
-        'create' => create_truck_type($pdo, $post, $adminId),
-        'update' => update_truck_type($pdo, $id, $post, $adminId),
+        'create' => create_truck_type($pdo, $post, $adminId, $_FILES),
+        'update' => update_truck_type($pdo, $id, $post, $adminId, $_FILES),
         'delete' => delete_truck_type($pdo, $id, $adminId),
         default  => ['success' => false, 'message' => 'Invalid action.'],
     };
@@ -176,4 +177,14 @@ function handle_notification(PDO $pdo, string $action, int $id, array $post, int
         return ['success' => true, 'message' => 'Notification deleted.'];
     }
     return ['success' => false, 'message' => 'Invalid action.'];
+}
+
+function handle_featured_product(PDO $pdo, string $action, int $id, array $post, int $adminId): array
+{
+    return match ($action) {
+        "create" => create_featured_product($pdo, $post, $adminId, $_FILES),
+        "update" => update_featured_product($pdo, $id, $post, $adminId, $_FILES),
+        "delete" => delete_featured_product($pdo, $id, $adminId),
+        default  => ["success" => false, "message" => "Invalid action."],
+    };
 }

@@ -14,5 +14,5 @@ defined('DB_CHARSET') || define('DB_CHARSET', getenv('DB_CHARSET') ?: 'utf8mb4')
 defined('SESSION_NAME') || define('SESSION_NAME', getenv('SESSION_NAME') ?: 'koch_tnb_session');
 defined('SESSION_LIFETIME') || define('SESSION_LIFETIME', (int) (getenv('SESSION_LIFETIME') ?: 86400));
 defined('PASSWORD_MIN_LENGTH') || define('PASSWORD_MIN_LENGTH', (int) (getenv('PASSWORD_MIN_LENGTH') ?: 8));
-defined('UPLOAD_ROOT') || define('UPLOAD_ROOT', dirname(__DIR__) . DIRECTORY_SEPARATOR . 'uploads');
+defined('UPLOAD_ROOT') || define('UPLOAD_ROOT', dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR . 'uploads');
 defined('UPLOAD_MAX_SIZE') || define('UPLOAD_MAX_SIZE', (int) (getenv('UPLOAD_MAX_SIZE') ?: 10485760));

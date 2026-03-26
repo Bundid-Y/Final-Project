@@ -29,8 +29,22 @@ function get_slider_by_id(PDO $pdo, int $id): ?array
     return $stmt->fetch() ?: null;
 }
 
-function create_slider(PDO $pdo, array $data, int $adminId): array
+function create_slider(PDO $pdo, array $data, int $adminId, array $files = []): array
 {
+    // Handle file upload
+    $imageUrl = sanitize_text((string) ($data['image_url'] ?? ''));
+    if (!empty($files['image_file'])) {
+        require_once __DIR__ . '/upload.php';
+        try {
+            $upload = handle_uploaded_file('image_file', 'sliders');
+            if ($upload) {
+                $imageUrl = $upload['public_path'];
+            }
+        } catch (RuntimeException $e) {
+            return ['success' => false, 'message' => 'Upload failed: ' . $e->getMessage()];
+        }
+    }
+
     $stmt = $pdo->prepare(
         'INSERT INTO slider_contents (company_id, title, subtitle, image_url, button_text, button_url, slide_order, is_active)
          VALUES (:company_id, :title, :subtitle, :image_url, :button_text, :button_url, :slide_order, :is_active)'
@@ -39,7 +53,7 @@ function create_slider(PDO $pdo, array $data, int $adminId): array
         ':company_id'  => (int) $data['company_id'],
         ':title'       => sanitize_text((string) ($data['title'] ?? '')),
         ':subtitle'    => sanitize_text((string) ($data['subtitle'] ?? '')),
-        ':image_url'   => sanitize_text((string) ($data['image_url'] ?? '')),
+        ':image_url'   => $imageUrl,
         ':button_text' => sanitize_text((string) ($data['button_text'] ?? '')),
         ':button_url'  => sanitize_text((string) ($data['button_url'] ?? '')),
         ':slide_order' => (int) ($data['slide_order'] ?? 0),
@@ -50,8 +64,22 @@ function create_slider(PDO $pdo, array $data, int $adminId): array
     return ['success' => true, 'message' => 'Slider created.', 'id' => $id];
 }
 
-function update_slider(PDO $pdo, int $id, array $data, int $adminId): array
+function update_slider(PDO $pdo, int $id, array $data, int $adminId, array $files = []): array
 {
+    // Handle file upload
+    $imageUrl = sanitize_text((string) ($data['image_url'] ?? ''));
+    if (!empty($files['image_file'])) {
+        require_once __DIR__ . '/upload.php';
+        try {
+            $upload = handle_uploaded_file('image_file', 'sliders');
+            if ($upload) {
+                $imageUrl = $upload['public_path'];
+            }
+        } catch (RuntimeException $e) {
+            return ['success' => false, 'message' => 'Upload failed: ' . $e->getMessage()];
+        }
+    }
+
     $stmt = $pdo->prepare(
         'UPDATE slider_contents SET company_id = :company_id, title = :title, subtitle = :subtitle,
          image_url = :image_url, button_text = :button_text, button_url = :button_url,
@@ -61,7 +89,7 @@ function update_slider(PDO $pdo, int $id, array $data, int $adminId): array
         ':company_id'  => (int) $data['company_id'],
         ':title'       => sanitize_text((string) ($data['title'] ?? '')),
         ':subtitle'    => sanitize_text((string) ($data['subtitle'] ?? '')),
-        ':image_url'   => sanitize_text((string) ($data['image_url'] ?? '')),
+        ':image_url'   => $imageUrl,
         ':button_text' => sanitize_text((string) ($data['button_text'] ?? '')),
         ':button_url'  => sanitize_text((string) ($data['button_url'] ?? '')),
         ':slide_order' => (int) ($data['slide_order'] ?? 0),
@@ -104,8 +132,22 @@ function get_partner_by_id(PDO $pdo, int $id): ?array
     return $stmt->fetch() ?: null;
 }
 
-function create_partner(PDO $pdo, array $data, int $adminId): array
+function create_partner(PDO $pdo, array $data, int $adminId, array $files = []): array
 {
+    // Handle file upload
+    $logoUrl = sanitize_text((string) ($data['logo_url'] ?? ''));
+    if (!empty($files['logo_file'])) {
+        require_once __DIR__ . '/upload.php';
+        try {
+            $upload = handle_uploaded_file('logo_file', 'partners');
+            if ($upload) {
+                $logoUrl = $upload['public_path'];
+            }
+        } catch (RuntimeException $e) {
+            return ['success' => false, 'message' => 'Upload failed: ' . $e->getMessage()];
+        }
+    }
+
     $stmt = $pdo->prepare(
         'INSERT INTO partners (company_id, name, logo_url, website_url, partner_order, is_active)
          VALUES (:company_id, :name, :logo_url, :website_url, :partner_order, :is_active)'
@@ -113,7 +155,7 @@ function create_partner(PDO $pdo, array $data, int $adminId): array
     $stmt->execute([
         ':company_id'    => (int) $data['company_id'],
         ':name'          => sanitize_text((string) ($data['name'] ?? '')),
-        ':logo_url'      => sanitize_text((string) ($data['logo_url'] ?? '')),
+        ':logo_url'      => $logoUrl,
         ':website_url'   => sanitize_text((string) ($data['website_url'] ?? '')),
         ':partner_order' => (int) ($data['partner_order'] ?? 0),
         ':is_active'     => !empty($data['is_active']) ? 1 : 0,
@@ -123,8 +165,22 @@ function create_partner(PDO $pdo, array $data, int $adminId): array
     return ['success' => true, 'message' => 'Partner created.', 'id' => $id];
 }
 
-function update_partner(PDO $pdo, int $id, array $data, int $adminId): array
+function update_partner(PDO $pdo, int $id, array $data, int $adminId, array $files = []): array
 {
+    // Handle file upload
+    $logoUrl = sanitize_text((string) ($data['logo_url'] ?? ''));
+    if (!empty($files['logo_file'])) {
+        require_once __DIR__ . '/upload.php';
+        try {
+            $upload = handle_uploaded_file('logo_file', 'partners');
+            if ($upload) {
+                $logoUrl = $upload['public_path'];
+            }
+        } catch (RuntimeException $e) {
+            return ['success' => false, 'message' => 'Upload failed: ' . $e->getMessage()];
+        }
+    }
+
     $stmt = $pdo->prepare(
         'UPDATE partners SET company_id = :company_id, name = :name, logo_url = :logo_url,
          website_url = :website_url, partner_order = :partner_order, is_active = :is_active WHERE id = :id'
@@ -132,7 +188,7 @@ function update_partner(PDO $pdo, int $id, array $data, int $adminId): array
     $stmt->execute([
         ':company_id'    => (int) $data['company_id'],
         ':name'          => sanitize_text((string) ($data['name'] ?? '')),
-        ':logo_url'      => sanitize_text((string) ($data['logo_url'] ?? '')),
+        ':logo_url'      => $logoUrl,
         ':website_url'   => sanitize_text((string) ($data['website_url'] ?? '')),
         ':partner_order' => (int) ($data['partner_order'] ?? 0),
         ':is_active'     => !empty($data['is_active']) ? 1 : 0,
@@ -167,18 +223,31 @@ function get_product_by_id(PDO $pdo, int $id): ?array
     return $stmt->fetch() ?: null;
 }
 
-function create_product(PDO $pdo, array $data, int $adminId): array
+function create_product(PDO $pdo, array $data, int $adminId, array $files = []): array
 {
+    // Handle file upload
+    $imageUrl = sanitize_text((string) ($data['image_url'] ?? ''));
+    if (!empty($files['image_file']) && $files['image_file']['error'] === UPLOAD_ERR_OK) {
+        require_once __DIR__ . '/upload.php';
+        try {
+            $upload = handle_uploaded_file('image_file', 'products');
+            if ($upload) {
+                $imageUrl = $upload['public_path'];
+            }
+        } catch (RuntimeException $e) {
+            return ['success' => false, 'message' => 'Upload failed: ' . $e->getMessage()];
+        }
+    }
+
     $stmt = $pdo->prepare(
-        'INSERT INTO products (name, description, category, image_url, price, display_order, is_active)
-         VALUES (:name, :description, :category, :image_url, :price, :display_order, :is_active)'
+        'INSERT INTO products (name, description, category, image_url, display_order, is_active)
+         VALUES (:name, :description, :category, :image_url, :display_order, :is_active)'
     );
     $stmt->execute([
         ':name'          => sanitize_text((string) ($data['name'] ?? '')),
         ':description'   => sanitize_text((string) ($data['description'] ?? '')),
         ':category'      => sanitize_text((string) ($data['category'] ?? '')),
-        ':image_url'     => sanitize_text((string) ($data['image_url'] ?? '')),
-        ':price'         => !empty($data['price']) ? (float) $data['price'] : null,
+        ':image_url'     => $imageUrl,
         ':display_order' => (int) ($data['display_order'] ?? 0),
         ':is_active'     => !empty($data['is_active']) ? 1 : 0,
     ]);
@@ -187,18 +256,31 @@ function create_product(PDO $pdo, array $data, int $adminId): array
     return ['success' => true, 'message' => 'Product created.', 'id' => $id];
 }
 
-function update_product(PDO $pdo, int $id, array $data, int $adminId): array
+function update_product(PDO $pdo, int $id, array $data, int $adminId, array $files = []): array
 {
+    // Handle file upload
+    $imageUrl = sanitize_text((string) ($data['image_url'] ?? ''));
+    if (!empty($files['image_file']) && $files['image_file']['error'] === UPLOAD_ERR_OK) {
+        require_once __DIR__ . '/upload.php';
+        try {
+            $upload = handle_uploaded_file('image_file', 'products');
+            if ($upload) {
+                $imageUrl = $upload['public_path'];
+            }
+        } catch (RuntimeException $e) {
+            return ['success' => false, 'message' => 'Upload failed: ' . $e->getMessage()];
+        }
+    }
+
     $stmt = $pdo->prepare(
         'UPDATE products SET name = :name, description = :description, category = :category,
-         image_url = :image_url, price = :price, display_order = :display_order, is_active = :is_active WHERE id = :id'
+         image_url = :image_url, display_order = :display_order, is_active = :is_active WHERE id = :id'
     );
     $stmt->execute([
         ':name'          => sanitize_text((string) ($data['name'] ?? '')),
         ':description'   => sanitize_text((string) ($data['description'] ?? '')),
         ':category'      => sanitize_text((string) ($data['category'] ?? '')),
-        ':image_url'     => sanitize_text((string) ($data['image_url'] ?? '')),
-        ':price'         => !empty($data['price']) ? (float) $data['price'] : null,
+        ':image_url'     => $imageUrl,
         ':display_order' => (int) ($data['display_order'] ?? 0),
         ':is_active'     => !empty($data['is_active']) ? 1 : 0,
         ':id'            => $id,
@@ -232,8 +314,22 @@ function get_truck_type_by_id(PDO $pdo, int $id): ?array
     return $stmt->fetch() ?: null;
 }
 
-function create_truck_type(PDO $pdo, array $data, int $adminId): array
+function create_truck_type(PDO $pdo, array $data, int $adminId, array $files = []): array
 {
+    // Handle file upload
+    $imageUrl = sanitize_text((string) ($data['image_url'] ?? ''));
+    if (!empty($files['image_file'])) {
+        require_once __DIR__ . '/upload.php';
+        try {
+            $upload = handle_uploaded_file('image_file', 'trucks');
+            if ($upload) {
+                $imageUrl = $upload['public_path'];
+            }
+        } catch (RuntimeException $e) {
+            return ['success' => false, 'message' => 'Upload failed: ' . $e->getMessage()];
+        }
+    }
+
     $stmt = $pdo->prepare(
         'INSERT INTO truck_types (name, description, image_url, capacity, dimensions, price_range, display_order, is_active)
          VALUES (:name, :description, :image_url, :capacity, :dimensions, :price_range, :display_order, :is_active)'
@@ -241,7 +337,7 @@ function create_truck_type(PDO $pdo, array $data, int $adminId): array
     $stmt->execute([
         ':name'          => sanitize_text((string) ($data['name'] ?? '')),
         ':description'   => sanitize_text((string) ($data['description'] ?? '')),
-        ':image_url'     => sanitize_text((string) ($data['image_url'] ?? '')),
+        ':image_url'     => $imageUrl,
         ':capacity'      => sanitize_text((string) ($data['capacity'] ?? '')),
         ':dimensions'    => sanitize_text((string) ($data['dimensions'] ?? '')),
         ':price_range'   => sanitize_text((string) ($data['price_range'] ?? '')),
@@ -253,17 +349,31 @@ function create_truck_type(PDO $pdo, array $data, int $adminId): array
     return ['success' => true, 'message' => 'Truck type created.', 'id' => $id];
 }
 
-function update_truck_type(PDO $pdo, int $id, array $data, int $adminId): array
+function update_truck_type(PDO $pdo, int $id, array $data, int $adminId, array $files = []): array
 {
+    // Handle file upload
+    $imageUrl = sanitize_text((string) ($data['image_url'] ?? ''));
+    if (!empty($files['image_file'])) {
+        require_once __DIR__ . '/upload.php';
+        try {
+            $upload = handle_uploaded_file('image_file', 'trucks');
+            if ($upload) {
+                $imageUrl = $upload['public_path'];
+            }
+        } catch (RuntimeException $e) {
+            return ['success' => false, 'message' => 'Upload failed: ' . $e->getMessage()];
+        }
+    }
+
     $stmt = $pdo->prepare(
-        'UPDATE truck_types SET name = :name, description = :description,
-         image_url = :image_url, capacity = :capacity, dimensions = :dimensions,
-         price_range = :price_range, display_order = :display_order, is_active = :is_active WHERE id = :id'
+        'UPDATE truck_types SET name = :name, description = :description, image_url = :image_url,
+         capacity = :capacity, dimensions = :dimensions, price_range = :price_range,
+         display_order = :display_order, is_active = :is_active WHERE id = :id'
     );
     $stmt->execute([
         ':name'          => sanitize_text((string) ($data['name'] ?? '')),
         ':description'   => sanitize_text((string) ($data['description'] ?? '')),
-        ':image_url'     => sanitize_text((string) ($data['image_url'] ?? '')),
+        ':image_url'     => $imageUrl,
         ':capacity'      => sanitize_text((string) ($data['capacity'] ?? '')),
         ':dimensions'    => sanitize_text((string) ($data['dimensions'] ?? '')),
         ':price_range'   => sanitize_text((string) ($data['price_range'] ?? '')),
@@ -850,4 +960,101 @@ function remove_user_permission(PDO $pdo, int $userId, string $permissionName, i
     $stmt->execute([':uid' => $userId, ':pname' => $permissionName]);
     log_activity($pdo, $adminId, 'PERMISSION_REMOVED', 'user_permissions', $userId);
     return ['success' => true, 'message' => "Permission '{$permissionName}' removed."];
+}
+
+// ── Featured Products CRUD ────────────────────────────────────────
+
+function get_all_featured_products_admin(PDO $pdo): array
+{
+    $stmt = $pdo->query('SELECT fp.*, c.name AS company_name FROM featured_products fp LEFT JOIN companies c ON c.id = fp.company_id ORDER BY fp.display_order ASC, fp.id ASC');
+    return $stmt->fetchAll() ?: [];
+}
+
+function get_active_featured_products(PDO $pdo): array
+{
+    $stmt = $pdo->query('SELECT * FROM featured_products WHERE is_active = 1 ORDER BY display_order ASC, id ASC');
+    return $stmt->fetchAll() ?: [];
+}
+
+function get_featured_product_by_id(PDO $pdo, int $id): ?array
+{
+    $stmt = $pdo->prepare('SELECT * FROM featured_products WHERE id = :id LIMIT 1');
+    $stmt->execute([':id' => $id]);
+    return $stmt->fetch() ?: null;
+}
+
+function create_featured_product(PDO $pdo, array $data, int $adminId, array $files = []): array
+{
+    // Handle file upload
+    $imageUrl = sanitize_text((string) ($data['image_url'] ?? ''));
+    if (!empty($files['image_file']) && $files['image_file']['error'] === UPLOAD_ERR_OK) {
+        require_once __DIR__ . '/upload.php';
+        try {
+            $upload = handle_uploaded_file('image_file', 'featured');
+            if ($upload) {
+                $imageUrl = $upload['public_path'];
+            }
+        } catch (RuntimeException $e) {
+            return ['success' => false, 'message' => 'Upload failed: ' . $e->getMessage()];
+        }
+    }
+
+    $stmt = $pdo->prepare(
+        'INSERT INTO featured_products (company_id, name, description, image_url, website_url, display_order, is_active)
+         VALUES (:company_id, :name, :description, :image_url, :website_url, :display_order, :is_active)'
+    );
+    $stmt->execute([
+        ':company_id'    => (int) $data['company_id'],
+        ':name'          => sanitize_text((string) ($data['name'] ?? '')),
+        ':description'   => sanitize_text((string) ($data['description'] ?? '')),
+        ':image_url'     => $imageUrl,
+        ':website_url'   => sanitize_text((string) ($data['website_url'] ?? '')),
+        ':display_order' => (int) ($data['display_order'] ?? 0),
+        ':is_active'     => !empty($data['is_active']) ? 1 : 0,
+    ]);
+    $id = (int) $pdo->lastInsertId();
+    log_activity($pdo, $adminId, 'FEATURED_PRODUCT_CREATED', 'featured_products', $id);
+    return ['success' => true, 'message' => 'Featured product created.', 'id' => $id];
+}
+
+function update_featured_product(PDO $pdo, int $id, array $data, int $adminId, array $files = []): array
+{
+    // Handle file upload
+    $imageUrl = sanitize_text((string) ($data['image_url'] ?? ''));
+    if (!empty($files['image_file']) && $files['image_file']['error'] === UPLOAD_ERR_OK) {
+        require_once __DIR__ . '/upload.php';
+        try {
+            $upload = handle_uploaded_file('image_file', 'featured');
+            if ($upload) {
+                $imageUrl = $upload['public_path'];
+            }
+        } catch (RuntimeException $e) {
+            return ['success' => false, 'message' => 'Upload failed: ' . $e->getMessage()];
+        }
+    }
+
+    $stmt = $pdo->prepare(
+        'UPDATE featured_products SET company_id = :company_id, name = :name, description = :description,
+         image_url = :image_url, website_url = :website_url, display_order = :display_order, is_active = :is_active WHERE id = :id'
+    );
+    $stmt->execute([
+        ':company_id'    => (int) $data['company_id'],
+        ':name'          => sanitize_text((string) ($data['name'] ?? '')),
+        ':description'   => sanitize_text((string) ($data['description'] ?? '')),
+        ':image_url'     => $imageUrl,
+        ':website_url'   => sanitize_text((string) ($data['website_url'] ?? '')),
+        ':display_order' => (int) ($data['display_order'] ?? 0),
+        ':is_active'     => !empty($data['is_active']) ? 1 : 0,
+        ':id'            => $id,
+    ]);
+    log_activity($pdo, $adminId, 'FEATURED_PRODUCT_UPDATED', 'featured_products', $id);
+    return ['success' => true, 'message' => 'Featured product updated.'];
+}
+
+function delete_featured_product(PDO $pdo, int $id, int $adminId): array
+{
+    $stmt = $pdo->prepare('DELETE FROM featured_products WHERE id = :id');
+    $stmt->execute([':id' => $id]);
+    log_activity($pdo, $adminId, 'FEATURED_PRODUCT_DELETED', 'featured_products', $id);
+    return ['success' => true, 'message' => 'Featured product deleted.'];
 }

@@ -9,6 +9,11 @@ function start_app_session(): void
         return;
     }
 
+    // Check if headers already sent
+    if (headers_sent()) {
+        return;
+    }
+
     $isHttps = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
 
     session_name(SESSION_NAME);

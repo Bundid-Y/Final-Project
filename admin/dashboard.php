@@ -11,7 +11,7 @@ $user = require_admin_user();
 $isSuperAdmin = in_array((string) $user['role'], ['super_admin'], true);
 $companyId = $isSuperAdmin ? null : (int) $user['company_id'];
 $section = $_GET['section'] ?? 'overview';
-$validSections = ['overview','users','koch_quotations','tnb_quotations','notifications','activity','settings','sliders','partners','products','truck_types','branches','email_templates','email_recipients','contact_messages'];
+$validSections = ['overview','users','koch_quotations','tnb_quotations','notifications','activity','settings','sliders','partners','products','featured_products','truck_types','branches','email_templates','email_recipients','contact_messages','export_data'];
 if (!in_array($section, $validSections, true)) $section = 'overview';
 
 // Company mode toggle
@@ -238,16 +238,19 @@ textarea.fm-input{resize:vertical;min-height:80px}
         <a href="?section=sliders" class="<?php echo $section==='sliders'?'active':'';?>"><i class="fas fa-images"></i> Sliders</a>
         <a href="?section=partners" class="<?php echo $section==='partners'?'active':'';?>"><i class="fas fa-handshake"></i> Partners</a>
         <a href="?section=products" class="<?php echo $section==='products'?'active':'';?>"><i class="fas fa-boxes-stacked"></i> Products</a>
+        <a href="?section=featured_products" class="<?php echo $section==='featured_products'?'active':'';?>"><i class="fas fa-star"></i> Featured Products</a>
         <a href="?section=truck_types" class="<?php echo $section==='truck_types'?'active':'';?>"><i class="fas fa-truck-moving"></i> Truck Types</a>
         <a href="?section=branches" class="<?php echo $section==='branches'?'active':'';?>"><i class="fas fa-map-marker-alt"></i> Branches</a>
         <div class="divider"></div>
         <div class="label">Communications</div>
         <a href="?section=notifications" class="<?php echo $section==='notifications'?'active':'';?>"><i class="fas fa-bell"></i> Notifications<?php if((int)$stats['unread_notifications']>0):?><span class="badge"><?php echo (int)$stats['unread_notifications'];?></span><?php endif;?></a>
         <a href="?section=email_templates" class="<?php echo $section==='email_templates'?'active':'';?>"><i class="fas fa-file-alt"></i> Email Templates</a>
-        <a href="?section=email_recipients" class="<?php echo $section==='email_recipients'?'active':'';?>"><i class="fas fa-at"></i> Email Recipients</a>
+        <a href="?section=activity" class="<?php echo $section==='activity'?'active':'';?>"><i class="fas fa-history"></i> Activity Logs</a>
+        <div class="divider"></div>
+        <div class="label">Export</div>
+        <a href="?section=export_data" class="<?php echo $section==='export_data'?'active':'';?>"><i class="fas fa-file-export"></i> Export Data</a>
         <div class="divider"></div>
         <div class="label">System</div>
-        <a href="?section=activity" class="<?php echo $section==='activity'?'active':'';?>"><i class="fas fa-history"></i> Activity Logs</a>
         <a href="?section=settings" class="<?php echo $section==='settings'?'active':'';?>"><i class="fas fa-cog"></i> Settings</a>
     </nav>
     <div class="sb-foot">
@@ -641,19 +644,41 @@ $distinctActions = get_distinct_actions($pdo);
 <?php $allProducts = get_all_products_admin($pdo); ?>
 <div class="card">
     <div class="card-h"><h2><i class="fas fa-boxes-stacked"></i> Products (KOCH)</h2><div style="display:flex;gap:8px;align-items:center"><span style="font-size:12px;color:var(--muted)"><?php echo count($allProducts);?> products</span><button class="btn btn-sm btn-primary" onclick="openModal('productModal')"><i class="fas fa-plus"></i> Add Product</button></div></div>
-    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>ID</th><th>Image</th><th>Name</th><th>Category</th><th>Price</th><th>Order</th><th>Status</th><th>Actions</th></tr></thead><tbody>
-    <?php if($allProducts===[]):?><tr class="empty"><td colspan="8">No products found</td></tr>
+    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>ID</th><th>Image</th><th>Name</th><th>Category</th><th>Order</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+    <?php if($allProducts===[]):?><tr class="empty"><td colspan="7">No products found</td></tr>
     <?php else: foreach($allProducts as $p):?><tr>
         <td style="font-size:12px;font-weight:600">#<?php echo (int)$p['id'];?></td>
         <td><?php if($p['image_url']):?><img src="<?php echo h((string)$p['image_url']);?>" style="width:40px;height:40px;object-fit:cover;border-radius:6px" alt=""><?php else:?><span style="color:var(--muted);font-size:11px">-</span><?php endif;?></td>
         <td style="font-size:12px;font-weight:600"><?php echo h((string)$p['name']);?></td>
         <td style="font-size:12px"><?php echo h(ucfirst((string)($p['category']??'')));?></td>
-        <td style="font-size:12px"><?php echo $p['price']!==null?h(number_format((float)$p['price'],2)).' ฿':'-';?></td>
         <td style="font-size:12px;text-align:center"><?php echo (int)$p['display_order'];?></td>
         <td><?php echo admin_status_badge($p['is_active']?'active':'inactive');?></td>
         <td><div class="act-btns">
-            <button class="btn btn-xs btn-ghost" onclick="openEditProduct(<?php echo (int)$p['id'];?>,'<?php echo h(addslashes((string)$p['name']));?>','<?php echo h(addslashes((string)($p['description']??'')));?>','<?php echo h(addslashes((string)($p['image_url']??'')));?>','<?php echo h(addslashes((string)($p['category']??'')));?>',<?php echo $p['price']!==null?(float)$p['price']:0;?>,<?php echo (int)$p['display_order'];?>,<?php echo $p['is_active']?1:0;?>)"><i class="fas fa-edit"></i></button>
+            <button class="btn btn-xs btn-ghost" onclick="openEditProduct(<?php echo (int)$p['id'];?>,'<?php echo h(addslashes((string)$p['name']));?>','<?php echo h(addslashes((string)($p['description']??'')));?>','<?php echo h(addslashes((string)($p['image_url']??'')));?>','<?php echo h(addslashes((string)($p['category']??'')));?>',<?php echo (int)$p['display_order'];?>,<?php echo $p['is_active']?1:0;?>)"><i class="fas fa-edit"></i></button>
             <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete?')"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="entity" value="product"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?php echo (int)$p['id'];?>"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=products'));?>"><button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></button></form>
+        </div></td>
+    </tr><?php endforeach; endif;?>
+    </tbody></table></div></div>
+</div>
+
+<?php elseif($section==='featured_products'): ?>
+<!-- =================== FEATURED PRODUCTS =================== -->
+<?php $allFeaturedProducts = get_all_featured_products_admin($pdo); ?>
+<div class="card">
+    <div class="card-h"><h2><i class="fas fa-star"></i> Featured Products</h2><div style="display:flex;gap:8px;align-items:center"><span style="font-size:12px;color:var(--muted)"><?php echo count($allFeaturedProducts);?> items</span><button class="btn btn-sm btn-primary" onclick="openModal('featuredProductModal')"><i class="fas fa-plus"></i> Add Featured Product</button></div></div>
+    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>ID</th><th>Company</th><th>Name</th><th>Image</th><th>Website</th><th>Order</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+    <?php if($allFeaturedProducts===[]):?><tr class="empty"><td colspan="8">No featured products found</td></tr>
+    <?php else: foreach($allFeaturedProducts as $fp):?><tr>
+        <td style="font-size:12px;font-weight:600">#<?php echo (int)$fp['id'];?></td>
+        <td style="font-size:12px"><?php echo h((string)($fp['company_name']??'Unknown'));?></td>
+        <td style="font-size:12px;font-weight:600"><?php echo h((string)$fp['name']);?></td>
+        <td><?php if($fp['image_url']):?><img src="<?php echo h((string)$fp['image_url']);?>" style="width:40px;height:40px;object-fit:cover;border-radius:6px" alt=""><?php else:?><span style="color:var(--muted);font-size:11px">-</span><?php endif;?></td>
+        <td style="font-size:12px"><?php if($fp['website_url']):?><a href="<?php echo h((string)$fp['website_url']);?>" target="_blank" style="color:var(--primary)">🔗</a><?php else:?>-<?php endif;?></td>
+        <td style="font-size:12px;text-align:center"><?php echo (int)$fp['display_order'];?></td>
+        <td><?php echo admin_status_badge($fp['is_active']?'active':'inactive');?></td>
+        <td><div class="act-btns">
+            <button class="btn btn-xs btn-ghost" onclick="openEditFeaturedProduct(<?php echo (int)$fp['id'];?>,'<?php echo h(addslashes((string)$fp['name']));?>','<?php echo h(addslashes((string)($fp['description']??'')));?>','<?php echo h(addslashes((string)($fp['image_url']??'')));?>','<?php echo h(addslashes((string)($fp['website_url']??'')));?>',<?php echo (int)$fp['company_id'];?>,<?php echo (int)$fp['display_order'];?>,<?php echo $fp['is_active']?1:0;?>)"><i class="fas fa-edit"></i></button>
+            <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete?')"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="entity" value="featured_product"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?php echo (int)$fp['id'];?>"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=featured_products'));?>"><button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></button></form>
         </div></td>
     </tr><?php endforeach; endif;?>
     </tbody></table></div></div>
@@ -778,6 +803,83 @@ $distinctActions = get_distinct_actions($pdo);
     </tbody></table></div></div>
 </div>
 
+<?php elseif($section==='export_data'): ?>
+<!-- =================== EXPORT DATA =================== -->
+<div class="card">
+    <div class="card-h"><h2><i class="fas fa-file-export"></i> Export Data</h2><p style="font-size:12px;color:var(--muted)">Export data in various formats</p></div>
+    <div class="card-b">
+        <div class="grid-3">
+            <div class="card">
+                <div class="card-h"><h3><i class="fas fa-users"></i> Users</h3></div>
+                <div class="card-b">
+                    <p style="font-size:13px;color:var(--muted)">Export all users data</p>
+                    <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+                        <button class="btn btn-sm btn-primary" onclick="exportData('users','csv')">📊 CSV</button>
+                        <button class="btn btn-sm btn-primary" onclick="exportData('users','excel')">📈 Excel</button>
+                        <button class="btn btn-sm btn-primary" onclick="exportData('users','pdf')">📄 PDF</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-h"><h3><i class="fas fa-box"></i> Quotations</h3></div>
+                <div class="card-b">
+                    <p style="font-size:13px;color:var(--muted)">Export KOCH quotations</p>
+                    <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+                        <button class="btn btn-sm btn-primary" onclick="exportData('quotations','csv')">📊 CSV</button>
+                        <button class="btn btn-sm btn-primary" onclick="exportData('quotations','excel')">📈 Excel</button>
+                        <button class="btn btn-sm btn-primary" onclick="exportData('quotations','pdf')">📄 PDF</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-h"><h3><i class="fas fa-truck"></i> Transport Requests</h3></div>
+                <div class="card-b">
+                    <p style="font-size:13px;color:var(--muted)">Export TNB transport requests</p>
+                    <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+                        <button class="btn btn-sm btn-primary" onclick="exportData('transport','csv')">📊 CSV</button>
+                        <button class="btn btn-sm btn-primary" onclick="exportData('transport','excel')">📈 Excel</button>
+                        <button class="btn btn-sm btn-primary" onclick="exportData('transport','pdf')">📄 PDF</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-h"><h3><i class="fas fa-history"></i> Activity Logs</h3></div>
+                <div class="card-b">
+                    <p style="font-size:13px;color:var(--muted)">Export system activity logs</p>
+                    <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+                        <button class="btn btn-sm btn-primary" onclick="exportData('activity','csv')">📊 CSV</button>
+                        <button class="btn btn-sm btn-primary" onclick="exportData('activity','excel')">📈 Excel</button>
+                        <button class="btn btn-sm btn-primary" onclick="exportData('activity','pdf')">📄 PDF</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-h"><h3><i class="fas fa-envelope"></i> Contact Messages</h3></div>
+                <div class="card-b">
+                    <p style="font-size:13px;color:var(--muted)">Export contact form messages</p>
+                    <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+                        <button class="btn btn-sm btn-primary" onclick="exportData('contacts','csv')">📊 CSV</button>
+                        <button class="btn btn-sm btn-primary" onclick="exportData('contacts','excel')">📈 Excel</button>
+                        <button class="btn btn-sm btn-primary" onclick="exportData('contacts','pdf')">📄 PDF</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-h"><h3><i class="fas fa-chart-bar"></i> Reports</h3></div>
+                <div class="card-b">
+                    <p style="font-size:13px;color:var(--muted)">Export system reports</p>
+                    <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+                        <button class="btn btn-sm btn-primary" onclick="exportData('reports','csv')">📊 CSV</button>
+                        <button class="btn btn-sm btn-primary" onclick="exportData('reports','excel')">📈 Excel</button>
+                        <button class="btn btn-sm btn-primary" onclick="exportData('reports','pdf')">📄 PDF</button>
+                        <button class="btn btn-sm btn-primary" onclick="exportData('reports','word')">📋 Word</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <?php elseif($section==='settings'): ?>
 <!-- =================== SETTINGS =================== -->
 <div class="grid-2">
@@ -819,7 +921,7 @@ $distinctActions = get_distinct_actions($pdo);
 <div class="modal-overlay" id="userModal" onclick="if(event.target===this)closeModal('userModal')">
 <div class="modal">
     <div class="modal-head"><h3><i class="fas fa-user-edit"></i> Edit User</h3><button class="modal-close" onclick="closeModal('userModal')">&times;</button></div>
-    <form method="POST" action="<?php echo h($crudUrl);?>">
+    <form method="POST" action="<?php echo h($crudUrl);?>" enctype="multipart/form-data">
         <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>">
         <input type="hidden" name="entity" value="user">
         <input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=users'));?>">
@@ -852,7 +954,7 @@ $distinctActions = get_distinct_actions($pdo);
 <div class="modal-overlay" id="sliderModal" onclick="if(event.target===this)closeModal('sliderModal')">
 <div class="modal">
     <div class="modal-head"><h3><i class="fas fa-images"></i> <span id="sm_title">Add Slider</span></h3><button class="modal-close" onclick="closeModal('sliderModal')">&times;</button></div>
-    <form method="POST" action="<?php echo h($crudUrl);?>">
+    <form method="POST" action="<?php echo h($crudUrl);?>" enctype="multipart/form-data">
         <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>">
         <input type="hidden" name="entity" value="slider">
         <input type="hidden" name="action" id="sm_action" value="create">
@@ -861,7 +963,8 @@ $distinctActions = get_distinct_actions($pdo);
         <div class="modal-body">
             <div class="fm-group"><label>Title<span>*</span></label><input type="text" name="title" id="sm_name" class="fm-input" required maxlength="255"></div>
             <div class="fm-group"><label>Subtitle</label><input type="text" name="subtitle" id="sm_subtitle" class="fm-input" maxlength="500"></div>
-            <div class="fm-group"><label>Image URL<span>*</span></label><input type="url" name="image_url" id="sm_image" class="fm-input" required placeholder="https://..."></div>
+            <div class="fm-group"><label>Image URL<span>*</span></label><input type="url" name="image_url" id="sm_image" class="fm-input" placeholder="https://..."></div>
+            <div class="fm-group"><label>OR Upload Image</label><input type="file" name="image_file" id="sm_file" class="fm-input" accept="image/jpeg,image/png,image/webp"><small style="color:var(--muted);font-size:11px">JPG, PNG, WEBP up to 10MB. Will override URL if provided.</small></div>
             <div class="fm-row">
                 <div class="fm-group"><label>Button Text</label><input type="text" name="button_text" id="sm_btn_text" class="fm-input" maxlength="100"></div>
                 <div class="fm-group"><label>Button URL</label><input type="text" name="button_url" id="sm_btn_url" class="fm-input" maxlength="500"></div>
@@ -880,7 +983,7 @@ $distinctActions = get_distinct_actions($pdo);
 <div class="modal-overlay" id="partnerModal" onclick="if(event.target===this)closeModal('partnerModal')">
 <div class="modal">
     <div class="modal-head"><h3><i class="fas fa-handshake"></i> <span id="pm_title">Add Partner</span></h3><button class="modal-close" onclick="closeModal('partnerModal')">&times;</button></div>
-    <form method="POST" action="<?php echo h($crudUrl);?>">
+    <form method="POST" action="<?php echo h($crudUrl);?>" enctype="multipart/form-data">
         <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>">
         <input type="hidden" name="entity" value="partner">
         <input type="hidden" name="action" id="pm_action" value="create">
@@ -889,6 +992,7 @@ $distinctActions = get_distinct_actions($pdo);
         <div class="modal-body">
             <div class="fm-group"><label>Partner Name<span>*</span></label><input type="text" name="name" id="pm_name" class="fm-input" required maxlength="255"></div>
             <div class="fm-group"><label>Logo URL</label><input type="url" name="logo_url" id="pm_logo" class="fm-input" placeholder="https://..."></div>
+            <div class="fm-group"><label>OR Upload Logo</label><input type="file" name="logo_file" id="pm_file" class="fm-input" accept="image/jpeg,image/png,image/webp"><small style="color:var(--muted);font-size:11px">JPG, PNG, WEBP up to 10MB. Will override URL if provided.</small></div>
             <div class="fm-group"><label>Website URL</label><input type="url" name="website_url" id="pm_website" class="fm-input" placeholder="https://..."></div>
             <div class="fm-row">
                 <div class="fm-group"><label>Company<span>*</span></label><select name="company_id" id="pm_company" class="fm-input" required><option value="<?php echo $kochId;?>">KOCH</option><option value="<?php echo $tnbId;?>">TNB</option></select></div>
@@ -904,7 +1008,7 @@ $distinctActions = get_distinct_actions($pdo);
 <div class="modal-overlay" id="productModal" onclick="if(event.target===this)closeModal('productModal')">
 <div class="modal">
     <div class="modal-head"><h3><i class="fas fa-boxes-stacked"></i> <span id="prd_title">Add Product</span></h3><button class="modal-close" onclick="closeModal('productModal')">&times;</button></div>
-    <form method="POST" action="<?php echo h($crudUrl);?>">
+    <form method="POST" action="<?php echo h($crudUrl);?>" enctype="multipart/form-data">
         <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>">
         <input type="hidden" name="entity" value="product">
         <input type="hidden" name="action" id="prd_action" value="create">
@@ -914,10 +1018,8 @@ $distinctActions = get_distinct_actions($pdo);
             <div class="fm-group"><label>Product Name<span>*</span></label><input type="text" name="name" id="prd_name" class="fm-input" required maxlength="255"></div>
             <div class="fm-group"><label>Description</label><textarea name="description" id="prd_desc" class="fm-input"></textarea></div>
             <div class="fm-group"><label>Image URL</label><input type="url" name="image_url" id="prd_image" class="fm-input" placeholder="https://..."></div>
-            <div class="fm-row">
-                <div class="fm-group"><label>Category</label><input type="text" name="category" id="prd_cat" class="fm-input" maxlength="100" placeholder="e.g. chemical, equipment"></div>
-                <div class="fm-group"><label>Price (฿)</label><input type="number" name="price" id="prd_price" class="fm-input" step="0.01" min="0"></div>
-            </div>
+            <div class="fm-group"><label>OR Upload Image</label><input type="file" name="image_file" id="prd_file" class="fm-input" accept="image/jpeg,image/png,image/webp"><small style="color:var(--muted);font-size:11px">JPG, PNG, WEBP up to 10MB. Will override URL if provided.</small></div>
+            <div class="fm-group"><label>Category<span>*</span></label><select name="category" id="prd_cat" class="fm-input" required><option value="">Select Category</option><option value="mail">กล่องกระดาษ</option><option value="corrugated">บรรจุภัณฑ์ไม้</option><option value="diecut">บรรจุภัณฑ์พลาสติก</option><option value="accessory">บรรจุภัณฑ์เหล็ก</option></select></div>
             <div class="fm-group"><label>Display Order</label><input type="number" name="display_order" id="prd_order" class="fm-input" value="0" min="0"></div>
             <div class="fm-check"><input type="checkbox" name="is_active" id="prd_active" value="1" checked><label for="prd_active">Active</label></div>
         </div>
@@ -929,7 +1031,7 @@ $distinctActions = get_distinct_actions($pdo);
 <div class="modal-overlay" id="truckModal" onclick="if(event.target===this)closeModal('truckModal')">
 <div class="modal">
     <div class="modal-head"><h3><i class="fas fa-truck-moving"></i> <span id="tt_title">Add Truck Type</span></h3><button class="modal-close" onclick="closeModal('truckModal')">&times;</button></div>
-    <form method="POST" action="<?php echo h($crudUrl);?>">
+    <form method="POST" action="<?php echo h($crudUrl);?>" enctype="multipart/form-data">
         <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>">
         <input type="hidden" name="entity" value="truck_type">
         <input type="hidden" name="action" id="tt_action" value="create">
@@ -939,6 +1041,7 @@ $distinctActions = get_distinct_actions($pdo);
             <div class="fm-group"><label>Truck Name<span>*</span></label><input type="text" name="name" id="tt_name" class="fm-input" required maxlength="255"></div>
             <div class="fm-group"><label>Description</label><textarea name="description" id="tt_desc" class="fm-input"></textarea></div>
             <div class="fm-group"><label>Image URL</label><input type="url" name="image_url" id="tt_image" class="fm-input" placeholder="https://..."></div>
+            <div class="fm-group"><label>OR Upload Image</label><input type="file" name="image_file" id="tt_file" class="fm-input" accept="image/jpeg,image/png,image/webp"><small style="color:var(--muted);font-size:11px">JPG, PNG, WEBP up to 10MB. Will override URL if provided.</small></div>
             <div class="fm-row">
                 <div class="fm-group"><label>Capacity</label><input type="text" name="capacity" id="tt_cap" class="fm-input" maxlength="100" placeholder="e.g. 10 tons"></div>
                 <div class="fm-group"><label>Display Order</label><input type="number" name="display_order" id="tt_order" class="fm-input" value="0" min="0"></div>
@@ -949,11 +1052,35 @@ $distinctActions = get_distinct_actions($pdo);
     </form>
 </div></div>
 
+<!-- Featured Product Modal -->
+<div class="modal-overlay" id="featuredProductModal" onclick="if(event.target===this)closeModal('featuredProductModal')">
+<div class="modal">
+    <div class="modal-head"><h3><i class="fas fa-star"></i> <span id="fp_title">Add Featured Product</span></h3><button class="modal-close" onclick="closeModal('featuredProductModal')">&times;</button></div>
+    <form method="POST" action="<?php echo h($crudUrl);?>" enctype="multipart/form-data">
+        <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>">
+        <input type="hidden" name="entity" value="featured_product">
+        <input type="hidden" name="action" id="fp_action" value="create">
+        <input type="hidden" name="id" id="fp_id" value="0">
+        <input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=featured_products'));?>">
+        <div class="modal-body">
+            <div class="fm-group"><label>Company<span>*</span></label><select name="company_id" id="fp_company" class="fm-input" required><option value="">Select Company</option><option value="1">KOCH</option><option value="2">TNB</option></select></div>
+            <div class="fm-group"><label>Product Name<span>*</span></label><input type="text" name="name" id="fp_name" class="fm-input" required maxlength="255"></div>
+            <div class="fm-group"><label>Description</label><textarea name="description" id="fp_desc" class="fm-input"></textarea></div>
+            <div class="fm-group"><label>Image URL</label><input type="url" name="image_url" id="fp_image" class="fm-input" placeholder="https://..."></div>
+            <div class="fm-group"><label>OR Upload Image</label><input type="file" name="image_file" id="fp_file" class="fm-input" accept="image/jpeg,image/png,image/webp"><small style="color:var(--muted);font-size:11px">JPG, PNG, WEBP up to 10MB. Will override URL if provided.</small></div>
+            <div class="fm-group"><label>Website URL</label><input type="url" name="website_url" id="fp_website" class="fm-input" placeholder="https://..."></div>
+            <div class="fm-group"><label>Display Order</label><input type="number" name="display_order" id="fp_order" class="fm-input" value="0" min="0"></div>
+            <div class="fm-check"><input type="checkbox" name="is_active" id="fp_active" value="1" checked><label for="fp_active">Active</label></div>
+        </div>
+        <div class="modal-foot"><button type="button" class="btn btn-ghost" onclick="closeModal('featuredProductModal')">Cancel</button><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save</button></div>
+    </form>
+</div></div>
+
 <!-- Branch Modal -->
 <div class="modal-overlay" id="branchModal" onclick="if(event.target===this)closeModal('branchModal')">
 <div class="modal">
     <div class="modal-head"><h3><i class="fas fa-map-marker-alt"></i> <span id="bm_title">Add Branch</span></h3><button class="modal-close" onclick="closeModal('branchModal')">&times;</button></div>
-    <form method="POST" action="<?php echo h($crudUrl);?>">
+    <form method="POST" action="<?php echo h($crudUrl);?>" enctype="multipart/form-data">
         <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>">
         <input type="hidden" name="entity" value="branch">
         <input type="hidden" name="action" id="bm_action" value="create">
@@ -986,7 +1113,7 @@ $distinctActions = get_distinct_actions($pdo);
 <div class="modal-overlay" id="emailTplModal" onclick="if(event.target===this)closeModal('emailTplModal')">
 <div class="modal">
     <div class="modal-head"><h3><i class="fas fa-file-alt"></i> <span id="etm_title">Add Email Template</span></h3><button class="modal-close" onclick="closeModal('emailTplModal')">&times;</button></div>
-    <form method="POST" action="<?php echo h($crudUrl);?>">
+    <form method="POST" action="<?php echo h($crudUrl);?>" enctype="multipart/form-data">
         <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>">
         <input type="hidden" name="entity" value="email_template">
         <input type="hidden" name="action" id="etm_action" value="create">
@@ -1010,7 +1137,7 @@ $distinctActions = get_distinct_actions($pdo);
 <div class="modal-overlay" id="emailRecModal" onclick="if(event.target===this)closeModal('emailRecModal')">
 <div class="modal">
     <div class="modal-head"><h3><i class="fas fa-at"></i> <span id="erm_title">Add Email Recipient</span></h3><button class="modal-close" onclick="closeModal('emailRecModal')">&times;</button></div>
-    <form method="POST" action="<?php echo h($crudUrl);?>">
+    <form method="POST" action="<?php echo h($crudUrl);?>" enctype="multipart/form-data">
         <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>">
         <input type="hidden" name="entity" value="email_recipient">
         <input type="hidden" name="action" id="erm_action" value="create">
@@ -1082,7 +1209,7 @@ function openEditPartner(id,name,logo,website,companyId,order,active){
     openModal('partnerModal');
 }
 
-function openEditProduct(id,name,desc,image,category,price,order,active){
+function openEditProduct(id,name,desc,image,category,order,active){
     document.getElementById('prd_title').textContent='Edit Product #'+id;
     document.getElementById('prd_action').value='update';
     document.getElementById('prd_id').value=id;
@@ -1090,10 +1217,34 @@ function openEditProduct(id,name,desc,image,category,price,order,active){
     document.getElementById('prd_desc').value=desc;
     document.getElementById('prd_image').value=image;
     document.getElementById('prd_cat').value=category;
-    document.getElementById('prd_price').value=price||'';
     document.getElementById('prd_order').value=order;
     document.getElementById('prd_active').checked=!!active;
     openModal('productModal');
+}
+
+function openEditFeaturedProduct(id,name,desc,image,website,company,order,active){
+    document.getElementById('fp_title').textContent='Edit Featured Product #'+id;
+    document.getElementById('fp_action').value='update';
+    document.getElementById('fp_id').value=id;
+    document.getElementById('fp_name').value=name;
+    document.getElementById('fp_desc').value=desc;
+    document.getElementById('fp_image').value=image;
+    document.getElementById('fp_website').value=website;
+    document.getElementById('fp_company').value=company;
+    document.getElementById('fp_order').value=order;
+    document.getElementById('fp_active').checked=!!active;
+    openModal('featuredProductModal');
+}
+
+function exportData(type, format) {
+    const url = '<?php echo h(project_url('admin/api/export/handler.php'));?>';
+    const params = new URLSearchParams({
+        type: type,
+        format: format,
+        _csrf: '<?php echo h($csrfToken);?>'
+    });
+    
+    window.open(url + '?' + params.toString(), '_blank');
 }
 
 function openEditTruck(id,name,desc,image,capacity,order,active){
