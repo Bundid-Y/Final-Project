@@ -99,12 +99,12 @@ function resolve_category(string $cat): string {
                         <div class="product-overlay"><span class="product-title"><?php echo htmlspecialchars((string)$prod['name']); ?></span></div>
                     </div>
                     <?php endforeach; else: ?>
-                    <div class="product-grid-item" data-category="mail"><img src="../img/products/box/rsc.png" alt="RSC Box"><div class="product-overlay"><span class="product-title">RSC Box</span></div></div>
-                    <div class="product-grid-item" data-category="corrugated"><img src="../img/products/Wooden/wooden_crates.png" alt="Wooden Crates"><div class="product-overlay"><span class="product-title">Wooden Crates</span></div></div>
-                    <div class="product-grid-item" data-category="diecut"><img src="../img/products/Plastic/plastic_container.png" alt="Plastic Container"><div class="product-overlay"><span class="product-title">Plastic Container</span></div></div>
-                    <div class="product-grid-item" data-category="accessory"><img src="../img/products/Steel/steel_rack.png" alt="Steel Rack"><div class="product-overlay"><span class="product-title">Steel Rack</span></div></div>
-                    <div class="product-grid-item" data-category="mail"><img src="../img/products/box/die-cut.png" alt="Die-Cut Box"><div class="product-overlay"><span class="product-title">Die-Cut Box</span></div></div>
-                    <div class="product-grid-item" data-category="corrugated"><img src="../img/products/Wooden/wooden_pallet.png" alt="Wooden Pallet"><div class="product-overlay"><span class="product-title">Wooden Pallet</span></div></div>
+                    <div class="product-grid-item" data-category="mail">
+                        <div style="height:200px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:13px;border-radius:8px;margin:10px">
+                            No Products Available
+                        </div>
+                        <div class="product-overlay"><span class="product-title">No Data</span></div>
+                    </div>
                     <?php endif; ?>
                 </div>
 
