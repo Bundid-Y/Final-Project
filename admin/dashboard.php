@@ -11,7 +11,7 @@ $user = require_admin_user();
 $isSuperAdmin = in_array((string) $user['role'], ['super_admin'], true);
 $companyId = $isSuperAdmin ? null : (int) $user['company_id'];
 $section = $_GET['section'] ?? 'overview';
-$validSections = ['overview','users','koch_quotations','tnb_quotations','notifications','activity','settings','sliders','partners','products','featured_products','truck_types','branches','email_templates','email_recipients','contact_messages','export_data'];
+$validSections = ['overview','users','koch_quotations','tnb_quotations','notifications','activity','settings','sliders','partners','products','featured_products','truck_types','truck_types_index','branches','email_templates','email_recipients','contact_messages','export_data'];
 if (!in_array($section, $validSections, true)) $section = 'overview';
 
 // Company mode toggle
@@ -237,10 +237,20 @@ textarea.fm-input{resize:vertical;min-height:80px}
         <div class="label">Content</div>
         <a href="?section=sliders" class="<?php echo $section==='sliders'?'active':'';?>"><i class="fas fa-images"></i> Sliders</a>
         <a href="?section=partners" class="<?php echo $section==='partners'?'active':'';?>"><i class="fas fa-handshake"></i> Partners</a>
+        <?php 
+$userCompanyCode = 'KOCH';
+if ($user['company_id'] == get_company_id_by_code($pdo, 'TNB')) {
+    $userCompanyCode = 'TNB';
+}
+?>
+        <?php if ($userCompanyCode === 'KOCH'): ?>
         <a href="?section=products" class="<?php echo $section==='products'?'active':'';?>"><i class="fas fa-boxes-stacked"></i> Products</a>
         <a href="?section=featured_products" class="<?php echo $section==='featured_products'?'active':'';?>"><i class="fas fa-star"></i> Featured Products</a>
+        <?php endif; ?>
+        <?php if ($userCompanyCode === 'TNB'): ?>
         <a href="?section=truck_types" class="<?php echo $section==='truck_types'?'active':'';?>"><i class="fas fa-truck-moving"></i> Truck Types</a>
-        <a href="?section=branches" class="<?php echo $section==='branches'?'active':'';?>"><i class="fas fa-map-marker-alt"></i> Branches</a>
+        <a href="?section=truck_types_index" class="<?php echo $section==='truck_types_index'?'active':'';?>"><i class="fas fa-truck-pickup"></i> Truck Types Index</a>
+        <?php endif; ?>
         <div class="divider"></div>
         <div class="label">Communications</div>
         <a href="?section=notifications" class="<?php echo $section==='notifications'?'active':'';?>"><i class="fas fa-bell"></i> Notifications<?php if((int)$stats['unread_notifications']>0):?><span class="badge"><?php echo (int)$stats['unread_notifications'];?></span><?php endif;?></a>
@@ -641,7 +651,7 @@ $distinctActions = get_distinct_actions($pdo);
 
 <?php elseif($section==='products'): ?>
 <!-- =================== PRODUCTS =================== -->
-<?php $allProducts = get_all_products_admin($pdo); ?>
+<?php $allProducts = get_all_products_admin($pdo, $filterCompanyId); ?>
 <div class="card">
     <div class="card-h"><h2><i class="fas fa-boxes-stacked"></i> Products (KOCH)</h2><div style="display:flex;gap:8px;align-items:center"><span style="font-size:12px;color:var(--muted)"><?php echo count($allProducts);?> products</span><button class="btn btn-sm btn-primary" onclick="openModal('productModal')"><i class="fas fa-plus"></i> Add Product</button></div></div>
     <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>ID</th><th>Image</th><th>Name</th><th>Category</th><th>Order</th><th>Status</th><th>Actions</th></tr></thead><tbody>
@@ -663,7 +673,7 @@ $distinctActions = get_distinct_actions($pdo);
 
 <?php elseif($section==='featured_products'): ?>
 <!-- =================== FEATURED PRODUCTS =================== -->
-<?php $allFeaturedProducts = get_all_featured_products_admin($pdo); ?>
+<?php $allFeaturedProducts = get_all_featured_products_admin($pdo, $filterCompanyId); ?>
 <div class="card">
     <div class="card-h"><h2><i class="fas fa-star"></i> Featured Products</h2><div style="display:flex;gap:8px;align-items:center"><span style="font-size:12px;color:var(--muted)"><?php echo count($allFeaturedProducts);?> items</span><button class="btn btn-sm btn-primary" onclick="openModal('featuredProductModal')"><i class="fas fa-plus"></i> Add Featured Product</button></div></div>
     <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>ID</th><th>Company</th><th>Name</th><th>Image</th><th>Website</th><th>Order</th><th>Status</th><th>Actions</th></tr></thead><tbody>
@@ -684,9 +694,32 @@ $distinctActions = get_distinct_actions($pdo);
     </tbody></table></div></div>
 </div>
 
+<?php elseif($section==='truck_types_index'): ?>
+<!-- =================== TRUCK TYPES INDEX =================== -->
+<?php $allTrucks = get_all_truck_types_admin($pdo, $filterCompanyId); ?>
+<div class="card">
+    <div class="card-h"><h2><i class="fas fa-truck-pickup"></i> Truck Types Index (TNB)</h2><div style="display:flex;gap:8px;align-items:center"><span style="font-size:12px;color:var(--muted)"><?php echo count($allTrucks);?> types</span><button class="btn btn-sm btn-primary" onclick="openModal('truckModal')"><i class="fas fa-plus"></i> Add Truck Type</button></div></div>
+    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>ID</th><th>Image</th><th>Name</th><th>Capacity</th><th>Order</th><th>Status</th><th>Index Display</th><th>Actions</th></tr></thead><tbody>
+    <?php if($allTrucks===[]):?><tr class="empty"><td colspan="8">No truck types found</td></tr>
+    <?php else: foreach($allTrucks as $t):?><tr>
+        <td style="font-size:12px;font-weight:600">#<?php echo (int)$t['id'];?></td>
+        <td><?php if($t['image_url']):?><img src="<?php echo h((string)$t['image_url']);?>" style="width:50px;height:35px;object-fit:cover;border-radius:6px" alt=""><?php else:?><span style="color:var(--muted);font-size:11px">-</span><?php endif;?></td>
+        <td style="font-size:12px;font-weight:600"><?php echo h((string)$t['name']);?></td>
+        <td style="font-size:12px"><?php echo h((string)($t['capacity']??'-'));?></td>
+        <td style="font-size:12px;text-align:center"><?php echo (int)$t['display_order'];?></td>
+        <td><?php echo admin_status_badge($t['is_active']?'active':'inactive');?></td>
+        <td><span style="font-size:11px;color:var(--muted)">Will show on TNB index page</span></td>
+        <td><div class="act-btns">
+            <button class="btn btn-xs btn-ghost" onclick="openEditTruck(<?php echo (int)$t['id'];?>,'<?php echo h(addslashes((string)$t['name']));?>','<?php echo h(addslashes((string)($t['description']??'')));?>','<?php echo h(addslashes((string)($t['image_url']??'')));?>','<?php echo h(addslashes((string)($t['capacity']??'')));?>',<?php echo (int)$t['display_order'];?>,<?php echo $t['is_active']?1:0;?>)"><i class="fas fa-edit"></i></button>
+            <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete?')"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="entity" value="truck_type"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?php echo (int)$t['id'];?>"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=truck_types_index'));?>"><button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></button></form>
+        </div></td>
+    </tr><?php endforeach; endif;?>
+    </tbody></table></div></div>
+</div>
+
 <?php elseif($section==='truck_types'): ?>
 <!-- =================== TRUCK TYPES =================== -->
-<?php $allTrucks = get_all_truck_types_admin($pdo); ?>
+<?php $allTrucks = get_all_truck_types_admin($pdo, $filterCompanyId); ?>
 <div class="card">
     <div class="card-h"><h2><i class="fas fa-truck-moving"></i> Truck Types (TNB)</h2><div style="display:flex;gap:8px;align-items:center"><span style="font-size:12px;color:var(--muted)"><?php echo count($allTrucks);?> types</span><button class="btn btn-sm btn-primary" onclick="openModal('truckModal')"><i class="fas fa-plus"></i> Add Truck Type</button></div></div>
     <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>ID</th><th>Image</th><th>Name</th><th>Capacity</th><th>Order</th><th>Status</th><th>Actions</th></tr></thead><tbody>
