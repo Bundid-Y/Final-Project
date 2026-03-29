@@ -168,7 +168,7 @@ function create_koch_quotation(PDO $pdo, array $payload, array $files = []): arr
                                
                     foreach ($toEmails as $to) {
                         if (filter_var($to, FILTER_VALIDATE_EMAIL)) {
-                            @mail($to, $subject, $message, $headers);
+                            // @mail($to, $subject, $message, $headers); // ปิดชั่วคราวเพื่อป้องกันการโหลดช้าบน XAMPP
                         }
                     }
                 }
@@ -314,7 +314,7 @@ function create_tnb_quotation(PDO $pdo, array $payload, array $files = []): arra
                                
                     foreach ($toEmails as $to) {
                         if (filter_var($to, FILTER_VALIDATE_EMAIL)) {
-                            @mail($to, $subject, $message, $headers);
+                            // @mail($to, $subject, $message, $headers); // ปิดชั่วคราวเพื่อป้องกันการโหลดช้าบน XAMPP
                         }
                     }
                 }
