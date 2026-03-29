@@ -230,8 +230,12 @@ textarea.fm-input{resize:vertical;min-height:80px}
         <div class="divider"></div>
         <div class="label">Business</div>
         <a href="?section=users" class="<?php echo $section==='users'?'active':'';?>"><i class="fas fa-users"></i> Users<span class="badge"><?php echo number_format((int)$stats['users']);?></span></a>
+        <?php if ($companyMode !== 'tnb'): ?>
         <a href="?section=koch_quotations" class="<?php echo $section==='koch_quotations'?'active':'';?>"><i class="fas fa-box"></i> KOCH Quotations<?php if($ext['koch_pending']>0):?><span class="badge warn"><?php echo $ext['koch_pending'];?></span><?php endif;?></a>
+        <?php endif; ?>
+        <?php if ($companyMode !== 'koch'): ?>
         <a href="?section=tnb_quotations" class="<?php echo $section==='tnb_quotations'?'active':'';?>"><i class="fas fa-truck"></i> TNB Requests<?php if($ext['tnb_pending']>0):?><span class="badge warn"><?php echo $ext['tnb_pending'];?></span><?php endif;?></a>
+        <?php endif; ?>
         <a href="?section=contact_messages" class="<?php echo $section==='contact_messages'?'active':'';?>"><i class="fas fa-envelope-open-text"></i> Contact Messages</a>
         <div class="divider"></div>
         <?php if ($companyMode !== 'all'): ?>
@@ -241,9 +245,10 @@ textarea.fm-input{resize:vertical;min-height:80px}
         <?php if ($companyMode === 'koch'): ?>
         <a href="?section=products" class="<?php echo $section==='products'?'active':'';?>"><i class="fas fa-boxes-stacked"></i> Products</a>
         <a href="?section=featured_products" class="<?php echo $section==='featured_products'?'active':'';?>"><i class="fas fa-star"></i> Featured Products</a>
+        <a href="?section=branches" class="<?php echo $section==='branches'?'active':'';?>"><i class="fas fa-map-marker-alt"></i> Branches</a>
         <?php elseif ($companyMode === 'tnb'): ?>
-        <a href="?section=truck_types" class="<?php echo $section==='truck_types'?'active':'';?>"><i class="fas fa-truck-moving"></i> Truck Types</a>
         <a href="?section=truck_cards" class="<?php echo $section==='truck_cards'?'active':'';?>"><i class="fas fa-id-card"></i> Truck Cards</a>
+        <a href="?section=branches" class="<?php echo $section==='branches'?'active':'';?>"><i class="fas fa-map-marker-alt"></i> Branches</a>
         <?php endif; ?>
         <?php endif; ?>
         <div class="divider"></div>
@@ -276,8 +281,12 @@ textarea.fm-input{resize:vertical;min-height:80px}
             </div>
         </div>
         <div class="topbar-right">
+            <?php if ($companyMode !== 'tnb'): ?>
             <a href="<?php echo h(project_url('koch/main/quotation.php'));?>" class="tb-btn ghost"><i class="fas fa-plus"></i> KOCH Quote</a>
+            <?php endif; ?>
+            <?php if ($companyMode !== 'koch'): ?>
             <a href="<?php echo h(project_url('tnb/main/quotation.php'));?>" class="tb-btn ghost"><i class="fas fa-plus"></i> TNB Request</a>
+            <?php endif; ?>
         </div>
     </div>
 
@@ -669,6 +678,21 @@ $distinctActions = get_distinct_actions($pdo);
 
 <?php elseif($section==='notifications'): ?>
 <!-- =================== NOTIFICATIONS =================== -->
+<?php
+// Auto-mark all notifications as read when entering this section
+if ((int)$stats['unread_notifications'] > 0) {
+    $markSql = 'UPDATE notifications SET is_read = 1 WHERE is_read = 0';
+    if ($filterCompanyId !== null) {
+        $markSql .= ' AND user_id IN (SELECT id FROM users WHERE company_id = :cid)';
+        $markStmt = $pdo->prepare($markSql);
+        $markStmt->execute([':cid' => $filterCompanyId]);
+    } else {
+        $pdo->exec($markSql);
+    }
+    // Refresh the count after marking
+    $stats['unread_notifications'] = 0;
+}
+?>
 <div class="card">
     <div class="card-h">
         <h2><i class="fas fa-bell"></i> System Notifications</h2>

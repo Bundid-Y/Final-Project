@@ -45,7 +45,10 @@ try {
     };
 
     if ($result['success']) {
-        create_notification($pdo, $adminId, 'CRUD: ' . ucfirst($action) . ' ' . ucfirst(str_replace('_', ' ', $entity)), $result['message'], 'success');
+        // Don't create a notification for notification-related actions (prevents paradox of creating unread while marking all read)
+        if ($entity !== 'notification') {
+            create_notification($pdo, $adminId, 'CRUD: ' . ucfirst($action) . ' ' . ucfirst(str_replace('_', ' ', $entity)), $result['message'], 'success');
+        }
     }
 
     set_flash($result['success'] ? 'success_message' : 'error_message', $result['message']);
