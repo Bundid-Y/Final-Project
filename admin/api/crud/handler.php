@@ -5,6 +5,7 @@ require_once __DIR__ . '/../../includes/bootstrap.php';
 require_once __DIR__ . '/../../includes/admin.php';
 require_once __DIR__ . '/../../includes/crud.php';
 require_once __DIR__ . '/../../includes/activity.php';
+require_once __DIR__ . '/../../includes/content.php';
 
 $pdo  = Database::connection();
 $user = require_admin_user();
