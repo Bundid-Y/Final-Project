@@ -24,6 +24,17 @@ $action = sanitize_text((string) ($_POST['action'] ?? ''));
 $id     = (int) ($_POST['id'] ?? 0);
 $back   = (string) ($_POST['redirect_back'] ?? '');
 
+// Resolve the company context from the form data (guaranteed accurate)
+$postCompanyMode = sanitize_text((string) ($_POST['company_mode'] ?? ($_SESSION['admin_company_mode'] ?? 'all')));
+$crudCompanyId = match($postCompanyMode) {
+    'koch' => get_company_id_by_code($pdo, 'KOCH'),
+    'tnb' => get_company_id_by_code($pdo, 'TNB'),
+    default => null,
+};
+// Also update the session so subsequent session-based reads are consistent
+$_SESSION['admin_company_mode'] = $postCompanyMode;
+$_SESSION['admin_company_id_context'] = $crudCompanyId;
+
 if ($back === '') {
     $back = $_SERVER['HTTP_REFERER'] ?? project_url('admin/dashboard.php');
 }
@@ -47,7 +58,7 @@ try {
     if ($result['success']) {
         // Don't create a notification for notification-related actions (prevents paradox of creating unread while marking all read)
         if ($entity !== 'notification') {
-            create_notification($pdo, $adminId, 'CRUD: ' . ucfirst($action) . ' ' . ucfirst(str_replace('_', ' ', $entity)), $result['message'], 'success');
+            create_notification($pdo, $adminId, 'CRUD: ' . ucfirst($action) . ' ' . ucfirst(str_replace('_', ' ', $entity)), $result['message'], 'success', null, null, 'normal', $crudCompanyId);
         }
     }
 

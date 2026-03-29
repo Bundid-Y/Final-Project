@@ -92,10 +92,10 @@ function admin_extended_stats(PDO $pdo, ?int $companyId = null): array
     $newUsersMonth = $pdo->prepare("SELECT COUNT(*) FROM users WHERE created_at >= DATE_FORMAT(NOW(), '%Y-%m-01')" . ($companyId !== null ? " AND company_id = :cid" : ''));
     $newUsersMonth->execute($params);
 
-    $kochPending = $pdo->prepare("SELECT COUNT(*) FROM koch_quotations WHERE status = 'pending'" . ($companyId !== null ? " AND user_id IN (SELECT id FROM users WHERE company_id = :cid)" : ''));
+    $kochPending = $pdo->prepare("SELECT COUNT(*) FROM koch_quotations WHERE is_read = 0" . ($companyId !== null ? " AND user_id IN (SELECT id FROM users WHERE company_id = :cid)" : ''));
     $kochPending->execute($params);
 
-    $tnbPending = $pdo->prepare("SELECT COUNT(*) FROM tnb_quotations WHERE status = 'pending'" . ($companyId !== null ? " AND user_id IN (SELECT id FROM users WHERE company_id = :cid)" : ''));
+    $tnbPending = $pdo->prepare("SELECT COUNT(*) FROM tnb_quotations WHERE is_read = 0" . ($companyId !== null ? " AND user_id IN (SELECT id FROM users WHERE company_id = :cid)" : ''));
     $tnbPending->execute($params);
 
     $tnbInTransit = $pdo->prepare("SELECT COUNT(*) FROM tnb_quotations WHERE status = 'in_transit'" . ($companyId !== null ? " AND user_id IN (SELECT id FROM users WHERE company_id = :cid)" : ''));

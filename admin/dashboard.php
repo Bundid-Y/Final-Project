@@ -231,7 +231,7 @@ textarea.fm-input{resize:vertical;min-height:80px}
         <a href="?section=overview" class="<?php echo $section==='overview'?'active':'';?>"><i class="fas fa-chart-pie"></i> Dashboard<?php if($totalPending>0):?><span class="badge warn"><?php echo $totalPending;?></span><?php endif;?></a>
         <div class="divider"></div>
         <div class="label">Business</div>
-        <a href="?section=users" class="<?php echo $section==='users'?'active':'';?>"><i class="fas fa-users"></i> Users<span class="badge"><?php echo number_format((int)$stats['users']);?></span></a>
+        <a href="?section=users" class="<?php echo $section==='users'?'active':'';?>"><i class="fas fa-users"></i> Users</a>
         <?php if ($companyMode !== 'tnb'): ?>
         <a href="?section=koch_quotations" class="<?php echo $section==='koch_quotations'?'active':'';?>"><i class="fas fa-box"></i> KOCH Quotations<?php if($ext['koch_pending']>0):?><span class="badge warn"><?php echo $ext['koch_pending'];?></span><?php endif;?></a>
         <?php endif; ?>
@@ -379,7 +379,7 @@ textarea.fm-input{resize:vertical;min-height:80px}
 
 <div class="qa-grid">
     <a href="<?php echo h(project_url('koch/main/quotation.php'));?>" class="qa-item koch"><i class="fas fa-box-open"></i><span>New Quotation</span></a>
-    <a href="?section=koch_quotations" class="qa-item all"><i class="fas fa-clipboard-list"></i><span>Pending (<?php echo $ext['koch_pending'];?>)</span></a>
+    <a href="?section=koch_quotations" class="qa-item all"><i class="fas fa-clipboard-list"></i><span>New (<?php echo $ext['koch_pending'];?>)</span></a>
     <a href="?section=products" class="qa-item koch"><i class="fas fa-boxes-stacked"></i><span>Products</span></a>
     <a href="?section=notifications" class="qa-item notif"><i class="fas fa-bell"></i><span>Notifications (<?php echo (int)$stats['unread_notifications'];?>)</span></a>
 </div>
@@ -460,7 +460,7 @@ textarea.fm-input{resize:vertical;min-height:80px}
 
 <div class="qa-grid">
     <a href="<?php echo h(project_url('tnb/main/quotation.php'));?>" class="qa-item tnb"><i class="fas fa-shipping-fast"></i><span>New TNB Request</span></a>
-    <a href="?section=tnb_quotations" class="qa-item all"><i class="fas fa-clipboard-list"></i><span>Pending (<?php echo $ext['tnb_pending'];?>)</span></a>
+    <a href="?section=tnb_quotations" class="qa-item all"><i class="fas fa-clipboard-list"></i><span>New (<?php echo $ext['tnb_pending'];?>)</span></a>
     <a href="?section=truck_cards" class="qa-item tnb"><i class="fas fa-id-card"></i><span>Truck Cards</span></a>
     <a href="?section=notifications" class="qa-item notif"><i class="fas fa-bell"></i><span>Notifications (<?php echo (int)$stats['unread_notifications'];?>)</span></a>
 </div>
@@ -563,7 +563,7 @@ textarea.fm-input{resize:vertical;min-height:80px}
             <div class="act-btns">
                 <button class="btn btn-sm btn-ghost" onclick="openUserModal(<?php echo (int)$u['id'];?>,'<?php echo h((string)$u['username']);?>','<?php echo h((string)$u['role']);?>','<?php echo h((string)$u['status']);?>')"><i class="fas fa-edit"></i></button>
                 <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete user <?php echo h((string)$u['username']);?>?')">
-                    <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>">
+                    <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>">
                     <input type="hidden" name="entity" value="user">
                     <input type="hidden" name="action" value="delete">
                     <input type="hidden" name="id" value="<?php echo (int)$u['id'];?>">
@@ -578,9 +578,20 @@ textarea.fm-input{resize:vertical;min-height:80px}
 
 <?php elseif($section==='koch_quotations'): ?>
 <!-- =================== KOCH QUOTATIONS =================== -->
+<?php
+// Auto-mark as read
+if ($ext['koch_pending'] > 0) {
+    if ($filterCompanyId !== null) {
+        $pdo->prepare("UPDATE koch_quotations SET is_read = 1 WHERE is_read = 0 AND user_id IN (SELECT id FROM users WHERE company_id = :cid)")->execute([':cid' => $filterCompanyId]);
+    } else {
+        $pdo->exec("UPDATE koch_quotations SET is_read = 1 WHERE is_read = 0");
+    }
+    $ext['koch_pending'] = 0; // Clear the badge immediately for the UI
+}
+?>
 <div class="stats-row">
     <div class="stat-card blue"><div class="sc-top"><div class="sc-icon"><i class="fas fa-file-alt"></i></div></div><div class="sc-num"><?php echo number_format((int)$stats['koch_quotations']);?></div><div class="sc-label">Total KOCH Quotations</div></div>
-    <div class="stat-card orange"><div class="sc-top"><div class="sc-icon"><i class="fas fa-clock"></i></div></div><div class="sc-num"><?php echo $ext['koch_pending'];?></div><div class="sc-label">Pending</div></div>
+    <div class="stat-card orange"><div class="sc-top"><div class="sc-icon"><i class="fas fa-clock"></i></div></div><div class="sc-num"><?php echo $ext['koch_pending'];?></div><div class="sc-label">New / Unread</div></div>
     <div class="stat-card purple"><div class="sc-top"><div class="sc-icon"><i class="fas fa-calendar"></i></div></div><div class="sc-num"><?php echo $ext['koch_month'];?></div><div class="sc-label">This Month</div></div>
     <div class="stat-card green"><div class="sc-top"><div class="sc-icon"><i class="fas fa-check-circle"></i></div></div><div class="sc-num">-</div><div class="sc-label">Completed</div></div>
 </div>
@@ -606,9 +617,20 @@ textarea.fm-input{resize:vertical;min-height:80px}
 
 <?php elseif($section==='tnb_quotations'): ?>
 <!-- =================== TNB QUOTATIONS =================== -->
+<?php
+// Auto-mark as read
+if ($ext['tnb_pending'] > 0) {
+    if ($filterCompanyId !== null) {
+        $pdo->prepare("UPDATE tnb_quotations SET is_read = 1 WHERE is_read = 0 AND user_id IN (SELECT id FROM users WHERE company_id = :cid)")->execute([':cid' => $filterCompanyId]);
+    } else {
+        $pdo->exec("UPDATE tnb_quotations SET is_read = 1 WHERE is_read = 0");
+    }
+    $ext['tnb_pending'] = 0; // Clear the badge immediately for the UI
+}
+?>
 <div class="stats-row">
     <div class="stat-card teal"><div class="sc-top"><div class="sc-icon"><i class="fas fa-file-alt"></i></div></div><div class="sc-num"><?php echo number_format((int)$stats['tnb_quotations']);?></div><div class="sc-label">Total TNB Requests</div></div>
-    <div class="stat-card orange"><div class="sc-top"><div class="sc-icon"><i class="fas fa-clock"></i></div></div><div class="sc-num"><?php echo $ext['tnb_pending'];?></div><div class="sc-label">Pending</div></div>
+    <div class="stat-card orange"><div class="sc-top"><div class="sc-icon"><i class="fas fa-clock"></i></div></div><div class="sc-num"><?php echo $ext['tnb_pending'];?></div><div class="sc-label">New / Unread</div></div>
     <div class="stat-card blue"><div class="sc-top"><div class="sc-icon"><i class="fas fa-shipping-fast"></i></div></div><div class="sc-num"><?php echo $ext['tnb_in_transit'];?></div><div class="sc-label">In Transit</div></div>
     <div class="stat-card purple"><div class="sc-top"><div class="sc-icon"><i class="fas fa-calendar"></i></div></div><div class="sc-num"><?php echo $ext['tnb_month'];?></div><div class="sc-label">This Month</div></div>
 </div>
@@ -699,7 +721,7 @@ if ((int)$stats['unread_notifications'] > 0) {
         <div style="display:flex;gap:8px;align-items:center">
             <?php if((int)$stats['unread_notifications']>0):?><span style="background:var(--primary);color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:10px"><?php echo (int)$stats['unread_notifications'];?> unread</span>
             <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline">
-                <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>">
+                <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>">
                 <input type="hidden" name="entity" value="notification">
                 <input type="hidden" name="action" value="mark_all_read">
                 <input type="hidden" name="id" value="0">
@@ -727,7 +749,7 @@ if ((int)$stats['unread_notifications'] > 0) {
             <div class="act-btns">
                 <?php if(!$n['is_read']):?>
                 <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline">
-                    <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>">
+                    <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>">
                     <input type="hidden" name="entity" value="notification">
                     <input type="hidden" name="action" value="mark_read">
                     <input type="hidden" name="id" value="<?php echo (int)$n['id'];?>">
@@ -736,7 +758,7 @@ if ((int)$stats['unread_notifications'] > 0) {
                 </form>
                 <?php endif;?>
                 <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete this notification?')">
-                    <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>">
+                    <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>">
                     <input type="hidden" name="entity" value="notification">
                     <input type="hidden" name="action" value="delete">
                     <input type="hidden" name="id" value="<?php echo (int)$n['id'];?>">
@@ -766,7 +788,7 @@ if ((int)$stats['unread_notifications'] > 0) {
         <td><?php echo admin_status_badge($s['is_active']?'active':'inactive');?></td>
         <td><div class="act-btns">
             <button class="btn btn-xs btn-ghost" onclick="openEditSlider(<?php echo (int)$s['id'];?>,'<?php echo h(addslashes((string)$s['title']));?>','<?php echo h(addslashes((string)($s['subtitle']??'')));?>','<?php echo h(addslashes((string)($s['image_url']??'')));?>','<?php echo h(addslashes((string)($s['button_text']??'')));?>','<?php echo h(addslashes((string)($s['button_url']??'')));?>',<?php echo (int)($s['company_id']??0);?>,<?php echo (int)$s['slide_order'];?>,<?php echo $s['is_active']?1:0;?>)"><i class="fas fa-edit"></i></button>
-            <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete this slider?')"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="entity" value="slider"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?php echo (int)$s['id'];?>"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=sliders'));?>"><button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></button></form>
+            <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete this slider?')"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>"><input type="hidden" name="entity" value="slider"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?php echo (int)$s['id'];?>"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=sliders'));?>"><button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></button></form>
         </div></td>
     </tr><?php endforeach; endif;?>
     </tbody></table></div></div>
@@ -789,7 +811,7 @@ if ((int)$stats['unread_notifications'] > 0) {
         <td><?php echo admin_status_badge($p['is_active']?'active':'inactive');?></td>
         <td><div class="act-btns">
             <button class="btn btn-xs btn-ghost" onclick="openEditPartner(<?php echo (int)$p['id'];?>,'<?php echo h(addslashes((string)$p['name']));?>','<?php echo h(addslashes((string)($p['logo_url']??'')));?>','<?php echo h(addslashes((string)($p['website_url']??'')));?>',<?php echo (int)($p['company_id']??0);?>,<?php echo (int)$p['partner_order'];?>,<?php echo $p['is_active']?1:0;?>)"><i class="fas fa-edit"></i></button>
-            <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete?')"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="entity" value="partner"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?php echo (int)$p['id'];?>"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=partners'));?>"><button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></button></form>
+            <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete?')"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>"><input type="hidden" name="entity" value="partner"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?php echo (int)$p['id'];?>"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=partners'));?>"><button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></button></form>
         </div></td>
     </tr><?php endforeach; endif;?>
     </tbody></table></div></div>
@@ -811,7 +833,7 @@ if ((int)$stats['unread_notifications'] > 0) {
         <td><?php echo admin_status_badge($p['is_active']?'active':'inactive');?></td>
         <td><div class="act-btns">
             <button class="btn btn-xs btn-ghost" onclick="openEditProduct(<?php echo (int)$p['id'];?>,'<?php echo h(addslashes((string)$p['name']));?>','<?php echo h(addslashes((string)($p['description']??'')));?>','<?php echo h(addslashes((string)($p['image_url']??'')));?>','<?php echo h(addslashes((string)($p['category']??'')));?>',<?php echo (int)$p['display_order'];?>,<?php echo $p['is_active']?1:0;?>)"><i class="fas fa-edit"></i></button>
-            <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete?')"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="entity" value="product"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?php echo (int)$p['id'];?>"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=products'));?>"><button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></button></form>
+            <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete?')"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>"><input type="hidden" name="entity" value="product"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?php echo (int)$p['id'];?>"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=products'));?>"><button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></button></form>
         </div></td>
     </tr><?php endforeach; endif;?>
     </tbody></table></div></div>
@@ -834,7 +856,7 @@ if ((int)$stats['unread_notifications'] > 0) {
         <td><?php echo admin_status_badge($fp['is_active']?'active':'inactive');?></td>
         <td><div class="act-btns">
             <button class="btn btn-xs btn-ghost" onclick="openEditFeaturedProduct(<?php echo (int)$fp['id'];?>,'<?php echo h(addslashes((string)$fp['name']));?>','<?php echo h(addslashes((string)($fp['description']??'')));?>','<?php echo h(addslashes((string)($fp['image_url']??'')));?>','<?php echo h(addslashes((string)($fp['website_url']??'')));?>',<?php echo (int)$fp['company_id'];?>,<?php echo (int)$fp['display_order'];?>,<?php echo $fp['is_active']?1:0;?>)"><i class="fas fa-edit"></i></button>
-            <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete?')"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="entity" value="featured_product"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?php echo (int)$fp['id'];?>"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=featured_products'));?>"><button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></button></form>
+            <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete?')"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>"><input type="hidden" name="entity" value="featured_product"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?php echo (int)$fp['id'];?>"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=featured_products'));?>"><button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></button></form>
         </div></td>
     </tr><?php endforeach; endif;?>
     </tbody></table></div></div>
@@ -842,7 +864,14 @@ if ((int)$stats['unread_notifications'] > 0) {
 
 <?php elseif($section==='truck_types_index'): ?>
 <!-- =================== TRUCK TYPES INDEX =================== -->
-<?php $allTrucks = get_all_truck_types_admin($pdo, $filterCompanyId); ?>
+<?php 
+// Block KOCH users from accessing truck types index
+if ($user['company_id'] == get_company_id_by_code($pdo, 'KOCH')) {
+    header('Location: ' . project_url('admin/dashboard.php?section=overview'));
+    exit;
+}
+$allTrucks = get_all_truck_types_admin($pdo, $filterCompanyId); 
+?>
 <div class="card">
     <div class="card-h"><h2><i class="fas fa-truck-pickup"></i> Truck Types Index (TNB)</h2><div style="display:flex;gap:8px;align-items:center"><span style="font-size:12px;color:var(--muted)"><?php echo count($allTrucks);?> types</span><button class="btn btn-sm btn-primary" onclick="openModal('truckModal')"><i class="fas fa-plus"></i> Add Truck Type</button></div></div>
     <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>ID</th><th>Image</th><th>Name</th><th>Capacity</th><th>Order</th><th>Status</th><th>Index Display</th><th>Actions</th></tr></thead><tbody>
@@ -857,7 +886,7 @@ if ((int)$stats['unread_notifications'] > 0) {
         <td><span style="font-size:11px;color:var(--muted)">Will show on TNB index page</span></td>
         <td><div class="act-btns">
             <button class="btn btn-xs btn-ghost" onclick="openEditTruck(<?php echo (int)$t['id'];?>,'<?php echo h(addslashes((string)$t['name']));?>','<?php echo h(addslashes((string)($t['description']??'')));?>','<?php echo h(addslashes((string)($t['image_url']??'')));?>','<?php echo h(addslashes((string)($t['capacity']??'')));?>',<?php echo (int)$t['display_order'];?>,<?php echo $t['is_active']?1:0;?>)"><i class="fas fa-edit"></i></button>
-            <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete?')"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="entity" value="truck_type"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?php echo (int)$t['id'];?>"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=truck_types_index'));?>"><button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></button></form>
+            <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete?')"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>"><input type="hidden" name="entity" value="truck_type"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?php echo (int)$t['id'];?>"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=truck_types_index'));?>"><button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></button></form>
         </div></td>
     </tr><?php endforeach; endif;?>
     </tbody></table></div></div>
@@ -865,7 +894,14 @@ if ((int)$stats['unread_notifications'] > 0) {
 
 <?php elseif($section==='truck_types'): ?>
 <!-- =================== TRUCK TYPES =================== -->
-<?php $allTrucks = get_all_truck_types_admin($pdo, $filterCompanyId); ?>
+<?php 
+// Block KOCH users from accessing truck types
+if ($user['company_id'] == get_company_id_by_code($pdo, 'KOCH')) {
+    header('Location: ' . project_url('admin/dashboard.php?section=overview'));
+    exit;
+}
+$allTrucks = get_all_truck_types_admin($pdo, $filterCompanyId); 
+?>
 <div class="card">
     <div class="card-h"><h2><i class="fas fa-truck-moving"></i> Truck Types (TNB)</h2><div style="display:flex;gap:8px;align-items:center"><span style="font-size:12px;color:var(--muted)"><?php echo count($allTrucks);?> types</span><button class="btn btn-sm btn-primary" onclick="openModal('truckModal')"><i class="fas fa-plus"></i> Add Truck Type</button></div></div>
     <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>ID</th><th>Image</th><th>Name</th><th>Capacity</th><th>Order</th><th>Status</th><th>Actions</th></tr></thead><tbody>
@@ -879,7 +915,7 @@ if ((int)$stats['unread_notifications'] > 0) {
         <td><?php echo admin_status_badge($t['is_active']?'active':'inactive');?></td>
         <td><div class="act-btns">
             <button class="btn btn-xs btn-ghost" onclick="openEditTruck(<?php echo (int)$t['id'];?>,'<?php echo h(addslashes((string)$t['name']));?>','<?php echo h(addslashes((string)($t['description']??'')));?>','<?php echo h(addslashes((string)($t['image_url']??'')));?>','<?php echo h(addslashes((string)($t['capacity']??'')));?>',<?php echo (int)$t['display_order'];?>,<?php echo $t['is_active']?1:0;?>)"><i class="fas fa-edit"></i></button>
-            <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete?')"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="entity" value="truck_type"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?php echo (int)$t['id'];?>"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=truck_types'));?>"><button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></button></form>
+            <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete?')"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>"><input type="hidden" name="entity" value="truck_type"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?php echo (int)$t['id'];?>"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=truck_types'));?>"><button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></button></form>
         </div></td>
     </tr><?php endforeach; endif;?>
     </tbody></table></div></div>
@@ -887,7 +923,14 @@ if ((int)$stats['unread_notifications'] > 0) {
 
 <?php elseif($section==='truck_cards'): ?>
 <!-- =================== TRUCK CARDS (TNB Index Display) =================== -->
-<?php $allTruckCards = get_all_truck_types_admin($pdo, $filterCompanyId); ?>
+<?php 
+// Block KOCH users from accessing truck cards
+if ($user['company_id'] == get_company_id_by_code($pdo, 'KOCH')) {
+    header('Location: ' . project_url('admin/dashboard.php?section=overview'));
+    exit;
+}
+$allTruckCards = get_all_truck_types_admin($pdo, $filterCompanyId); 
+?>
 <div class="card">
     <div class="card-h"><h2><i class="fas fa-id-card"></i> Truck Cards (TNB)</h2><div style="display:flex;gap:8px;align-items:center"><span style="font-size:12px;color:var(--muted)"><?php echo count($allTruckCards);?> cards</span><button class="btn btn-sm btn-primary" onclick="openModal('truckModal')"><i class="fas fa-plus"></i> Add Truck Card</button></div></div>
     <div class="card-b" style="padding:12px 20px;background:#eff6ff;border-bottom:1px solid var(--border)">
@@ -908,7 +951,7 @@ if ((int)$stats['unread_notifications'] > 0) {
                     </div>
                     <div style="display:flex;gap:4px;margin-top:8px">
                         <button class="btn btn-xs btn-ghost" onclick="openEditTruck(<?php echo (int)$tc['id'];?>,'<?php echo h(addslashes((string)$tc['name']));?>','<?php echo h(addslashes((string)($tc['description']??'')));?>','<?php echo h(addslashes((string)($tc['image_url']??'')));?>','<?php echo h(addslashes((string)($tc['capacity']??'')));?>',<?php echo (int)$tc['display_order'];?>,<?php echo $tc['is_active']?1:0;?>)"><i class="fas fa-edit"></i></button>
-                        <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete?')"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="entity" value="truck_type"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?php echo (int)$tc['id'];?>"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=truck_cards'));?>"><button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></button></form>
+                        <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete?')"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>"><input type="hidden" name="entity" value="truck_type"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?php echo (int)$tc['id'];?>"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=truck_cards'));?>"><button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></button></form>
                     </div>
                 </div>
             </div>
@@ -934,7 +977,7 @@ if ((int)$stats['unread_notifications'] > 0) {
         <td style="font-size:11px;white-space:nowrap"><?php echo h(date('d/m/Y H:i',strtotime((string)$et['updated_at'])));?></td>
         <td><div class="act-btns">
             <button class="btn btn-xs btn-ghost" onclick="openEditEmailTpl(<?php echo (int)$et['id'];?>,'<?php echo h(addslashes((string)$et['name']));?>','<?php echo h(addslashes((string)$et['subject']));?>','<?php echo h(addslashes((string)($et['variables']??'')));?>',<?php echo (int)($et['company_id']??0);?>,<?php echo $et['is_active']?1:0;?>)"><i class="fas fa-edit"></i></button>
-            <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete?')"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="entity" value="email_template"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?php echo (int)$et['id'];?>"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=email_templates'));?>"><button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></button></form>
+            <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete?')"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>"><input type="hidden" name="entity" value="email_template"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?php echo (int)$et['id'];?>"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=email_templates'));?>"><button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></button></form>
         </div></td>
     </tr><?php endforeach; endif;?>
     </tbody></table></div></div>
@@ -959,7 +1002,7 @@ if ((int)$stats['unread_notifications'] > 0) {
         <td><?php echo admin_status_badge($er['is_active']?'active':'inactive');?></td>
         <td><div class="act-btns">
             <button class="btn btn-xs btn-ghost" onclick="openEditEmailRec(<?php echo (int)$er['id'];?>,'<?php echo h(addslashes((string)$er['event_type']));?>','<?php echo h(addslashes((string)$er['recipient_name']));?>','<?php echo h(addslashes((string)$er['recipient_email']));?>',<?php echo (int)($er['company_id']??0);?>,<?php echo $er['is_active']?1:0;?>)"><i class="fas fa-edit"></i></button>
-            <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete?')"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="entity" value="email_recipient"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?php echo (int)$er['id'];?>"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=email_recipients'));?>"><button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></button></form>
+            <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete?')"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>"><input type="hidden" name="entity" value="email_recipient"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?php echo (int)$er['id'];?>"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=email_recipients'));?>"><button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></button></form>
         </div></td>
     </tr><?php endforeach; endif;?>
     </tbody></table></div></div>
@@ -982,8 +1025,8 @@ if ((int)$stats['unread_notifications'] > 0) {
         <td><?php echo admin_status_badge((string)($cm['status']??'new'));?></td>
         <td style="font-size:11px;white-space:nowrap"><?php echo h(date('d/m/Y H:i',strtotime((string)$cm['created_at'])));?></td>
         <td><div class="act-btns">
-            <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="entity" value="contact_message"><input type="hidden" name="action" value="update_status"><input type="hidden" name="id" value="<?php echo (int)$cm['id'];?>"><input type="hidden" name="status" value="read"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=contact_messages'));?>"><button type="submit" class="btn btn-xs btn-ghost" title="Mark Read"><i class="fas fa-eye"></i></button></form>
-            <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete?')"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="entity" value="contact_message"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?php echo (int)$cm['id'];?>"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=contact_messages'));?>"><button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></button></form>
+            <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>"><input type="hidden" name="entity" value="contact_message"><input type="hidden" name="action" value="update_status"><input type="hidden" name="id" value="<?php echo (int)$cm['id'];?>"><input type="hidden" name="status" value="read"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=contact_messages'));?>"><button type="submit" class="btn btn-xs btn-ghost" title="Mark Read"><i class="fas fa-eye"></i></button></form>
+            <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete?')"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>"><input type="hidden" name="entity" value="contact_message"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?php echo (int)$cm['id'];?>"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=contact_messages'));?>"><button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></button></form>
         </div></td>
     </tr><?php endforeach; endif;?>
     </tbody></table></div></div>
@@ -1108,7 +1151,7 @@ if ((int)$stats['unread_notifications'] > 0) {
 <div class="modal">
     <div class="modal-head"><h3><i class="fas fa-user-edit"></i> Edit User</h3><button class="modal-close" onclick="closeModal('userModal')">&times;</button></div>
     <form method="POST" action="<?php echo h($crudUrl);?>" enctype="multipart/form-data">
-        <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>">
+        <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>">
         <input type="hidden" name="entity" value="user">
         <input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=users'));?>">
         <input type="hidden" name="id" id="um_id">
@@ -1141,7 +1184,7 @@ if ((int)$stats['unread_notifications'] > 0) {
 <div class="modal">
     <div class="modal-head"><h3><i class="fas fa-images"></i> <span id="sm_title">Add Slider</span></h3><button class="modal-close" onclick="closeModal('sliderModal')">&times;</button></div>
     <form method="POST" action="<?php echo h($crudUrl);?>" enctype="multipart/form-data">
-        <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>">
+        <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>">
         <input type="hidden" name="entity" value="slider">
         <input type="hidden" name="action" id="sm_action" value="create">
         <input type="hidden" name="id" id="sm_id" value="0">
@@ -1170,7 +1213,7 @@ if ((int)$stats['unread_notifications'] > 0) {
 <div class="modal">
     <div class="modal-head"><h3><i class="fas fa-handshake"></i> <span id="pm_title">Add Partner</span></h3><button class="modal-close" onclick="closeModal('partnerModal')">&times;</button></div>
     <form method="POST" action="<?php echo h($crudUrl);?>" enctype="multipart/form-data">
-        <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>">
+        <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>">
         <input type="hidden" name="entity" value="partner">
         <input type="hidden" name="action" id="pm_action" value="create">
         <input type="hidden" name="id" id="pm_id" value="0">
@@ -1195,7 +1238,7 @@ if ((int)$stats['unread_notifications'] > 0) {
 <div class="modal">
     <div class="modal-head"><h3><i class="fas fa-boxes-stacked"></i> <span id="prd_title">Add Product</span></h3><button class="modal-close" onclick="closeModal('productModal')">&times;</button></div>
     <form method="POST" action="<?php echo h($crudUrl);?>" enctype="multipart/form-data">
-        <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>">
+        <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>">
         <input type="hidden" name="entity" value="product">
         <input type="hidden" name="action" id="prd_action" value="create">
         <input type="hidden" name="id" id="prd_id" value="0">
@@ -1218,7 +1261,7 @@ if ((int)$stats['unread_notifications'] > 0) {
 <div class="modal">
     <div class="modal-head"><h3><i class="fas fa-truck-moving"></i> <span id="tt_title">Add Truck Type</span></h3><button class="modal-close" onclick="closeModal('truckModal')">&times;</button></div>
     <form method="POST" action="<?php echo h($crudUrl);?>" enctype="multipart/form-data">
-        <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>">
+        <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>">
         <input type="hidden" name="entity" value="truck_type">
         <input type="hidden" name="action" id="tt_action" value="create">
         <input type="hidden" name="id" id="tt_id" value="0">
@@ -1243,7 +1286,7 @@ if ((int)$stats['unread_notifications'] > 0) {
 <div class="modal">
     <div class="modal-head"><h3><i class="fas fa-star"></i> <span id="fp_title">Add Featured Product</span></h3><button class="modal-close" onclick="closeModal('featuredProductModal')">&times;</button></div>
     <form method="POST" action="<?php echo h($crudUrl);?>" enctype="multipart/form-data">
-        <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>">
+        <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>">
         <input type="hidden" name="entity" value="featured_product">
         <input type="hidden" name="action" id="fp_action" value="create">
         <input type="hidden" name="id" id="fp_id" value="0">
@@ -1267,7 +1310,7 @@ if ((int)$stats['unread_notifications'] > 0) {
 <div class="modal">
     <div class="modal-head"><h3><i class="fas fa-file-alt"></i> <span id="etm_title">Add Email Template</span></h3><button class="modal-close" onclick="closeModal('emailTplModal')">&times;</button></div>
     <form method="POST" action="<?php echo h($crudUrl);?>" enctype="multipart/form-data">
-        <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>">
+        <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>">
         <input type="hidden" name="entity" value="email_template">
         <input type="hidden" name="action" id="etm_action" value="create">
         <input type="hidden" name="id" id="etm_id" value="0">
@@ -1291,7 +1334,7 @@ if ((int)$stats['unread_notifications'] > 0) {
 <div class="modal">
     <div class="modal-head"><h3><i class="fas fa-at"></i> <span id="erm_title">Add Email Recipient</span></h3><button class="modal-close" onclick="closeModal('emailRecModal')">&times;</button></div>
     <form method="POST" action="<?php echo h($crudUrl);?>" enctype="multipart/form-data">
-        <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>">
+        <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>">
         <input type="hidden" name="entity" value="email_recipient">
         <input type="hidden" name="action" id="erm_action" value="create">
         <input type="hidden" name="id" id="erm_id" value="0">
