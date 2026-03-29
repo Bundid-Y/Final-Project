@@ -11,7 +11,7 @@ $user = require_admin_user();
 $isSuperAdmin = in_array((string) $user['role'], ['super_admin'], true);
 $companyId = $isSuperAdmin ? null : (int) $user['company_id'];
 $section = $_GET['section'] ?? 'overview';
-$validSections = ['overview','users','koch_quotations','tnb_quotations','notifications','activity','settings','sliders','partners','products','featured_products','truck_types','truck_types_index','truck_cards','branches','email_templates','email_recipients','contact_messages','export_data'];
+$validSections = ['overview','users','koch_quotations','tnb_quotations','notifications','activity','settings','sliders','partners','products','featured_products','truck_types','truck_types_index','truck_cards','email_templates','email_recipients','contact_messages','export_data'];
 if (!in_array($section, $validSections, true)) $section = 'overview';
 
 // Company mode toggle
@@ -245,10 +245,8 @@ textarea.fm-input{resize:vertical;min-height:80px}
         <?php if ($companyMode === 'koch'): ?>
         <a href="?section=products" class="<?php echo $section==='products'?'active':'';?>"><i class="fas fa-boxes-stacked"></i> Products</a>
         <a href="?section=featured_products" class="<?php echo $section==='featured_products'?'active':'';?>"><i class="fas fa-star"></i> Featured Products</a>
-        <a href="?section=branches" class="<?php echo $section==='branches'?'active':'';?>"><i class="fas fa-map-marker-alt"></i> Branches</a>
         <?php elseif ($companyMode === 'tnb'): ?>
         <a href="?section=truck_cards" class="<?php echo $section==='truck_cards'?'active':'';?>"><i class="fas fa-id-card"></i> Truck Cards</a>
-        <a href="?section=branches" class="<?php echo $section==='branches'?'active':'';?>"><i class="fas fa-map-marker-alt"></i> Branches</a>
         <?php endif; ?>
         <?php endif; ?>
         <div class="divider"></div>
@@ -917,31 +915,6 @@ if ((int)$stats['unread_notifications'] > 0) {
     </div>
 </div>
 
-<?php elseif($section==='branches'): ?>
-<!-- =================== BRANCHES =================== -->
-<?php $allBranches = get_all_branches_admin($pdo, $filterCompanyId); ?>
-<div class="card">
-    <div class="card-h"><h2><i class="fas fa-map-marker-alt"></i> Branches</h2><div style="display:flex;gap:8px;align-items:center"><span style="font-size:12px;color:var(--muted)"><?php echo count($allBranches);?> branches</span><button class="btn btn-sm btn-primary" onclick="openModal('branchModal')"><i class="fas fa-plus"></i> Add Branch</button></div></div>
-    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>ID</th><th>Name</th><th>Company</th><th>Address</th><th>Phone</th><th>Email</th><th>HQ</th><th>Staff</th><th>Status</th><th>Actions</th></tr></thead><tbody>
-    <?php if($allBranches===[]):?><tr class="empty"><td colspan="10">No branches found</td></tr>
-    <?php else: foreach($allBranches as $b):?><tr>
-        <td style="font-size:12px;font-weight:600">#<?php echo (int)$b['id'];?></td>
-        <td style="font-size:12px;font-weight:600"><?php echo h((string)$b['name']);?><?php if($b['name_en']):?><br><span style="font-size:10px;color:var(--muted)"><?php echo h((string)$b['name_en']);?></span><?php endif;?></td>
-        <td style="font-size:12px"><?php echo h((string)($b['company_name']??'-'));?></td>
-        <td style="font-size:11px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><?php echo h((string)($b['address']??'-'));?></td>
-        <td style="font-size:12px"><?php echo h((string)($b['phone']??'-'));?></td>
-        <td style="font-size:11px"><?php echo h((string)($b['email']??'-'));?></td>
-        <td style="text-align:center"><?php echo $b['is_headquarters']?'<i class="fas fa-star" style="color:var(--warning)"></i>':'-';?></td>
-        <td style="font-size:12px;text-align:center"><?php echo (int)$b['staff_count'];?></td>
-        <td><?php echo admin_status_badge($b['is_active']?'active':'inactive');?></td>
-        <td><div class="act-btns">
-            <button class="btn btn-xs btn-ghost" onclick="openEditBranch(<?php echo (int)$b['id'];?>,'<?php echo h(addslashes((string)$b['name']));?>','<?php echo h(addslashes((string)($b['name_en']??'')));?>','<?php echo h(addslashes((string)($b['address']??'')));?>','<?php echo h(addslashes((string)($b['phone']??'')));?>','<?php echo h(addslashes((string)($b['email']??'')));?>',<?php echo (int)($b['company_id']??0);?>,<?php echo $b['is_headquarters']?1:0;?>,<?php echo (int)$b['staff_count'];?>,<?php echo $b['is_active']?1:0;?>)"><i class="fas fa-edit"></i></button>
-            <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete?')"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="entity" value="branch"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?php echo (int)$b['id'];?>"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=branches'));?>"><button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></button></form>
-        </div></td>
-    </tr><?php endforeach; endif;?>
-    </tbody></table></div></div>
-</div>
-
 <?php elseif($section==='email_templates'): ?>
 <!-- =================== EMAIL TEMPLATES =================== -->
 <?php $allTemplates = get_all_email_templates($pdo, $filterCompanyId); ?>
@@ -1287,39 +1260,6 @@ if ((int)$stats['unread_notifications'] > 0) {
     </form>
 </div></div>
 
-<!-- Branch Modal -->
-<div class="modal-overlay" id="branchModal" onclick="if(event.target===this)closeModal('branchModal')">
-<div class="modal">
-    <div class="modal-head"><h3><i class="fas fa-map-marker-alt"></i> <span id="bm_title">Add Branch</span></h3><button class="modal-close" onclick="closeModal('branchModal')">&times;</button></div>
-    <form method="POST" action="<?php echo h($crudUrl);?>" enctype="multipart/form-data">
-        <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>">
-        <input type="hidden" name="entity" value="branch">
-        <input type="hidden" name="action" id="bm_action" value="create">
-        <input type="hidden" name="id" id="bm_id" value="0">
-        <input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=branches'));?>">
-        <div class="modal-body">
-            <div class="fm-row">
-                <div class="fm-group"><label>Branch Name (TH)<span>*</span></label><input type="text" name="name" id="bm_name" class="fm-input" required maxlength="255"></div>
-                <div class="fm-group"><label>Branch Name (EN)</label><input type="text" name="name_en" id="bm_name_en" class="fm-input" maxlength="255"></div>
-            </div>
-            <div class="fm-group"><label>Address</label><textarea name="address" id="bm_address" class="fm-input"></textarea></div>
-            <div class="fm-row">
-                <div class="fm-group"><label>Phone</label><input type="text" name="phone" id="bm_phone" class="fm-input" maxlength="20"></div>
-                <div class="fm-group"><label>Email</label><input type="email" name="email" id="bm_email" class="fm-input" maxlength="255"></div>
-            </div>
-            <div class="fm-row">
-                <div class="fm-group"><label>Company<span>*</span></label><select name="company_id" id="bm_company" class="fm-input" required><option value="<?php echo $kochId;?>">KOCH</option><option value="<?php echo $tnbId;?>">TNB</option></select></div>
-                <div class="fm-group"><label>Staff Count</label><input type="number" name="staff_count" id="bm_staff" class="fm-input" value="0" min="0"></div>
-            </div>
-            <div class="fm-row">
-                <div class="fm-check"><input type="checkbox" name="is_headquarters" id="bm_hq" value="1"><label for="bm_hq">Headquarters</label></div>
-                <div class="fm-check"><input type="checkbox" name="is_active" id="bm_active" value="1" checked><label for="bm_active">Active</label></div>
-            </div>
-        </div>
-        <div class="modal-foot"><button type="button" class="btn btn-ghost" onclick="closeModal('branchModal')">Cancel</button><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save</button></div>
-    </form>
-</div></div>
-
 <!-- Email Template Modal -->
 <div class="modal-overlay" id="emailTplModal" onclick="if(event.target===this)closeModal('emailTplModal')">
 <div class="modal">
@@ -1469,22 +1409,6 @@ function openEditTruck(id,name,desc,image,capacity,order,active){
     document.getElementById('tt_order').value=order;
     document.getElementById('tt_active').checked=!!active;
     openModal('truckModal');
-}
-
-function openEditBranch(id,name,nameEn,address,phone,email,companyId,isHq,staff,active){
-    document.getElementById('bm_title').textContent='Edit Branch #'+id;
-    document.getElementById('bm_action').value='update';
-    document.getElementById('bm_id').value=id;
-    document.getElementById('bm_name').value=name;
-    document.getElementById('bm_name_en').value=nameEn;
-    document.getElementById('bm_address').value=address;
-    document.getElementById('bm_phone').value=phone;
-    document.getElementById('bm_email').value=email;
-    document.getElementById('bm_company').value=companyId;
-    document.getElementById('bm_hq').checked=!!isHq;
-    document.getElementById('bm_staff').value=staff;
-    document.getElementById('bm_active').checked=!!active;
-    openModal('branchModal');
 }
 
 function openEditEmailTpl(id,name,subject,vars,companyId,active){
