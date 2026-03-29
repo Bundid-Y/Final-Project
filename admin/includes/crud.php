@@ -1071,3 +1071,29 @@ function delete_featured_product(PDO $pdo, int $id, int $adminId): array
     log_activity($pdo, $adminId, 'FEATURED_PRODUCT_DELETED', 'featured_products', $id);
     return ['success' => true, 'message' => 'Featured product deleted.'];
 }
+
+// =============================================
+// SYSTEM SETTINGS (EMAILS)
+// =============================================
+function handle_system_settings_emails(PDO $pdo, string $action, array $post, int $adminId): array
+{
+    if ($action === 'update_admin_emails') {
+        $kochId = get_company_id_by_code($pdo, 'KOCH');
+        $tnbId = get_company_id_by_code($pdo, 'TNB');
+        
+        $sql = 'INSERT INTO system_settings (setting_key, setting_value, company_id) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)';
+        $stmt = $pdo->prepare($sql);
+        
+        if (isset($post['admin_notify_email_koch'])) {
+            $stmt->execute(['admin_notify_email_koch', trim((string)$post['admin_notify_email_koch']), $kochId]);
+        }
+        if (isset($post['admin_notify_email_tnb'])) {
+            $stmt->execute(['admin_notify_email_tnb', trim((string)$post['admin_notify_email_tnb']), $tnbId]);
+        }
+        
+        log_activity($pdo, $adminId, 'SETTINGS_UPDATED', 'system_settings', 0, [], ['emails_updated' => true]);
+        return ['success' => true, 'message' => 'Notification emails saved successfully.'];
+    }
+    return ['success' => false, 'message' => 'Invalid action for settings.'];
+}
+

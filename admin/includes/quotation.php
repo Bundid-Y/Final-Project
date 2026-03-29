@@ -145,6 +145,36 @@ function create_koch_quotation(PDO $pdo, array $payload, array $files = []): arr
             );
         }
 
+        // --- Send Email to Configured Admin Emails ---
+        try {
+            $stmtMail = $pdo->prepare("SELECT setting_value FROM system_settings WHERE setting_key = 'admin_notify_email_koch'");
+            $stmtMail->execute();
+            $adminEmailSetting = $stmtMail->fetchColumn();
+            
+            if (!empty($adminEmailSetting)) {
+                $toEmails = array_filter(array_map('trim', explode(',', (string) $adminEmailSetting)));
+                if ($toEmails !== []) {
+                    $subject = "New KOCH Quotation Request: " . $quotationNumber;
+                    $message = "A new KOCH quotation request has been submitted.\n\n" .
+                               "Quotation Number: " . $quotationNumber . "\n" .
+                               "Customer: " . sanitize_text((string) $payload['first_name']) . " " . sanitize_text((string) $payload['last_name']) . " (" . sanitize_text((string) $payload['email']) . ")\n" .
+                               "Product: " . sanitize_text((string) $payload['product_type']) . "\n" .
+                               "Quantity: " . max(1, (int) $payload['quantity']) . "\n\n" .
+                               "Please log in to the admin dashboard to review.";
+                    
+                    $headers = "From: noreply@" . ($_SERVER['HTTP_HOST'] ?? 'localhost') . "\r\n" .
+                               "Reply-To: noreply@" . ($_SERVER['HTTP_HOST'] ?? 'localhost') . "\r\n" .
+                               "X-Mailer: PHP/" . phpversion();
+                               
+                    foreach ($toEmails as $to) {
+                        if (filter_var($to, FILTER_VALIDATE_EMAIL)) {
+                            @mail($to, $subject, $message, $headers);
+                        }
+                    }
+                }
+            }
+        } catch (Throwable $e) {}
+
         $pdo->commit();
 
         return [
@@ -260,6 +290,36 @@ function create_tnb_quotation(PDO $pdo, array $payload, array $files = []): arra
                 'normal'
             );
         }
+
+        // --- Send Email to Configured Admin Emails ---
+        try {
+            $stmtMail = $pdo->prepare("SELECT setting_value FROM system_settings WHERE setting_key = 'admin_notify_email_tnb'");
+            $stmtMail->execute();
+            $adminEmailSetting = $stmtMail->fetchColumn();
+            
+            if (!empty($adminEmailSetting)) {
+                $toEmails = array_filter(array_map('trim', explode(',', (string) $adminEmailSetting)));
+                if ($toEmails !== []) {
+                    $subject = "New TNB Quotation Request: " . $requestNumber;
+                    $message = "A new TNB quotation request has been submitted.\n\n" .
+                               "Request Number: " . $requestNumber . "\n" .
+                               "Customer: " . sanitize_text((string) $payload['first_name']) . " " . sanitize_text((string) $payload['last_name']) . " (" . sanitize_text((string) $payload['email']) . ")\n" .
+                               "Service Type: " . sanitize_text((string) $payload['service_type']) . "\n" .
+                               "Route: " . sanitize_text((string) $payload['route']) . "\n\n" .
+                               "Please log in to the admin dashboard to review.";
+                    
+                    $headers = "From: noreply@" . ($_SERVER['HTTP_HOST'] ?? 'localhost') . "\r\n" .
+                               "Reply-To: noreply@" . ($_SERVER['HTTP_HOST'] ?? 'localhost') . "\r\n" .
+                               "X-Mailer: PHP/" . phpversion();
+                               
+                    foreach ($toEmails as $to) {
+                        if (filter_var($to, FILTER_VALIDATE_EMAIL)) {
+                            @mail($to, $subject, $message, $headers);
+                        }
+                    }
+                }
+            }
+        } catch (Throwable $e) {}
 
         $pdo->commit();
 

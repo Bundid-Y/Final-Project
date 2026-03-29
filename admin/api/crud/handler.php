@@ -52,6 +52,7 @@ try {
         'user'            => handle_user($pdo, $action, $id, $_POST, $adminId),
         'contact_message' => handle_contact_message($pdo, $action, $id, $_POST, $adminId),
         'featured_product' => handle_featured_product($pdo, $action, $id, $_POST, $adminId),
+        'system_settings' => handle_system_settings_emails($pdo, $action, $_POST, $adminId),
         'notification'    => handle_notification($pdo, $action, $id, $_POST, $adminId),
         default           => ['success' => false, 'message' => 'Unknown entity.'],
     };

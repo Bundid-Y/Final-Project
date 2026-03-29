@@ -11,7 +11,7 @@ $user = require_admin_user();
 $isSuperAdmin = in_array((string) $user['role'], ['super_admin'], true);
 $companyId = $isSuperAdmin ? null : (int) $user['company_id'];
 $section = $_GET['section'] ?? 'overview';
-$validSections = ['overview','users','koch_quotations','tnb_quotations','notifications','activity','settings','sliders','partners','products','featured_products','truck_types','truck_types_index','truck_cards','email_templates','email_recipients','contact_messages','export_data'];
+$validSections = ['overview','users','koch_quotations','tnb_quotations','notifications','activity','settings','sliders','partners','products','featured_products','truck_types','truck_types_index','truck_cards','email_templates','contact_messages','export_data'];
 if (!in_array($section, $validSections, true)) $section = 'overview';
 
 // Company mode toggle
@@ -54,7 +54,7 @@ function admin_action_label(string $a): string {
     return $m[$a] ?? $a;
 }
 
-$sectionTitles = ['overview'=>'Dashboard Overview','users'=>'User Management','koch_quotations'=>'KOCH Quotations','tnb_quotations'=>'TNB Requests','notifications'=>'Notifications','activity'=>'Activity Logs','settings'=>'System Settings','sliders'=>'Slider Management','partners'=>'Partner Management','products'=>'Product Management','featured_products'=>'Featured Products','truck_types'=>'Truck Type Management','truck_types_index'=>'Truck Types Index','truck_cards'=>'Truck Cards','branches'=>'Branch Management','email_templates'=>'Email Templates','email_recipients'=>'Email Recipients','contact_messages'=>'Contact Messages'];
+$sectionTitles = ['overview'=>'Dashboard Overview','users'=>'User Management','koch_quotations'=>'KOCH Quotations','tnb_quotations'=>'TNB Requests','notifications'=>'Notifications','activity'=>'Activity Logs','settings'=>'System Settings','sliders'=>'Slider Management','partners'=>'Partner Management','products'=>'Product Management','featured_products'=>'Featured Products','truck_types'=>'Truck Type Management','truck_types_index'=>'Truck Types Index','truck_cards'=>'Truck Cards','branches'=>'Branch Management','email_templates'=>'Notification Emails','contact_messages'=>'Contact Messages'];
 ?>
 <!DOCTYPE html>
 <html lang="th">
@@ -256,7 +256,7 @@ textarea.fm-input{resize:vertical;min-height:80px}
         <div class="divider"></div>
         <div class="label">Communications</div>
         <a href="?section=notifications" class="<?php echo $section==='notifications'?'active':'';?>"><i class="fas fa-bell"></i> Notifications<?php if((int)$stats['unread_notifications']>0):?><span class="badge"><?php echo (int)$stats['unread_notifications'];?></span><?php endif;?></a>
-        <a href="?section=email_templates" class="<?php echo $section==='email_templates'?'active':'';?>"><i class="fas fa-file-alt"></i> Email Templates</a>
+        <a href="?section=email_templates" class="<?php echo $section==='email_templates'?'active':'';?>"><i class="fas fa-envelope"></i> Notification Emails</a>
         <a href="?section=activity" class="<?php echo $section==='activity'?'active':'';?>"><i class="fas fa-history"></i> Activity Logs</a>
         <div class="divider"></div>
         <div class="label">Export</div>
@@ -963,51 +963,48 @@ $allTruckCards = get_all_truck_types_admin($pdo, $filterCompanyId);
 </div>
 
 <?php elseif($section==='email_templates'): ?>
-<!-- =================== EMAIL TEMPLATES =================== -->
-<?php $allTemplates = get_all_email_templates($pdo, $filterCompanyId); ?>
-<div class="card">
-    <div class="card-h"><h2><i class="fas fa-file-alt"></i> Email Templates</h2><div style="display:flex;gap:8px;align-items:center"><span style="font-size:12px;color:var(--muted)"><?php echo count($allTemplates);?> templates</span><button class="btn btn-sm btn-primary" onclick="openModal('emailTplModal')"><i class="fas fa-plus"></i> Add Template</button></div></div>
-    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>ID</th><th>Name</th><th>Subject</th><th>Company</th><th>Variables</th><th>Status</th><th>Updated</th><th>Actions</th></tr></thead><tbody>
-    <?php if($allTemplates===[]):?><tr class="empty"><td colspan="8">No email templates found</td></tr>
-    <?php else: foreach($allTemplates as $et):?><tr>
-        <td style="font-size:12px;font-weight:600">#<?php echo (int)$et['id'];?></td>
-        <td style="font-size:12px;font-weight:600;font-family:monospace"><?php echo h((string)$et['name']);?></td>
-        <td style="font-size:12px"><?php echo h((string)$et['subject']);?></td>
-        <td style="font-size:12px"><?php echo h((string)($et['company_name']??'Global'));?></td>
-        <td style="font-size:11px;color:var(--muted);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><?php echo h((string)($et['variables']??'-'));?></td>
-        <td><?php echo admin_status_badge($et['is_active']?'active':'inactive');?></td>
-        <td style="font-size:11px;white-space:nowrap"><?php echo h(date('d/m/Y H:i',strtotime((string)$et['updated_at'])));?></td>
-        <td><div class="act-btns">
-            <button class="btn btn-xs btn-ghost" onclick="openEditEmailTpl(<?php echo (int)$et['id'];?>,'<?php echo h(addslashes((string)$et['name']));?>','<?php echo h(addslashes((string)$et['subject']));?>','<?php echo h(addslashes((string)($et['variables']??'')));?>',<?php echo (int)($et['company_id']??0);?>,<?php echo $et['is_active']?1:0;?>)"><i class="fas fa-edit"></i></button>
-            <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete?')"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>"><input type="hidden" name="entity" value="email_template"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?php echo (int)$et['id'];?>"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=email_templates'));?>"><button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></button></form>
-        </div></td>
-    </tr><?php endforeach; endif;?>
-    </tbody></table></div></div>
-</div>
+<!-- =================== NOTIFICATION EMAILS =================== -->
+<?php 
+$stmt = $pdo->prepare("SELECT setting_key, setting_value FROM system_settings WHERE setting_key IN ('admin_notify_email_koch', 'admin_notify_email_tnb')");
+$stmt->execute();
+$emails = [];
+foreach($stmt->fetchAll() as $row) {
+    if ($row['setting_key'] === 'admin_notify_email_koch') $emails['koch'] = $row['setting_value'];
+    if ($row['setting_key'] === 'admin_notify_email_tnb') $emails['tnb'] = $row['setting_value'];
+}
+?>
+<div class="card" style="max-width: 600px; margin: 0 auto;">
+    <div class="card-h"><h2><i class="fas fa-envelope"></i> Notification Emails</h2></div>
+    <div class="card-b" style="padding: 20px;">
+        <p style="font-size: 13px; color: var(--muted); margin-bottom: 20px;">
+            กรอกอีเมลที่แอดมินต้องการให้ระบบแจ้งเตือนเมื่อมีลูกค้าขอใบเสนอราคา (สามารถใส่ได้หลายอีเมลโดยคั่นด้วย ,)
+        </p>
+        <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>">
+            <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>">
+            <input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>">
+            <input type="hidden" name="entity" value="system_settings">
+            <input type="hidden" name="action" value="update_admin_emails">
+            <input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=email_templates'));?>">
+            
+            <?php if ($companyMode === 'all' || $companyMode === 'koch'): ?>
+            <div class="fm-group">
+                <label style="color: #c41f1f;">KOCH Notification Email</label>
+                <input type="text" name="admin_notify_email_koch" class="fm-input" value="<?php echo h($emails['koch'] ?? '');?>" placeholder="e.g. admin@koch.com, sales@koch.com">
+            </div>
+            <?php endif; ?>
 
-<?php elseif($section==='email_recipients'): ?>
-<!-- =================== EMAIL RECIPIENTS =================== -->
-<?php $allRecipients = get_all_email_recipients($pdo, $filterCompanyId); ?>
-<div class="card">
-    <div class="card-h"><h2><i class="fas fa-at"></i> Email Recipients</h2><div style="display:flex;gap:8px;align-items:center"><span style="font-size:12px;color:var(--muted)"><?php echo count($allRecipients);?> recipients</span><button class="btn btn-sm btn-primary" onclick="openModal('emailRecModal')"><i class="fas fa-plus"></i> Add Recipient</button></div></div>
-    <div class="card-b" style="padding:12px 20px;background:#fffbeb;border-bottom:1px solid var(--border)">
-        <p style="font-size:12px;color:#92400e;margin:0"><i class="fas fa-info-circle"></i> <strong>Email Recipients</strong> are the email addresses that receive notifications when customers submit quotation requests. Admin must add at least one email to receive quotation data.</p>
+            <?php if ($companyMode === 'all' || $companyMode === 'tnb'): ?>
+            <div class="fm-group" style="margin-top:20px;">
+                <label style="color: #0d2d6b;">TNB Notification Email</label>
+                <input type="text" name="admin_notify_email_tnb" class="fm-input" value="<?php echo h($emails['tnb'] ?? '');?>" placeholder="e.g. admin@tnb.com, info@tnb.com">
+            </div>
+            <?php endif; ?>
+
+            <div style="margin-top: 30px;">
+                <button type="submit" class="btn btn-primary" style="width: 100%;"><i class="fas fa-save"></i> Save Emails</button>
+            </div>
+        </form>
     </div>
-    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>ID</th><th>Event Type</th><th>Name</th><th>Email</th><th>Company</th><th>Status</th><th>Actions</th></tr></thead><tbody>
-    <?php if($allRecipients===[]):?><tr class="empty"><td colspan="7">No email recipients found — Add at least one email to receive quotation notifications</td></tr>
-    <?php else: foreach($allRecipients as $er):?><tr>
-        <td style="font-size:12px;font-weight:600">#<?php echo (int)$er['id'];?></td>
-        <td><span style="font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px;background:var(--primary-light);color:var(--primary)"><?php echo h((string)$er['event_type']);?></span></td>
-        <td style="font-size:12px;font-weight:600"><?php echo h((string)$er['recipient_name']);?></td>
-        <td style="font-size:12px"><?php echo h((string)$er['recipient_email']);?></td>
-        <td style="font-size:12px"><?php echo h((string)($er['company_name']??'-'));?></td>
-        <td><?php echo admin_status_badge($er['is_active']?'active':'inactive');?></td>
-        <td><div class="act-btns">
-            <button class="btn btn-xs btn-ghost" onclick="openEditEmailRec(<?php echo (int)$er['id'];?>,'<?php echo h(addslashes((string)$er['event_type']));?>','<?php echo h(addslashes((string)$er['recipient_name']));?>','<?php echo h(addslashes((string)$er['recipient_email']));?>',<?php echo (int)($er['company_id']??0);?>,<?php echo $er['is_active']?1:0;?>)"><i class="fas fa-edit"></i></button>
-            <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete?')"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>"><input type="hidden" name="entity" value="email_recipient"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?php echo (int)$er['id'];?>"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=email_recipients'));?>"><button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></button></form>
-        </div></td>
-    </tr><?php endforeach; endif;?>
-    </tbody></table></div></div>
 </div>
 
 <?php elseif($section==='contact_messages'): ?>
