@@ -92,7 +92,7 @@ function resolve_category(string $cat): string {
                     ?>
                     <div class="product-grid-item" data-category="<?php echo $cat; ?>">
                         <?php if (!empty($prod['image_url'])): ?>
-                        <img src="<?php echo htmlspecialchars('../../' . (string)$prod['image_url']); ?>" alt="<?php echo htmlspecialchars((string)$prod['name']); ?>">
+                        <img src="<?php echo htmlspecialchars(resolve_image_url((string)$prod['image_url'])); ?>" alt="<?php echo htmlspecialchars((string)$prod['name']); ?>">
                         <?php else: ?>
                         <div style="height:200px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:13px">No Image</div>
                         <?php endif; ?>

@@ -64,7 +64,7 @@ $dbTruckTypes = get_active_truck_types($pdo);
             <div class="truck-card">
                 <div class="truck-card__img-container">
                     <?php if (!empty($truck['image_url'])): ?>
-                    <img class="truck-card__img" src="<?php echo htmlspecialchars('../../' . (string)$truck['image_url']); ?>" alt="<?php echo htmlspecialchars((string)$truck['name']); ?>">
+                    <img class="truck-card__img" src="<?php echo htmlspecialchars(resolve_image_url((string)$truck['image_url'])); ?>" alt="<?php echo htmlspecialchars((string)$truck['name']); ?>">
                     <?php else: ?>
                     <div style="height:200px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:13px">No Image</div>
                     <?php endif; ?>

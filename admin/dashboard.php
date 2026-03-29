@@ -11,7 +11,7 @@ $user = require_admin_user();
 $isSuperAdmin = in_array((string) $user['role'], ['super_admin'], true);
 $companyId = $isSuperAdmin ? null : (int) $user['company_id'];
 $section = $_GET['section'] ?? 'overview';
-$validSections = ['overview','users','koch_quotations','tnb_quotations','notifications','activity','settings','sliders','partners','products','featured_products','truck_types','truck_types_index','branches','email_templates','email_recipients','contact_messages','export_data'];
+$validSections = ['overview','users','koch_quotations','tnb_quotations','notifications','activity','settings','sliders','partners','products','featured_products','truck_types','truck_types_index','truck_cards','branches','email_templates','email_recipients','contact_messages','export_data'];
 if (!in_array($section, $validSections, true)) $section = 'overview';
 
 // Company mode toggle
@@ -52,7 +52,7 @@ function admin_action_label(string $a): string {
     return $m[$a] ?? $a;
 }
 
-$sectionTitles = ['overview'=>'Dashboard Overview','users'=>'User Management','koch_quotations'=>'KOCH Quotations','tnb_quotations'=>'TNB Requests','notifications'=>'Notifications','activity'=>'Activity Logs','settings'=>'System Settings','sliders'=>'Slider Management','partners'=>'Partner Management','products'=>'Product Management','truck_types'=>'Truck Type Management','branches'=>'Branch Management','email_templates'=>'Email Templates','email_recipients'=>'Email Recipients','contact_messages'=>'Contact Messages'];
+$sectionTitles = ['overview'=>'Dashboard Overview','users'=>'User Management','koch_quotations'=>'KOCH Quotations','tnb_quotations'=>'TNB Requests','notifications'=>'Notifications','activity'=>'Activity Logs','settings'=>'System Settings','sliders'=>'Slider Management','partners'=>'Partner Management','products'=>'Product Management','featured_products'=>'Featured Products','truck_types'=>'Truck Type Management','truck_types_index'=>'Truck Types Index','truck_cards'=>'Truck Cards','branches'=>'Branch Management','email_templates'=>'Email Templates','email_recipients'=>'Email Recipients','contact_messages'=>'Contact Messages'];
 ?>
 <!DOCTYPE html>
 <html lang="th">
@@ -234,22 +234,17 @@ textarea.fm-input{resize:vertical;min-height:80px}
         <a href="?section=tnb_quotations" class="<?php echo $section==='tnb_quotations'?'active':'';?>"><i class="fas fa-truck"></i> TNB Requests<?php if($ext['tnb_pending']>0):?><span class="badge warn"><?php echo $ext['tnb_pending'];?></span><?php endif;?></a>
         <a href="?section=contact_messages" class="<?php echo $section==='contact_messages'?'active':'';?>"><i class="fas fa-envelope-open-text"></i> Contact Messages</a>
         <div class="divider"></div>
+        <?php if ($companyMode !== 'all'): ?>
         <div class="label">Content</div>
         <a href="?section=sliders" class="<?php echo $section==='sliders'?'active':'';?>"><i class="fas fa-images"></i> Sliders</a>
         <a href="?section=partners" class="<?php echo $section==='partners'?'active':'';?>"><i class="fas fa-handshake"></i> Partners</a>
-        <?php 
-$userCompanyCode = 'KOCH';
-if ($user['company_id'] == get_company_id_by_code($pdo, 'TNB')) {
-    $userCompanyCode = 'TNB';
-}
-?>
-        <?php if ($userCompanyCode === 'KOCH'): ?>
+        <?php if ($companyMode === 'koch'): ?>
         <a href="?section=products" class="<?php echo $section==='products'?'active':'';?>"><i class="fas fa-boxes-stacked"></i> Products</a>
         <a href="?section=featured_products" class="<?php echo $section==='featured_products'?'active':'';?>"><i class="fas fa-star"></i> Featured Products</a>
-        <?php endif; ?>
-        <?php if ($userCompanyCode === 'TNB'): ?>
+        <?php elseif ($companyMode === 'tnb'): ?>
         <a href="?section=truck_types" class="<?php echo $section==='truck_types'?'active':'';?>"><i class="fas fa-truck-moving"></i> Truck Types</a>
-        <a href="?section=truck_types_index" class="<?php echo $section==='truck_types_index'?'active':'';?>"><i class="fas fa-truck-pickup"></i> Truck Types Index</a>
+        <a href="?section=truck_cards" class="<?php echo $section==='truck_cards'?'active':'';?>"><i class="fas fa-id-card"></i> Truck Cards</a>
+        <?php endif; ?>
         <?php endif; ?>
         <div class="divider"></div>
         <div class="label">Communications</div>
@@ -292,33 +287,91 @@ if ($user['company_id'] == get_company_id_by_code($pdo, 'TNB')) {
 
 <?php if($section==='overview'): ?>
 <!-- =================== OVERVIEW =================== -->
+
+<?php if($companyMode === 'all'): ?>
+<!-- ALL MODE: Summary only -->
 <div class="stats-row">
     <div class="stat-card purple">
         <div class="sc-top"><div class="sc-icon"><i class="fas fa-users"></i></div><?php if($ext['new_users_month']>0):?><span class="sc-change up">+<?php echo $ext['new_users_month'];?> this month</span><?php endif;?></div>
         <div class="sc-num"><?php echo number_format((int)$stats['users']);?></div>
-        <div class="sc-label">Total Users</div>
+        <div class="sc-label">Total Users (All)</div>
+    </div>
+    <div class="stat-card blue">
+        <div class="sc-top"><div class="sc-icon"><i class="fas fa-box"></i></div><?php if($ext['koch_month']>0):?><span class="sc-change up">+<?php echo $ext['koch_month'];?> this month</span><?php endif;?></div>
+        <div class="sc-num"><?php echo number_format((int)$stats['koch_quotations']);?></div>
+        <div class="sc-label">KOCH Quotations (Total)</div>
+    </div>
+    <div class="stat-card teal">
+        <div class="sc-top"><div class="sc-icon"><i class="fas fa-truck"></i></div><?php if($ext['tnb_month']>0):?><span class="sc-change up">+<?php echo $ext['tnb_month'];?> this month</span><?php endif;?></div>
+        <div class="sc-num"><?php echo number_format((int)$stats['tnb_quotations']);?></div>
+        <div class="sc-label">TNB Requests (Total)</div>
+    </div>
+    <div class="stat-card orange">
+        <div class="sc-top"><div class="sc-icon"><i class="fas fa-clock"></i></div></div>
+        <div class="sc-num"><?php echo $totalPending;?></div>
+        <div class="sc-label">Pending Approval (All)</div>
+    </div>
+</div>
+
+<div class="card" style="margin-bottom:20px">
+    <div class="card-b" style="padding:20px;text-align:center">
+        <i class="fas fa-info-circle" style="font-size:24px;color:var(--primary);margin-bottom:8px;display:block"></i>
+        <p style="font-size:14px;font-weight:600;margin:0 0 6px">ภาพรวมรวม KOCH & TNB</p>
+        <p style="font-size:12px;color:var(--muted);margin:0">เลือก <strong>KOCH</strong> หรือ <strong>TNB</strong> ที่แถบด้านซ้ายเพื่อจัดการข้อมูลของแต่ละบริษัท</p>
+    </div>
+</div>
+
+<div class="grid-2">
+    <div class="card">
+        <div class="card-h"><h2><i class="fas fa-box" style="color:#ED2A2A"></i> KOCH Summary</h2></div>
+        <div class="card-b">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+                <div style="padding:12px;background:var(--bg);border-radius:10px;text-align:center"><div style="font-size:22px;font-weight:800"><?php echo number_format((int)$stats['koch_quotations']);?></div><div style="font-size:11px;color:var(--muted)">Quotations</div></div>
+                <div style="padding:12px;background:var(--bg);border-radius:10px;text-align:center"><div style="font-size:22px;font-weight:800"><?php echo $ext['koch_pending'];?></div><div style="font-size:11px;color:var(--muted)">Pending</div></div>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-h"><h2><i class="fas fa-truck" style="color:#0d2d6b"></i> TNB Summary</h2></div>
+        <div class="card-b">
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+                <div style="padding:12px;background:var(--bg);border-radius:10px;text-align:center"><div style="font-size:22px;font-weight:800"><?php echo number_format((int)$stats['tnb_quotations']);?></div><div style="font-size:11px;color:var(--muted)">Requests</div></div>
+                <div style="padding:12px;background:var(--bg);border-radius:10px;text-align:center"><div style="font-size:22px;font-weight:800"><?php echo $ext['tnb_pending'];?></div><div style="font-size:11px;color:var(--muted)">Pending</div></div>
+                <div style="padding:12px;background:var(--bg);border-radius:10px;text-align:center"><div style="font-size:22px;font-weight:800"><?php echo $ext['tnb_in_transit'];?></div><div style="font-size:11px;color:var(--muted)">In Transit</div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php elseif($companyMode === 'koch'): ?>
+<!-- KOCH MODE -->
+<div class="stats-row">
+    <div class="stat-card purple">
+        <div class="sc-top"><div class="sc-icon"><i class="fas fa-users"></i></div><?php if($ext['new_users_month']>0):?><span class="sc-change up">+<?php echo $ext['new_users_month'];?> this month</span><?php endif;?></div>
+        <div class="sc-num"><?php echo number_format((int)$stats['users']);?></div>
+        <div class="sc-label">KOCH Users</div>
     </div>
     <div class="stat-card blue">
         <div class="sc-top"><div class="sc-icon"><i class="fas fa-box"></i></div><?php if($ext['koch_month']>0):?><span class="sc-change up">+<?php echo $ext['koch_month'];?> this month</span><?php endif;?></div>
         <div class="sc-num"><?php echo number_format((int)$stats['koch_quotations']);?></div>
         <div class="sc-label">KOCH Quotations</div>
     </div>
-    <div class="stat-card teal">
-        <div class="sc-top"><div class="sc-icon"><i class="fas fa-truck"></i></div><?php if($ext['tnb_month']>0):?><span class="sc-change up">+<?php echo $ext['tnb_month'];?> this month</span><?php endif;?></div>
-        <div class="sc-num"><?php echo number_format((int)$stats['tnb_quotations']);?></div>
-        <div class="sc-label">TNB Requests</div>
-    </div>
     <div class="stat-card orange">
         <div class="sc-top"><div class="sc-icon"><i class="fas fa-clock"></i></div></div>
-        <div class="sc-num"><?php echo $totalPending;?></div>
-        <div class="sc-label">Pending Approval</div>
+        <div class="sc-num"><?php echo $ext['koch_pending'];?></div>
+        <div class="sc-label">Pending</div>
+    </div>
+    <div class="stat-card green">
+        <div class="sc-top"><div class="sc-icon"><i class="fas fa-bell"></i></div></div>
+        <div class="sc-num"><?php echo number_format((int)$stats['unread_notifications']);?></div>
+        <div class="sc-label">Notifications</div>
     </div>
 </div>
 
 <div class="qa-grid">
-    <a href="<?php echo h(project_url('koch/main/quotation.php'));?>" class="qa-item koch"><i class="fas fa-box-open"></i><span>New KOCH Quotation</span></a>
-    <a href="<?php echo h(project_url('tnb/main/quotation.php'));?>" class="qa-item tnb"><i class="fas fa-shipping-fast"></i><span>New TNB Request</span></a>
-    <a href="?section=koch_quotations" class="qa-item all"><i class="fas fa-clipboard-list"></i><span>Pending Items (<?php echo $totalPending;?>)</span></a>
+    <a href="<?php echo h(project_url('koch/main/quotation.php'));?>" class="qa-item koch"><i class="fas fa-box-open"></i><span>New Quotation</span></a>
+    <a href="?section=koch_quotations" class="qa-item all"><i class="fas fa-clipboard-list"></i><span>Pending (<?php echo $ext['koch_pending'];?>)</span></a>
+    <a href="?section=products" class="qa-item koch"><i class="fas fa-boxes-stacked"></i><span>Products</span></a>
     <a href="?section=notifications" class="qa-item notif"><i class="fas fa-bell"></i><span>Notifications (<?php echo (int)$stats['unread_notifications'];?>)</span></a>
 </div>
 
@@ -337,6 +390,74 @@ if ($user['company_id'] == get_company_id_by_code($pdo, 'TNB')) {
             </tr><?php endforeach; endif;?>
             </tbody></table></div></div>
         </div>
+    </div>
+    <div>
+        <div class="card">
+            <div class="card-h"><h2><i class="fas fa-user-plus"></i> Recent Users</h2><a href="?section=users" class="link">View All &rarr;</a></div>
+            <div class="card-b">
+            <?php if($recentUsers===[]):?><p style="text-align:center;color:var(--muted);padding:20px 0;font-size:13px">No users yet</p>
+            <?php else: foreach($recentUsers as $u):?>
+                <div class="user-row" style="padding:8px 0;border-bottom:1px solid var(--border);<?php echo end($recentUsers)===$u?'border:none':'';?>">
+                    <div class="u-avatar"><?php echo strtoupper(substr((string)($u['first_name']??$u['username']),0,1));?></div>
+                    <div class="u-info">
+                        <h4><?php echo h(trim(($u['first_name']??'').' '.($u['last_name']??''))?:$u['username']);?></h4>
+                        <span><?php echo h((string)($u['company_name']??'-'));?> &middot; <?php echo h(ucfirst((string)$u['role']));?></span>
+                    </div>
+                    <div style="margin-left:auto"><?php echo admin_status_badge((string)$u['status']);?></div>
+                </div>
+            <?php endforeach; endif;?>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-h"><h2><i class="fas fa-history"></i> Recent Activity</h2><a href="?section=activity" class="link">View All &rarr;</a></div>
+            <div class="card-b" style="padding:12px 20px">
+            <?php if($activities===[]):?><p style="text-align:center;color:var(--muted);padding:20px 0;font-size:13px">No activity yet</p>
+            <?php else: foreach(array_slice($activities,0,6) as $a):?>
+                <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px">
+                    <div style="width:6px;height:6px;border-radius:50%;background:var(--primary);flex-shrink:0"></div>
+                    <div style="flex:1"><strong><?php echo h((string)($a['username']??'System'));?></strong> — <?php echo h(admin_action_label((string)$a['action']));?></div>
+                    <div style="color:var(--muted);white-space:nowrap"><?php echo h(date('d/m H:i',strtotime((string)$a['created_at'])));?></div>
+                </div>
+            <?php endforeach; endif;?>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php else: ?>
+<!-- TNB MODE -->
+<div class="stats-row">
+    <div class="stat-card purple">
+        <div class="sc-top"><div class="sc-icon"><i class="fas fa-users"></i></div><?php if($ext['new_users_month']>0):?><span class="sc-change up">+<?php echo $ext['new_users_month'];?> this month</span><?php endif;?></div>
+        <div class="sc-num"><?php echo number_format((int)$stats['users']);?></div>
+        <div class="sc-label">TNB Users</div>
+    </div>
+    <div class="stat-card teal">
+        <div class="sc-top"><div class="sc-icon"><i class="fas fa-truck"></i></div><?php if($ext['tnb_month']>0):?><span class="sc-change up">+<?php echo $ext['tnb_month'];?> this month</span><?php endif;?></div>
+        <div class="sc-num"><?php echo number_format((int)$stats['tnb_quotations']);?></div>
+        <div class="sc-label">TNB Requests</div>
+    </div>
+    <div class="stat-card orange">
+        <div class="sc-top"><div class="sc-icon"><i class="fas fa-clock"></i></div></div>
+        <div class="sc-num"><?php echo $ext['tnb_pending'];?></div>
+        <div class="sc-label">Pending</div>
+    </div>
+    <div class="stat-card blue">
+        <div class="sc-top"><div class="sc-icon"><i class="fas fa-shipping-fast"></i></div></div>
+        <div class="sc-num"><?php echo $ext['tnb_in_transit'];?></div>
+        <div class="sc-label">In Transit</div>
+    </div>
+</div>
+
+<div class="qa-grid">
+    <a href="<?php echo h(project_url('tnb/main/quotation.php'));?>" class="qa-item tnb"><i class="fas fa-shipping-fast"></i><span>New TNB Request</span></a>
+    <a href="?section=tnb_quotations" class="qa-item all"><i class="fas fa-clipboard-list"></i><span>Pending (<?php echo $ext['tnb_pending'];?>)</span></a>
+    <a href="?section=truck_cards" class="qa-item tnb"><i class="fas fa-id-card"></i><span>Truck Cards</span></a>
+    <a href="?section=notifications" class="qa-item notif"><i class="fas fa-bell"></i><span>Notifications (<?php echo (int)$stats['unread_notifications'];?>)</span></a>
+</div>
+
+<div class="grid-3">
+    <div>
         <div class="card">
             <div class="card-h"><h2><i class="fas fa-truck"></i> Recent TNB Requests</h2><a href="?section=tnb_quotations" class="link">View All &rarr;</a></div>
             <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Number</th><th>Customer</th><th>Service</th><th>Route</th><th>Status</th></tr></thead><tbody>
@@ -383,6 +504,7 @@ if ($user['company_id'] == get_company_id_by_code($pdo, 'TNB')) {
         </div>
     </div>
 </div>
+<?php endif; ?>
 
 <?php elseif($section==='users'): ?>
 <!-- =================== USERS =================== -->
@@ -612,7 +734,7 @@ $distinctActions = get_distinct_actions($pdo);
     <?php if($allSliders===[]):?><tr class="empty"><td colspan="8">No sliders found</td></tr>
     <?php else: foreach($allSliders as $s):?><tr>
         <td style="font-size:12px;font-weight:600">#<?php echo (int)$s['id'];?></td>
-        <td><?php if($s['image_url']):?><img src="<?php echo h((string)$s['image_url']);?>" style="width:60px;height:35px;object-fit:cover;border-radius:6px" alt=""><?php else:?><span style="color:var(--muted);font-size:11px">No image</span><?php endif;?></td>
+        <td><?php if($s['image_url']):?><img src="<?php echo h(resolve_image_url((string)$s['image_url']));?>" style="width:60px;height:35px;object-fit:cover;border-radius:6px" alt=""><?php else:?><span style="color:var(--muted);font-size:11px">No image</span><?php endif;?></td>
         <td style="font-size:12px;font-weight:600"><?php echo h((string)$s['title']);?></td>
         <td style="font-size:12px;color:var(--muted);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><?php echo h((string)($s['subtitle']??''));?></td>
         <td style="font-size:12px"><?php echo h((string)($s['company_name']??'-'));?></td>
@@ -635,7 +757,7 @@ $distinctActions = get_distinct_actions($pdo);
     <?php if($allPartners===[]):?><tr class="empty"><td colspan="8">No partners found</td></tr>
     <?php else: foreach($allPartners as $p):?><tr>
         <td style="font-size:12px;font-weight:600">#<?php echo (int)$p['id'];?></td>
-        <td><?php if($p['logo_url']):?><img src="<?php echo h((string)$p['logo_url']);?>" style="width:40px;height:40px;object-fit:contain;border-radius:6px;background:#f8fafc;padding:4px" alt=""><?php else:?><span style="color:var(--muted);font-size:11px">-</span><?php endif;?></td>
+        <td><?php if($p['logo_url']):?><img src="<?php echo h(resolve_image_url((string)$p['logo_url']));?>" style="width:40px;height:40px;object-fit:contain;border-radius:6px;background:#f8fafc;padding:4px" alt=""><?php else:?><span style="color:var(--muted);font-size:11px">-</span><?php endif;?></td>
         <td style="font-size:12px;font-weight:600"><?php echo h((string)$p['name']);?></td>
         <td style="font-size:11px;color:var(--muted)"><?php echo $p['website_url']?'<a href="'.h((string)$p['website_url']).'" target="_blank" style="color:var(--primary)">Visit</a>':'-';?></td>
         <td style="font-size:12px"><?php echo h((string)($p['company_name']??'-'));?></td>
@@ -658,7 +780,7 @@ $distinctActions = get_distinct_actions($pdo);
     <?php if($allProducts===[]):?><tr class="empty"><td colspan="7">No products found</td></tr>
     <?php else: foreach($allProducts as $p):?><tr>
         <td style="font-size:12px;font-weight:600">#<?php echo (int)$p['id'];?></td>
-        <td><?php if($p['image_url']):?><img src="<?php echo h((string)$p['image_url']);?>" style="width:40px;height:40px;object-fit:cover;border-radius:6px" alt=""><?php else:?><span style="color:var(--muted);font-size:11px">-</span><?php endif;?></td>
+        <td><?php if($p['image_url']):?><img src="<?php echo h(resolve_image_url((string)$p['image_url']));?>" style="width:40px;height:40px;object-fit:cover;border-radius:6px" alt=""><?php else:?><span style="color:var(--muted);font-size:11px">-</span><?php endif;?></td>
         <td style="font-size:12px;font-weight:600"><?php echo h((string)$p['name']);?></td>
         <td style="font-size:12px"><?php echo h(ucfirst((string)($p['category']??'')));?></td>
         <td style="font-size:12px;text-align:center"><?php echo (int)$p['display_order'];?></td>
@@ -682,7 +804,7 @@ $distinctActions = get_distinct_actions($pdo);
         <td style="font-size:12px;font-weight:600">#<?php echo (int)$fp['id'];?></td>
         <td style="font-size:12px"><?php echo h((string)($fp['company_name']??'Unknown'));?></td>
         <td style="font-size:12px;font-weight:600"><?php echo h((string)$fp['name']);?></td>
-        <td><?php if($fp['image_url']):?><img src="<?php echo h((string)$fp['image_url']);?>" style="width:40px;height:40px;object-fit:cover;border-radius:6px" alt=""><?php else:?><span style="color:var(--muted);font-size:11px">-</span><?php endif;?></td>
+        <td><?php if($fp['image_url']):?><img src="<?php echo h(resolve_image_url((string)$fp['image_url']));?>" style="width:40px;height:40px;object-fit:cover;border-radius:6px" alt=""><?php else:?><span style="color:var(--muted);font-size:11px">-</span><?php endif;?></td>
         <td style="font-size:12px"><?php if($fp['website_url']):?><a href="<?php echo h((string)$fp['website_url']);?>" target="_blank" style="color:var(--primary)">🔗</a><?php else:?>-<?php endif;?></td>
         <td style="font-size:12px;text-align:center"><?php echo (int)$fp['display_order'];?></td>
         <td><?php echo admin_status_badge($fp['is_active']?'active':'inactive');?></td>
@@ -703,7 +825,7 @@ $distinctActions = get_distinct_actions($pdo);
     <?php if($allTrucks===[]):?><tr class="empty"><td colspan="8">No truck types found</td></tr>
     <?php else: foreach($allTrucks as $t):?><tr>
         <td style="font-size:12px;font-weight:600">#<?php echo (int)$t['id'];?></td>
-        <td><?php if($t['image_url']):?><img src="<?php echo h((string)$t['image_url']);?>" style="width:50px;height:35px;object-fit:cover;border-radius:6px" alt=""><?php else:?><span style="color:var(--muted);font-size:11px">-</span><?php endif;?></td>
+        <td><?php if($t['image_url']):?><img src="<?php echo h(resolve_image_url((string)$t['image_url']));?>" style="width:50px;height:35px;object-fit:cover;border-radius:6px" alt=""><?php else:?><span style="color:var(--muted);font-size:11px">-</span><?php endif;?></td>
         <td style="font-size:12px;font-weight:600"><?php echo h((string)$t['name']);?></td>
         <td style="font-size:12px"><?php echo h((string)($t['capacity']??'-'));?></td>
         <td style="font-size:12px;text-align:center"><?php echo (int)$t['display_order'];?></td>
@@ -726,7 +848,7 @@ $distinctActions = get_distinct_actions($pdo);
     <?php if($allTrucks===[]):?><tr class="empty"><td colspan="7">No truck types found</td></tr>
     <?php else: foreach($allTrucks as $t):?><tr>
         <td style="font-size:12px;font-weight:600">#<?php echo (int)$t['id'];?></td>
-        <td><?php if($t['image_url']):?><img src="<?php echo h((string)$t['image_url']);?>" style="width:50px;height:35px;object-fit:cover;border-radius:6px" alt=""><?php else:?><span style="color:var(--muted);font-size:11px">-</span><?php endif;?></td>
+        <td><?php if($t['image_url']):?><img src="<?php echo h(resolve_image_url((string)$t['image_url']));?>" style="width:50px;height:35px;object-fit:cover;border-radius:6px" alt=""><?php else:?><span style="color:var(--muted);font-size:11px">-</span><?php endif;?></td>
         <td style="font-size:12px;font-weight:600"><?php echo h((string)$t['name']);?></td>
         <td style="font-size:12px"><?php echo h((string)($t['capacity']??'-'));?></td>
         <td style="font-size:12px;text-align:center"><?php echo (int)$t['display_order'];?></td>
@@ -737,6 +859,38 @@ $distinctActions = get_distinct_actions($pdo);
         </div></td>
     </tr><?php endforeach; endif;?>
     </tbody></table></div></div>
+</div>
+
+<?php elseif($section==='truck_cards'): ?>
+<!-- =================== TRUCK CARDS (TNB Index Display) =================== -->
+<?php $allTruckCards = get_all_truck_types_admin($pdo, $filterCompanyId); ?>
+<div class="card">
+    <div class="card-h"><h2><i class="fas fa-id-card"></i> Truck Cards (TNB)</h2><div style="display:flex;gap:8px;align-items:center"><span style="font-size:12px;color:var(--muted)"><?php echo count($allTruckCards);?> cards</span><button class="btn btn-sm btn-primary" onclick="openModal('truckModal')"><i class="fas fa-plus"></i> Add Truck Card</button></div></div>
+    <div class="card-b" style="padding:12px 20px;background:#eff6ff;border-bottom:1px solid var(--border)">
+        <p style="font-size:12px;color:#1e40af;margin:0"><i class="fas fa-info-circle"></i> <strong>Truck Cards</strong> จะแสดงที่หน้าเว็บ TNB ในส่วน "ประเภทรถ" — ข้อมูลที่เพิ่ม/แก้ไขที่นี่จะปรากฏบน TNB website โดยตรง</p>
+    </div>
+    <div class="card-b" style="padding:20px">
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px">
+        <?php if($allTruckCards===[]): ?>
+            <p style="text-align:center;color:var(--muted);padding:40px 0;font-size:13px;grid-column:1/-1">No truck cards found. Click "Add Truck Card" to create one.</p>
+        <?php else: foreach($allTruckCards as $tc): ?>
+            <div style="background:var(--bg);border-radius:12px;overflow:hidden;transition:transform .2s,box-shadow .2s;border:1.5px solid var(--border)" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 16px rgba(0,0,0,.1)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+                <?php if($tc['image_url']):?><img src="<?php echo h(resolve_image_url((string)$tc['image_url']));?>" style="width:100%;height:130px;object-fit:cover" alt=""><?php else:?><div style="width:100%;height:130px;background:#e2e8f0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:12px">No Image</div><?php endif;?>
+                <div style="padding:12px">
+                    <h4 style="font-size:13px;font-weight:700;margin:0 0 4px"><?php echo h((string)$tc['name']);?></h4>
+                    <p style="font-size:11px;color:var(--muted);margin:0 0 8px"><?php echo h((string)($tc['capacity']??'-'));?></p>
+                    <div style="display:flex;gap:4px">
+                        <?php echo admin_status_badge($tc['is_active']?'active':'inactive');?>
+                    </div>
+                    <div style="display:flex;gap:4px;margin-top:8px">
+                        <button class="btn btn-xs btn-ghost" onclick="openEditTruck(<?php echo (int)$tc['id'];?>,'<?php echo h(addslashes((string)$tc['name']));?>','<?php echo h(addslashes((string)($tc['description']??'')));?>','<?php echo h(addslashes((string)($tc['image_url']??'')));?>','<?php echo h(addslashes((string)($tc['capacity']??'')));?>',<?php echo (int)$tc['display_order'];?>,<?php echo $tc['is_active']?1:0;?>)"><i class="fas fa-edit"></i></button>
+                        <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete?')"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="entity" value="truck_type"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?php echo (int)$tc['id'];?>"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=truck_cards'));?>"><button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></button></form>
+                    </div>
+                </div>
+            </div>
+        <?php endforeach; endif; ?>
+        </div>
+    </div>
 </div>
 
 <?php elseif($section==='branches'): ?>

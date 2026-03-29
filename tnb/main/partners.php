@@ -81,10 +81,10 @@ $dbPartners = get_active_partners($pdo, $companyId);
                                     <?php if (!empty($dbPartners)): $pCount = count($dbPartners); $totalItems = $pCount * 2; ?>
                                     <div class="login-track vertical" style="--time: <?php echo max(30, $pCount * 4); ?>s; --total: <?php echo $totalItems; ?>; --top: -300rem;">
                                         <?php $idx = 1; foreach ($dbPartners as $p): ?>
-                                        <div class="login-item" style="--i: <?php echo $idx++; ?>;"><img src="<?php echo htmlspecialchars((string)$p['logo_url']); ?>" alt="<?php echo htmlspecialchars((string)$p['name']); ?>"></div>
+                                        <div class="login-item" style="--i: <?php echo $idx++; ?>;"><img src="<?php echo htmlspecialchars(resolve_image_url((string)$p['logo_url'])); ?>" alt="<?php echo htmlspecialchars((string)$p['name']); ?>"></div>
                                         <?php endforeach; ?>
                                         <?php foreach ($dbPartners as $p): ?>
-                                        <div class="login-item" style="--i: <?php echo $idx++; ?>;"><img src="<?php echo htmlspecialchars((string)$p['logo_url']); ?>" alt="<?php echo htmlspecialchars((string)$p['name']); ?>"></div>
+                                        <div class="login-item" style="--i: <?php echo $idx++; ?>;"><img src="<?php echo htmlspecialchars(resolve_image_url((string)$p['logo_url'])); ?>" alt="<?php echo htmlspecialchars((string)$p['name']); ?>"></div>
                                         <?php endforeach; ?>
                                     </div>
                                     <?php else: ?>

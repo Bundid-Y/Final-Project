@@ -89,7 +89,7 @@ $companyInfo = get_company_info($pdo, 'TNB');
                     </div>
                 </div>
                 <div class="tnb-panel__img-col">
-                    <img src="<?php echo htmlspecialchars((string)$sl['image_url']); ?>" alt="<?php echo htmlspecialchars((string)$sl['title']); ?>" class="tnb-panel__img" />
+                    <img src="<?php echo htmlspecialchars(resolve_image_url((string)$sl['image_url'])); ?>" alt="<?php echo htmlspecialchars((string)$sl['title']); ?>" class="tnb-panel__img" />
                 </div>
             </div>
             <?php endforeach; else: ?>
@@ -328,7 +328,7 @@ $companyInfo = get_company_info($pdo, 'TNB');
                 <?php foreach ($dbPartners as $pi => $partner): ?>
                 <div class="login-item" style="--i: <?php echo $pi + 1; ?>;">
                     <?php if (!empty($partner['website_url'])): ?><a href="<?php echo htmlspecialchars((string)$partner['website_url']); ?>" target="_blank" rel="noopener noreferrer"><?php endif; ?>
-                    <img src="<?php echo htmlspecialchars((string)$partner['logo_url']); ?>" alt="<?php echo htmlspecialchars((string)$partner['name']); ?>" loading="lazy">
+                    <img src="<?php echo htmlspecialchars(resolve_image_url((string)$partner['logo_url'])); ?>" alt="<?php echo htmlspecialchars((string)$partner['name']); ?>" loading="lazy">
                     <?php if (!empty($partner['website_url'])): ?></a><?php endif; ?>
                 </div>
                 <?php endforeach; ?>
@@ -372,7 +372,7 @@ $companyInfo = get_company_info($pdo, 'TNB');
                             <?php foreach ($tPage as $truck): ?>
                             <div class="dev-card">
                                 <a href="../main/trucktypes.php" rel="noopener noreferrer">
-                                    <?php if (!empty($truck['image_url'])): ?><img src="<?php echo htmlspecialchars('../../' . (string)$truck['image_url']); ?>" alt="<?php echo htmlspecialchars((string)$truck['name']); ?>" loading="lazy"><?php else: ?><div style="height:140px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:12px">No Image</div><?php endif; ?>
+                                    <?php if (!empty($truck['image_url'])): ?><img src="<?php echo htmlspecialchars(resolve_image_url((string)$truck['image_url'])); ?>" alt="<?php echo htmlspecialchars((string)$truck['name']); ?>" loading="lazy"><?php else: ?><div style="height:140px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:12px">No Image</div><?php endif; ?>
                                     <div class="dev-card-title"><?php echo htmlspecialchars((string)$truck['name']); ?></div>
                                     <p class="dev-card-desc"><?php echo htmlspecialchars((string)($truck['capacity'] ?? $truck['name'])); ?></p>
                                 </a>

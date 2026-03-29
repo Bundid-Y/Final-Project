@@ -67,7 +67,7 @@ $companyInfo = get_company_info($pdo, 'KOCH');
             <div class="slide-track" id="slideTrack">
                 <?php if (!empty($dbSliders)): foreach ($dbSliders as $sl): ?>
                 <div class="slide-item">
-                    <img src="<?php echo htmlspecialchars((string)$sl['image_url']); ?>" alt="<?php echo htmlspecialchars((string)$sl['title']); ?>">
+                    <img src="<?php echo htmlspecialchars(resolve_image_url((string)$sl['image_url'])); ?>" alt="<?php echo htmlspecialchars((string)$sl['title']); ?>">
                     <?php if (!empty($sl['title']) || !empty($sl['subtitle'])): ?>
                     <div class="slide-caption" style="position:absolute;bottom:20px;left:20px;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.6)">
                         <?php if ($sl['title']): ?><h3 style="margin:0;font-size:1.4rem"><?php echo htmlspecialchars((string)$sl['title']); ?></h3><?php endif; ?>
@@ -242,7 +242,7 @@ $companyInfo = get_company_info($pdo, 'KOCH');
                 <?php foreach ($dbPartners as $pi => $partner): ?>
                 <div class="login-item" style="--i: <?php echo $pi + 1; ?>;">
                     <?php if (!empty($partner['website_url'])): ?><a href="<?php echo htmlspecialchars((string)$partner['website_url']); ?>" target="_blank" rel="noopener noreferrer"><?php endif; ?>
-                    <img src="<?php echo htmlspecialchars((string)$partner['logo_url']); ?>" alt="<?php echo htmlspecialchars((string)$partner['name']); ?>" loading="lazy">
+                    <img src="<?php echo htmlspecialchars(resolve_image_url((string)$partner['logo_url'])); ?>" alt="<?php echo htmlspecialchars((string)$partner['name']); ?>" loading="lazy">
                     <?php if (!empty($partner['website_url'])): ?></a><?php endif; ?>
                 </div>
                 <?php endforeach; ?>
@@ -299,7 +299,7 @@ $companyInfo = get_company_info($pdo, 'KOCH');
                         <div class="dev-cards">
                             <?php foreach ($page as $product): ?>
                             <div class="dev-card"><a href="../main/product.php" rel="noopener noreferrer">
-                                <?php if (!empty($product['image_url'])): ?><img src="<?php echo htmlspecialchars('../../' . (string)$product['image_url']); ?>" alt="<?php echo htmlspecialchars((string)$product['name']); ?>" loading="lazy"><?php else: ?><div style="height:140px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:12px">No Image</div><?php endif; ?>
+                                <?php if (!empty($product['image_url'])): ?><img src="<?php echo htmlspecialchars(resolve_image_url((string)$product['image_url'])); ?>" alt="<?php echo htmlspecialchars((string)$product['name']); ?>" loading="lazy"><?php else: ?><div style="height:140px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:12px">No Image</div><?php endif; ?>
                                 <div class="dev-card-title"><?php echo htmlspecialchars((string)$product['name']); ?></div>
                                 <p class="dev-card-desc"><?php echo htmlspecialchars((string)($product['category'] ?? $product['name'])); ?></p>
                             </a></div>

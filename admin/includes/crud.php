@@ -209,7 +209,7 @@ function delete_partner(PDO $pdo, int $id, int $adminId): array
 // =============================================
 // PRODUCT CRUD (KOCH)
 // =============================================
-function get_all_products_admin(PDO $pdo): array
+function get_all_products_admin(PDO $pdo, ?int $companyId = null): array
 {
     $stmt = $pdo->prepare('SELECT id, name, description, category, image_url, price, is_active, display_order, created_at, updated_at FROM products ORDER BY display_order ASC');
     $stmt->execute();
@@ -300,7 +300,7 @@ function delete_product(PDO $pdo, int $id, int $adminId): array
 // =============================================
 // TRUCK TYPES CRUD (TNB)
 // =============================================
-function get_all_truck_types_admin(PDO $pdo): array
+function get_all_truck_types_admin(PDO $pdo, ?int $companyId = null): array
 {
     $stmt = $pdo->prepare('SELECT id, name, description, image_url, capacity, dimensions, price_range, is_active, display_order, created_at, updated_at FROM truck_types ORDER BY display_order ASC');
     $stmt->execute();
@@ -964,9 +964,17 @@ function remove_user_permission(PDO $pdo, int $userId, string $permissionName, i
 
 // ── Featured Products CRUD ────────────────────────────────────────
 
-function get_all_featured_products_admin(PDO $pdo): array
+function get_all_featured_products_admin(PDO $pdo, ?int $companyId = null): array
 {
-    $stmt = $pdo->query('SELECT fp.*, c.name AS company_name FROM featured_products fp LEFT JOIN companies c ON c.id = fp.company_id ORDER BY fp.display_order ASC, fp.id ASC');
+    $sql = 'SELECT fp.*, c.name AS company_name FROM featured_products fp LEFT JOIN companies c ON c.id = fp.company_id';
+    $params = [];
+    if ($companyId !== null) {
+        $sql .= ' WHERE fp.company_id = :cid';
+        $params[':cid'] = $companyId;
+    }
+    $sql .= ' ORDER BY fp.display_order ASC, fp.id ASC';
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute($params);
     return $stmt->fetchAll() ?: [];
 }
 

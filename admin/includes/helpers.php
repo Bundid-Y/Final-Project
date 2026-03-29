@@ -110,3 +110,20 @@ function upload_public_path(string $absolutePath): string
     $relative = str_replace($root . '/', '', $normalized);
     return 'admin/' . ltrim($relative, '/');
 }
+
+/**
+ * Resolve an image URL stored in DB (e.g. "admin/uploads/products/xxx.png")
+ * into a full project URL that works from any page.
+ */
+function resolve_image_url(?string $dbPath): string
+{
+    if ($dbPath === null || $dbPath === '') {
+        return '';
+    }
+    // If it's already an absolute URL, return as-is
+    if (str_starts_with($dbPath, 'http://') || str_starts_with($dbPath, 'https://') || str_starts_with($dbPath, '//')) {
+        return $dbPath;
+    }
+    // Convert relative DB path to full project URL
+    return project_url($dbPath);
+}
