@@ -965,15 +965,23 @@ $allTruckCards = get_all_truck_types_admin($pdo, $filterCompanyId);
 <?php elseif($section==='email_templates'): ?>
 <!-- =================== NOTIFICATION EMAILS =================== -->
 <?php 
-$stmt = $pdo->prepare("SELECT setting_key, setting_value FROM system_settings WHERE setting_key IN ('admin_notify_email_koch', 'admin_notify_email_tnb')");
+$stmt = $pdo->prepare("SELECT setting_key, setting_value FROM system_settings WHERE setting_key IN ('admin_notify_email_koch', 'admin_notify_email_tnb', 'smtp_host', 'smtp_port', 'smtp_user', 'smtp_pass')");
 $stmt->execute();
 $emails = [];
+$smtp = ['host'=>'smtp.gmail.com', 'port'=>'587', 'user'=>'', 'pass'=>''];
 foreach($stmt->fetchAll() as $row) {
     if ($row['setting_key'] === 'admin_notify_email_koch') $emails['koch'] = $row['setting_value'];
     if ($row['setting_key'] === 'admin_notify_email_tnb') $emails['tnb'] = $row['setting_value'];
+    if ($row['setting_key'] === 'smtp_host') $smtp['host'] = $row['setting_value'];
+    if ($row['setting_key'] === 'smtp_port') $smtp['port'] = $row['setting_value'];
+    if ($row['setting_key'] === 'smtp_user') $smtp['user'] = $row['setting_value'];
+    if ($row['setting_key'] === 'smtp_pass') $smtp['pass'] = $row['setting_value'];
 }
 ?>
-<div class="card" style="max-width: 600px; margin: 0 auto;">
+
+<div style="display:flex; flex-direction:column; gap:20px; align-items:center;">
+
+<div class="card" style="width: 100%; max-width: 600px; margin: 0;">
     <div class="card-h"><h2><i class="fas fa-envelope"></i> Notification Emails</h2></div>
     <div class="card-b" style="padding: 20px;">
         <p style="font-size: 13px; color: var(--muted); margin-bottom: 20px;">
@@ -1005,6 +1013,52 @@ foreach($stmt->fetchAll() as $row) {
             </div>
         </form>
     </div>
+</div>
+
+<?php if ($companyMode === 'all'): ?>
+<div class="card" style="width: 100%; max-width: 600px; margin: 0;">
+    <div class="card-h"><h2><i class="fas fa-server"></i> SMTP Configuration</h2></div>
+    <div class="card-b" style="padding: 20px; background:#f8fafc;">
+        <p style="font-size: 13px; color: var(--muted); margin-bottom: 20px;">
+            ตั้งค่าระบบส่งอีเมลกลาง (เช่น ผู้ส่งอีเมล noreply) แนะนำให้ใช้รหัสผ่านแบบ <strong>App Password</strong> ของ Gmail เพื่อความปลอดภัย
+        </p>
+        <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>">
+            <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>">
+            <input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>">
+            <input type="hidden" name="entity" value="system_settings">
+            <input type="hidden" name="action" value="update_smtp_config">
+            <input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=email_templates'));?>">
+            
+            <div class="fm-row">
+                <div class="fm-group">
+                    <label>SMTP Host</label>
+                    <input type="text" name="smtp_host" class="fm-input" value="<?php echo h($smtp['host']);?>" placeholder="smtp.gmail.com" required>
+                </div>
+                <div class="fm-group" style="flex: 0 0 100px;">
+                    <label>Port</label>
+                    <input type="number" name="smtp_port" class="fm-input" value="<?php echo h($smtp['port']);?>" placeholder="587" required>
+                </div>
+            </div>
+            
+            <div class="fm-group">
+                <label>SMTP Username (Email)</label>
+                <input type="email" name="smtp_user" class="fm-input" value="<?php echo h($smtp['user']);?>" placeholder="your-email@gmail.com">
+            </div>
+            
+            <div class="fm-group">
+                <label>SMTP Password (App Password)</label>
+                <input type="password" name="smtp_pass" class="fm-input" value="<?php echo h($smtp['pass']);?>" placeholder="••••••••••••••••">
+                <small style="font-size: 11px; color: #64748b; margin-top:4px; display:block;">รหัสผ่านของ Email หลัก หรือ Gmail App Password 16 หลัก</small>
+            </div>
+
+            <div style="margin-top: 30px;">
+                <button type="submit" class="btn btn-secondary" style="width: 100%; background:var(--secondary); color:#fff;"><i class="fas fa-save"></i> Save SMTP Config</button>
+            </div>
+        </form>
+    </div>
+</div>
+<?php endif; ?>
+
 </div>
 
 <?php elseif($section==='contact_messages'): ?>

@@ -8,6 +8,12 @@ require_once __DIR__ . '/auth.php';
 require_once __DIR__ . '/activity.php';
 require_once __DIR__ . '/upload.php';
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+require_once __DIR__ . '/PHPMailer/Exception.php';
+require_once __DIR__ . '/PHPMailer/PHPMailer.php';
+require_once __DIR__ . '/PHPMailer/SMTP.php';
+
 function generate_document_number(PDO $pdo, string $table, string $column, string $prefix): string
 {
     $year = date('Y');
@@ -147,33 +153,55 @@ function create_koch_quotation(PDO $pdo, array $payload, array $files = []): arr
 
         // --- Send Email to Configured Admin Emails ---
         try {
-            $stmtMail = $pdo->prepare("SELECT setting_value FROM system_settings WHERE setting_key = 'admin_notify_email_koch'");
+            $stmtMail = $pdo->prepare("SELECT setting_key, setting_value FROM system_settings WHERE setting_key IN ('admin_notify_email_koch', 'smtp_host', 'smtp_port', 'smtp_user', 'smtp_pass')");
             $stmtMail->execute();
-            $adminEmailSetting = $stmtMail->fetchColumn();
+            $settingsList = $stmtMail->fetchAll();
+            $adminEmailSetting = '';
+            $smtpConfig = ['host'=>'', 'port'=>'', 'user'=>'', 'pass'=>''];
+            foreach($settingsList as $row) {
+                if ($row['setting_key'] === 'admin_notify_email_koch') $adminEmailSetting = $row['setting_value'];
+                else $smtpConfig[str_replace('smtp_','',$row['setting_key'])] = $row['setting_value'];
+            }
             
-            if (!empty($adminEmailSetting)) {
+            if (!empty($adminEmailSetting) && !empty($smtpConfig['host'])) {
                 $toEmails = array_filter(array_map('trim', explode(',', (string) $adminEmailSetting)));
                 if ($toEmails !== []) {
-                    $subject = "New KOCH Quotation Request: " . $quotationNumber;
-                    $message = "A new KOCH quotation request has been submitted.\n\n" .
-                               "Quotation Number: " . $quotationNumber . "\n" .
-                               "Customer: " . sanitize_text((string) $payload['first_name']) . " " . sanitize_text((string) $payload['last_name']) . " (" . sanitize_text((string) $payload['email']) . ")\n" .
-                               "Product: " . sanitize_text((string) $payload['product_type']) . "\n" .
-                               "Quantity: " . max(1, (int) $payload['quantity']) . "\n\n" .
-                               "Please log in to the admin dashboard to review.";
+                    $mail = new PHPMailer(true);
                     
-                    $headers = "From: noreply@" . ($_SERVER['HTTP_HOST'] ?? 'localhost') . "\r\n" .
-                               "Reply-To: noreply@" . ($_SERVER['HTTP_HOST'] ?? 'localhost') . "\r\n" .
-                               "X-Mailer: PHP/" . phpversion();
-                               
+                    // Server settings
+                    $mail->isSMTP();
+                    $mail->Host       = $smtpConfig['host'];
+                    $mail->SMTPAuth   = true;
+                    $mail->Username   = $smtpConfig['user'];
+                    $mail->Password   = $smtpConfig['pass'];
+                    $mail->SMTPSecure = (int)$smtpConfig['port'] === 465 ? PHPMailer::ENCRYPTION_SMTPS : PHPMailer::ENCRYPTION_STARTTLS;
+                    $mail->Port       = (int) $smtpConfig['port'];
+                    $mail->CharSet    = 'UTF-8';
+
+                    // Recipients
+                    $mail->setFrom($smtpConfig['user'] ?: 'noreply@' . ($_SERVER['HTTP_HOST'] ?? 'localhost'), 'KOCH Dashboard');
                     foreach ($toEmails as $to) {
                         if (filter_var($to, FILTER_VALIDATE_EMAIL)) {
-                            // @mail($to, $subject, $message, $headers); // ปิดชั่วคราวเพื่อป้องกันการโหลดช้าบน XAMPP
+                            $mail->addAddress($to);
                         }
                     }
+
+                    // Content
+                    $mail->isHTML(false);
+                    $mail->Subject = "New KOCH Quotation Request: " . $quotationNumber;
+                    $mail->Body    = "A new KOCH quotation request has been submitted.\n\n" .
+                                     "Quotation Number: " . $quotationNumber . "\n" .
+                                     "Customer: " . sanitize_text((string) $payload['first_name']) . " " . sanitize_text((string) $payload['last_name']) . " (" . sanitize_text((string) $payload['email']) . ")\n" .
+                                     "Product: " . sanitize_text((string) $payload['product_type']) . "\n" .
+                                     "Quantity: " . max(1, (int) $payload['quantity']) . "\n\n" .
+                                     "Please log in to the admin dashboard to review.";
+
+                    $mail->send();
                 }
             }
-        } catch (Throwable $e) {}
+        } catch (Throwable $e) {
+            error_log('KOCH SMTP Error: ' . $e->getMessage());
+        }
 
         $pdo->commit();
 
@@ -293,33 +321,55 @@ function create_tnb_quotation(PDO $pdo, array $payload, array $files = []): arra
 
         // --- Send Email to Configured Admin Emails ---
         try {
-            $stmtMail = $pdo->prepare("SELECT setting_value FROM system_settings WHERE setting_key = 'admin_notify_email_tnb'");
+            $stmtMail = $pdo->prepare("SELECT setting_key, setting_value FROM system_settings WHERE setting_key IN ('admin_notify_email_tnb', 'smtp_host', 'smtp_port', 'smtp_user', 'smtp_pass')");
             $stmtMail->execute();
-            $adminEmailSetting = $stmtMail->fetchColumn();
+            $settingsList = $stmtMail->fetchAll();
+            $adminEmailSetting = '';
+            $smtpConfig = ['host'=>'', 'port'=>'', 'user'=>'', 'pass'=>''];
+            foreach($settingsList as $row) {
+                if ($row['setting_key'] === 'admin_notify_email_tnb') $adminEmailSetting = $row['setting_value'];
+                else $smtpConfig[str_replace('smtp_','',$row['setting_key'])] = $row['setting_value'];
+            }
             
-            if (!empty($adminEmailSetting)) {
+            if (!empty($adminEmailSetting) && !empty($smtpConfig['host'])) {
                 $toEmails = array_filter(array_map('trim', explode(',', (string) $adminEmailSetting)));
                 if ($toEmails !== []) {
-                    $subject = "New TNB Quotation Request: " . $requestNumber;
-                    $message = "A new TNB quotation request has been submitted.\n\n" .
-                               "Request Number: " . $requestNumber . "\n" .
-                               "Customer: " . sanitize_text((string) $payload['first_name']) . " " . sanitize_text((string) $payload['last_name']) . " (" . sanitize_text((string) $payload['email']) . ")\n" .
-                               "Service Type: " . sanitize_text((string) $payload['service_type']) . "\n" .
-                               "Route: " . sanitize_text((string) $payload['route']) . "\n\n" .
-                               "Please log in to the admin dashboard to review.";
+                    $mail = new PHPMailer(true);
                     
-                    $headers = "From: noreply@" . ($_SERVER['HTTP_HOST'] ?? 'localhost') . "\r\n" .
-                               "Reply-To: noreply@" . ($_SERVER['HTTP_HOST'] ?? 'localhost') . "\r\n" .
-                               "X-Mailer: PHP/" . phpversion();
-                               
+                    // Server settings
+                    $mail->isSMTP();
+                    $mail->Host       = $smtpConfig['host'];
+                    $mail->SMTPAuth   = true;
+                    $mail->Username   = $smtpConfig['user'];
+                    $mail->Password   = $smtpConfig['pass'];
+                    $mail->SMTPSecure = (int)$smtpConfig['port'] === 465 ? PHPMailer::ENCRYPTION_SMTPS : PHPMailer::ENCRYPTION_STARTTLS;
+                    $mail->Port       = (int) $smtpConfig['port'];
+                    $mail->CharSet    = 'UTF-8';
+
+                    // Recipients
+                    $mail->setFrom($smtpConfig['user'] ?: 'noreply@' . ($_SERVER['HTTP_HOST'] ?? 'localhost'), 'TNB Dashboard');
                     foreach ($toEmails as $to) {
                         if (filter_var($to, FILTER_VALIDATE_EMAIL)) {
-                            // @mail($to, $subject, $message, $headers); // ปิดชั่วคราวเพื่อป้องกันการโหลดช้าบน XAMPP
+                            $mail->addAddress($to);
                         }
                     }
+
+                    // Content
+                    $mail->isHTML(false);
+                    $mail->Subject = "New TNB Quotation Request: " . $requestNumber;
+                    $mail->Body    = "A new TNB quotation request has been submitted.\n\n" .
+                                     "Request Number: " . $requestNumber . "\n" .
+                                     "Customer: " . sanitize_text((string) $payload['first_name']) . " " . sanitize_text((string) $payload['last_name']) . " (" . sanitize_text((string) $payload['email']) . ")\n" .
+                                     "Service Type: " . sanitize_text((string) $payload['service_type']) . "\n" .
+                                     "Route: " . sanitize_text((string) $payload['route']) . "\n\n" .
+                                     "Please log in to the admin dashboard to review.";
+
+                    $mail->send();
                 }
             }
-        } catch (Throwable $e) {}
+        } catch (Throwable $e) {
+            error_log('TNB SMTP Error: ' . $e->getMessage());
+        }
 
         $pdo->commit();
 

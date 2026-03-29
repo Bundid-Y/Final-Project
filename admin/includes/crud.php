@@ -1094,6 +1094,27 @@ function handle_system_settings_emails(PDO $pdo, string $action, array $post, in
         log_activity($pdo, $adminId, 'SETTINGS_UPDATED', 'system_settings', 0, [], ['emails_updated' => true]);
         return ['success' => true, 'message' => 'Notification emails saved successfully.'];
     }
+
+    if ($action === 'update_smtp_config') {
+        $sql = 'INSERT INTO system_settings (setting_key, setting_value) VALUES (?, ?) ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)';
+        $stmt = $pdo->prepare($sql);
+        
+        $fields = ['smtp_host', 'smtp_port', 'smtp_user'];
+        foreach ($fields as $field) {
+            if (isset($post[$field])) {
+                $stmt->execute([$field, trim((string)$post[$field])]);
+            }
+        }
+        
+        // Passwords shouldn't be overridden with empty if already set (unless they explicitly clear it)
+        if (!empty($post['smtp_pass'])) {
+            $stmt->execute(['smtp_pass', trim((string)$post['smtp_pass'])]);
+        }
+        
+        log_activity($pdo, $adminId, 'SETTINGS_UPDATED', 'system_settings', 0, [], ['smtp_updated' => true]);
+        return ['success' => true, 'message' => 'SMTP Configuration saved successfully.'];
+    }
+
     return ['success' => false, 'message' => 'Invalid action for settings.'];
 }
 
