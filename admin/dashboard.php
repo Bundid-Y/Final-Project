@@ -248,6 +248,8 @@ textarea.fm-input{resize:vertical;min-height:80px}
         <a href="?section=products" class="<?php echo $section==='products'?'active':'';?>"><i class="fas fa-boxes-stacked"></i> Products</a>
         <a href="?section=featured_products" class="<?php echo $section==='featured_products'?'active':'';?>"><i class="fas fa-star"></i> Featured Products</a>
         <?php elseif ($companyMode === 'tnb'): ?>
+        <a href="?section=truck_types" class="<?php echo $section==='truck_types'?'active':'';?>"><i class="fas fa-truck-moving"></i> Truck Types</a>
+        <a href="?section=truck_types_index" class="<?php echo $section==='truck_types_index'?'active':'';?>"><i class="fas fa-truck-pickup"></i> Truck Types Index</a>
         <a href="?section=truck_cards" class="<?php echo $section==='truck_cards'?'active':'';?>"><i class="fas fa-id-card"></i> Truck Cards</a>
         <?php endif; ?>
         <?php endif; ?>
@@ -866,7 +868,7 @@ if ((int)$stats['unread_notifications'] > 0) {
 <!-- =================== TRUCK TYPES INDEX =================== -->
 <?php 
 // Block KOCH users from accessing truck types index
-if ($user['company_id'] == get_company_id_by_code($pdo, 'KOCH')) {
+if ($user['company_id'] == get_company_id_by_code($pdo, 'KOCH') && $user['role'] !== 'super_admin') {
     header('Location: ' . project_url('admin/dashboard.php?section=overview'));
     exit;
 }
@@ -896,7 +898,7 @@ $allTrucks = get_all_truck_types_admin($pdo, $filterCompanyId);
 <!-- =================== TRUCK TYPES =================== -->
 <?php 
 // Block KOCH users from accessing truck types
-if ($user['company_id'] == get_company_id_by_code($pdo, 'KOCH')) {
+if ($user['company_id'] == get_company_id_by_code($pdo, 'KOCH') && $user['role'] !== 'super_admin') {
     header('Location: ' . project_url('admin/dashboard.php?section=overview'));
     exit;
 }
@@ -925,7 +927,7 @@ $allTrucks = get_all_truck_types_admin($pdo, $filterCompanyId);
 <!-- =================== TRUCK CARDS (TNB Index Display) =================== -->
 <?php 
 // Block KOCH users from accessing truck cards
-if ($user['company_id'] == get_company_id_by_code($pdo, 'KOCH')) {
+if ($user['company_id'] == get_company_id_by_code($pdo, 'KOCH') && $user['role'] !== 'super_admin') {
     header('Location: ' . project_url('admin/dashboard.php?section=overview'));
     exit;
 }
