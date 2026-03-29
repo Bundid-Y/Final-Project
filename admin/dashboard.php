@@ -24,6 +24,8 @@ $filterCompanyId = match($companyMode) {
     'tnb' => get_company_id_by_code($pdo, 'TNB'),
     default => null,
 };
+// Store company context in session so notification/activity functions know which company is active
+$_SESSION['admin_company_id_context'] = $filterCompanyId;
 $stats = admin_dashboard_stats($pdo, $filterCompanyId);
 $ext = admin_extended_stats($pdo, $filterCompanyId);
 $activities = latest_admin_activities($pdo, $filterCompanyId, 8);
@@ -681,7 +683,7 @@ $distinctActions = get_distinct_actions($pdo);
 if ((int)$stats['unread_notifications'] > 0) {
     $markSql = 'UPDATE notifications SET is_read = 1 WHERE is_read = 0';
     if ($filterCompanyId !== null) {
-        $markSql .= ' AND user_id IN (SELECT id FROM users WHERE company_id = :cid)';
+        $markSql .= ' AND company_id = :cid';
         $markStmt = $pdo->prepare($markSql);
         $markStmt->execute([':cid' => $filterCompanyId]);
     } else {
@@ -709,7 +711,7 @@ if ((int)$stats['unread_notifications'] > 0) {
     </div>
     <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Type</th><th>Title</th><th>Message</th><th>User</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead><tbody>
     <?php
-    $nSql = 'SELECT n.*, u.username FROM notifications n LEFT JOIN users u ON u.id = n.user_id' . ($filterCompanyId !== null ? ' WHERE n.user_id IN (SELECT id FROM users WHERE company_id = :cid)' : '') . ' ORDER BY n.created_at DESC LIMIT 50';
+    $nSql = 'SELECT n.*, u.username FROM notifications n LEFT JOIN users u ON u.id = n.user_id' . ($filterCompanyId !== null ? ' WHERE n.company_id = :cid' : '') . ' ORDER BY n.created_at DESC LIMIT 50';
     $nStmt = $pdo->prepare($nSql);
     $nStmt->execute($filterCompanyId !== null ? [':cid' => $filterCompanyId] : []);
     $nList = $nStmt->fetchAll();

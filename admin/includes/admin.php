@@ -46,7 +46,7 @@ function admin_dashboard_stats(PDO $pdo, ?int $companyId = null): array
     $tnbStmt = $pdo->prepare('SELECT COUNT(*) FROM tnb_quotations' . ($companyId !== null ? ' WHERE user_id IN (SELECT id FROM users WHERE company_id = :company_id)' : ''));
     $tnbStmt->execute($params);
 
-    $notificationsStmt = $pdo->prepare('SELECT COUNT(*) FROM notifications WHERE is_read = 0' . ($companyId !== null ? ' AND user_id IN (SELECT id FROM users WHERE company_id = :company_id)' : ''));
+    $notificationsStmt = $pdo->prepare('SELECT COUNT(*) FROM notifications WHERE is_read = 0' . ($companyId !== null ? ' AND company_id = :company_id' : ''));
     $notificationsStmt->execute($params);
 
     return [
@@ -65,7 +65,7 @@ function latest_admin_activities(PDO $pdo, ?int $companyId = null, int $limit = 
 
     $params = [];
     if ($companyId !== null) {
-        $sql .= ' WHERE (u.company_id = :company_id OR u.company_id IS NULL)';
+        $sql .= ' WHERE al.company_id = :company_id';
         $params[':company_id'] = $companyId;
     }
 

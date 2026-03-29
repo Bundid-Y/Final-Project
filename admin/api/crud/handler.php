@@ -170,8 +170,14 @@ function handle_notification(PDO $pdo, string $action, int $id, array $post, int
         return ['success' => true, 'message' => 'Notification marked as read.'];
     }
     if ($action === 'mark_all_read') {
-        $stmt = $pdo->prepare('UPDATE notifications SET is_read = 1 WHERE is_read = 0');
-        $stmt->execute();
+        $companyCtx = $_SESSION['admin_company_id_context'] ?? null;
+        if ($companyCtx !== null) {
+            $stmt = $pdo->prepare('UPDATE notifications SET is_read = 1 WHERE is_read = 0 AND company_id = :cid');
+            $stmt->execute([':cid' => $companyCtx]);
+        } else {
+            $stmt = $pdo->prepare('UPDATE notifications SET is_read = 1 WHERE is_read = 0');
+            $stmt->execute();
+        }
         return ['success' => true, 'message' => 'All notifications marked as read.'];
     }
     if ($action === 'delete') {

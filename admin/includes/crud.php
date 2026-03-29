@@ -790,7 +790,7 @@ function get_activity_logs_filtered(PDO $pdo, array $filters = [], int $limit = 
         $params[':user_id'] = (int) $filters['user_id'];
     }
     if (!empty($filters['company_id'])) {
-        $sql .= ' AND u.company_id = :company_id';
+        $sql .= ' AND al.company_id = :company_id';
         $params[':company_id'] = (int) $filters['company_id'];
     }
     if (!empty($filters['action'])) {
@@ -829,14 +829,15 @@ function get_distinct_actions(PDO $pdo): array
 // =============================================
 // NOTIFICATION SYSTEM
 // =============================================
-function create_admin_notification(PDO $pdo, int $userId, string $title, string $message, string $type = 'info', string $priority = 'normal', ?string $relatedTable = null, ?int $relatedId = null): int
+function create_admin_notification(PDO $pdo, int $userId, string $title, string $message, string $type = 'info', string $priority = 'normal', ?string $relatedTable = null, ?int $relatedId = null, ?int $companyId = null): int
 {
     $stmt = $pdo->prepare(
-        'INSERT INTO notifications (user_id, title, message, type, priority, related_table, related_id)
-         VALUES (:user_id, :title, :message, :type, :priority, :related_table, :related_id)'
+        'INSERT INTO notifications (user_id, company_id, title, message, type, priority, related_table, related_id)
+         VALUES (:user_id, :company_id, :title, :message, :type, :priority, :related_table, :related_id)'
     );
     $stmt->execute([
         ':user_id'       => $userId,
+        ':company_id'    => $companyId,
         ':title'         => $title,
         ':message'       => $message,
         ':type'          => $type,
@@ -876,6 +877,9 @@ function notify_admins_new_quotation(PDO $pdo, string $type, string $quotationNu
     $admins->execute();
     $adminIds = $admins->fetchAll(PDO::FETCH_COLUMN);
     $label = $type === 'koch' ? 'KOCH Quotation' : 'TNB Transport Request';
+    // Resolve the company_id for the notification
+    $companyCode = $type === 'koch' ? 'KOCH' : 'TNB';
+    $notifCompanyId = get_company_id_by_code($pdo, $companyCode);
     foreach ($adminIds as $adminId) {
         create_admin_notification(
             $pdo,
@@ -885,7 +889,8 @@ function notify_admins_new_quotation(PDO $pdo, string $type, string $quotationNu
             'info',
             'normal',
             $type === 'koch' ? 'koch_quotations' : 'tnb_quotations',
-            null
+            null,
+            $notifCompanyId
         );
     }
 }
