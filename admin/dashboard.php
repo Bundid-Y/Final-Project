@@ -50,7 +50,45 @@ function admin_status_badge(string $status): string {
     return '<span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background:'.$s[0].';color:'.$s[1].'">'.h($s[2]).'</span>';
 }
 function admin_action_label(string $a): string {
-    $m = ['LOGIN_SUCCESS'=>'Login','LOGIN_FAILED'=>'Login Failed','REGISTER_SUCCESS'=>'Register','PROFILE_UPDATED'=>'Profile Update','PASSWORD_CHANGED'=>'Password Change','KOCH_QUOTATION_CREATED'=>'KOCH Quotation','TNB_QUOTATION_CREATED'=>'TNB Request','AUTO_REGISTER_FROM_QUOTATION'=>'Auto Register'];
+    $m = [
+        'LOGIN_SUCCESS'=>'Login',
+        'LOGIN_FAILED'=>'Login Failed',
+        'REGISTER_SUCCESS'=>'Register',
+        'AUTO_REGISTER_FROM_QUOTATION'=>'Auto Register',
+        'PROFILE_UPDATED'=>'Profile Update',
+        'PASSWORD_CHANGED'=>'Password Change',
+        'LOGOUT'=>'Logout',
+        'KOCH_QUOTATION_CREATED'=>'KOCH Quotation',
+        'TNB_QUOTATION_CREATED'=>'TNB Request',
+        'CONTACT_MESSAGE_SENT'=>'Contact Message',
+        'CONTACT_STATUS_CHANGED'=>'Contact Status Changed',
+        'CONTACT_DELETED'=>'Contact Deleted',
+        'SLIDER_CREATED'=>'Slider Created',
+        'SLIDER_UPDATED'=>'Slider Updated',
+        'SLIDER_DELETED'=>'Slider Deleted',
+        'PARTNER_CREATED'=>'Partner Created',
+        'PARTNER_UPDATED'=>'Partner Updated',
+        'PARTNER_DELETED'=>'Partner Deleted',
+        'PRODUCT_CREATED'=>'Product Created',
+        'PRODUCT_UPDATED'=>'Product Updated',
+        'PRODUCT_DELETED'=>'Product Deleted',
+        'TRUCK_TYPE_CREATED'=>'Truck Type Created',
+        'TRUCK_TYPE_UPDATED'=>'Truck Type Updated',
+        'TRUCK_TYPE_DELETED'=>'Truck Type Deleted',
+        'BRANCH_CREATED'=>'Branch Created',
+        'BRANCH_UPDATED'=>'Branch Updated',
+        'BRANCH_DELETED'=>'Branch Deleted',
+        'USER_ROLE_CHANGED'=>'User Role Changed',
+        'USER_STATUS_CHANGED'=>'User Status Changed',
+        'FEATURED_PRODUCT_CREATED'=>'Featured Product Created',
+        'FEATURED_PRODUCT_UPDATED'=>'Featured Product Updated',
+        'FEATURED_PRODUCT_DELETED'=>'Featured Product Deleted',
+        'TRUCK_CARD_CREATED'=>'Truck Card Created',
+        'TRUCK_CARD_UPDATED'=>'Truck Card Updated',
+        'TRUCK_CARD_DELETED'=>'Truck Card Deleted',
+        'DATA_EXPORTED'=>'Data Exported',
+        'DATA_EXPORT_FAILED'=>'Export Failed',
+    ];
     return $m[$a] ?? $a;
 }
 
@@ -676,7 +714,7 @@ $distinctActions = get_distinct_actions($pdo);
             <div><label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">Date From</label><input type="date" name="date_from" value="<?php echo h($actFilters['date_from']);?>" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:inherit"></div>
             <div><label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">Date To</label><input type="date" name="date_to" value="<?php echo h($actFilters['date_to']);?>" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:inherit"></div>
             <div><label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">User</label><input type="text" name="filter_user" value="<?php echo h($actFilters['user']);?>" placeholder="Username" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:inherit"></div>
-            <div><label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">Action</label><select name="filter_action" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:inherit"><option value="">All Actions</option><?php foreach($distinctActions as $da):?><option value="<?php echo h($da);?>" <?php echo $actFilters['action']===$da?'selected':'';?>><?php echo h($da);?></option><?php endforeach;?></select></div>
+            <div><label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">Action</label><select name="filter_action" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:inherit"><option value="">All Actions</option><option value="LOGIN_SUCCESS" <?php echo $actFilters['action']==='LOGIN_SUCCESS'?'selected':'';?>>Login</option><option value="LOGIN_FAILED" <?php echo $actFilters['action']==='LOGIN_FAILED'?'selected':'';?>>Login Failed</option><option value="REGISTER_SUCCESS" <?php echo $actFilters['action']==='REGISTER_SUCCESS'?'selected':'';?>>Register</option><option value="PROFILE_UPDATED" <?php echo $actFilters['action']==='PROFILE_UPDATED'?'selected':'';?>>Profile Update</option><option value="PASSWORD_CHANGED" <?php echo $actFilters['action']==='PASSWORD_CHANGED'?'selected':'';?>>Password Change</option><option value="KOCH_QUOTATION_CREATED" <?php echo $actFilters['action']==='KOCH_QUOTATION_CREATED'?'selected':'';?>>KOCH Quotation</option><option value="TNB_QUOTATION_CREATED" <?php echo $actFilters['action']==='TNB_QUOTATION_CREATED'?'selected':'';?>>TNB Request</option><option value="CONTACT_MESSAGE_SENT" <?php echo $actFilters['action']==='CONTACT_MESSAGE_SENT'?'selected':'';?>>Contact Message</option><option value="SLIDER_CREATED" <?php echo $actFilters['action']==='SLIDER_CREATED'?'selected':'';?>>Slider Created</option><option value="SLIDER_UPDATED" <?php echo $actFilters['action']==='SLIDER_UPDATED'?'selected':'';?>>Slider Updated</option><option value="SLIDER_DELETED" <?php echo $actFilters['action']==='SLIDER_DELETED'?'selected':'';?>>Slider Deleted</option><option value="PRODUCT_CREATED" <?php echo $actFilters['action']==='PRODUCT_CREATED'?'selected':'';?>>Product Created</option><option value="PRODUCT_UPDATED" <?php echo $actFilters['action']==='PRODUCT_UPDATED'?'selected':'';?>>Product Updated</option><option value="PRODUCT_DELETED" <?php echo $actFilters['action']==='PRODUCT_DELETED'?'selected':'';?>>Product Deleted</option><option value="TRUCK_TYPE_CREATED" <?php echo $actFilters['action']==='TRUCK_TYPE_CREATED'?'selected':'';?>>Truck Type Created</option><option value="TRUCK_TYPE_UPDATED" <?php echo $actFilters['action']==='TRUCK_TYPE_UPDATED'?'selected':'';?>>Truck Type Updated</option><option value="TRUCK_TYPE_DELETED" <?php echo $actFilters['action']==='TRUCK_TYPE_DELETED'?'selected':'';?>>Truck Type Deleted</option><option value="DATA_EXPORTED" <?php echo $actFilters['action']==='DATA_EXPORTED'?'selected':'';?>>Data Exported</option><option value="DATA_EXPORT_FAILED" <?php echo $actFilters['action']==='DATA_EXPORT_FAILED'?'selected':'';?>>Export Failed</option></select></div>
             <div style="display:flex;gap:6px"><button type="submit" class="tb-btn primary" style="flex:1"><i class="fas fa-search"></i> Filter</button><a href="?section=activity" class="tb-btn ghost" style="flex:1;text-align:center"><i class="fas fa-times"></i> Clear</a></div>
         </form>
     </div>
@@ -1083,8 +1121,105 @@ foreach($stmt->fetchAll() as $row) {
 
 <?php elseif($section==='export_data'): ?>
 <!-- =================== EXPORT DATA =================== -->
+<?php
+// Get current export type
+$exportType = $_GET['export_type'] ?? '';
+$filterMode = $_GET['filter_mode'] ?? 'all'; // 'all' or 'filter'
+
+// Export filters for each type
+$expFilters = [
+    'users' => [
+        'date_from' => $_GET['date_from'] ?? '',
+        'date_to' => $_GET['date_to'] ?? '',
+        'company_id' => $filterCompanyId ?? '',
+        'role' => $_GET['filter_role'] ?? '',
+        'status' => $_GET['filter_status'] ?? '',
+    ],
+    'quotations' => [
+        'date_from' => $_GET['date_from'] ?? '',
+        'date_to' => $_GET['date_to'] ?? '',
+        'company_id' => $filterCompanyId ?? '',
+        'user' => $_GET['filter_user'] ?? '',
+        'status' => $_GET['filter_status'] ?? '',
+        'product_type' => $_GET['filter_product_type'] ?? '',
+    ],
+    'transport' => [
+        'date_from' => $_GET['date_from'] ?? '',
+        'date_to' => $_GET['date_to'] ?? '',
+        'company_id' => $filterCompanyId ?? '',
+        'user' => $_GET['filter_user'] ?? '',
+        'status' => $_GET['filter_status'] ?? '',
+        'service_type' => $_GET['filter_service_type'] ?? '',
+    ],
+    'activity' => [
+        'date_from' => $_GET['date_from'] ?? '',
+        'date_to' => $_GET['date_to'] ?? '',
+        'company_id' => $filterCompanyId ?? '',
+        'user' => $_GET['filter_user'] ?? '',
+        'action' => $_GET['filter_action'] ?? '',
+    ],
+    'contacts' => [
+        'date_from' => $_GET['date_from'] ?? '',
+        'date_to' => $_GET['date_to'] ?? '',
+        'company_id' => $filterCompanyId ?? '',
+        'status' => $_GET['filter_status'] ?? '',
+    ],
+];
+?>
+
+<!-- Export Type Selection -->
+<div class="card" style="margin-bottom:16px">
+    <div class="card-h"><h2><i class="fas fa-file-export"></i> Select Export Type</h2></div>
+    <div class="card-b">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px">
+            <button class="btn btn-primary" onclick="selectExportType('users')" id="btn-users" style="width:100%"><i class="fas fa-users"></i> Users</button>
+            <button class="btn btn-primary" onclick="selectExportType('quotations')" id="btn-quotations" style="width:100%"><i class="fas fa-box"></i> Quotations</button>
+            <button class="btn btn-primary" onclick="selectExportType('transport')" id="btn-transport" style="width:100%"><i class="fas fa-truck"></i> Transport</button>
+            <button class="btn btn-primary" onclick="selectExportType('activity')" id="btn-activity" style="width:100%"><i class="fas fa-history"></i> Activity Logs</button>
+            <button class="btn btn-primary" onclick="selectExportType('contacts')" id="btn-contacts" style="width:100%"><i class="fas fa-envelope"></i> Contact Messages</button>
+        </div>
+    </div>
+</div>
+
+<!-- Filter Section -->
+<div id="filterSection" style="display:none">
+    <div class="card" style="margin-bottom:16px">
+        <div class="card-h"><h2><i class="fas fa-filter"></i> Export Filters</h2></div>
+        <div class="card-b">
+            <div style="display:flex;gap:10px;margin-bottom:15px">
+                <label style="display:flex;align-items:center;gap:5px;cursor:pointer">
+                    <input type="radio" name="export_mode" value="all" <?php echo $filterMode==='all'?'checked':'';?> onchange="toggleFilterMode('all')">
+                    <span style="font-size:13px">Export All Data</span>
+                </label>
+                <label style="display:flex;align-items:center;gap:5px;cursor:pointer">
+                    <input type="radio" name="export_mode" value="filter" <?php echo $filterMode==='filter'?'checked':'';?> onchange="toggleFilterMode('filter')">
+                    <span style="font-size:13px">Apply Filters</span>
+                </label>
+            </div>
+            
+            <div id="filterFields" style="display:<?php echo $filterMode==='filter'?'block':'none';?>">
+                <!-- Filter fields will be dynamically loaded here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Export Options -->
+<div id="exportOptions" style="display:none">
+    <div class="card">
+        <div class="card-h"><h2><i class="fas fa-download"></i> Export Format</h2></div>
+        <div class="card-b">
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+                <button class="btn btn-success" onclick="exportWithFilters('csv')"><i class="fas fa-file-csv"></i> CSV</button>
+                <button class="btn btn-success" onclick="exportWithFilters('excel')"><i class="fas fa-file-excel"></i> Excel</button>
+                <button class="btn btn-success" onclick="exportWithFilters('pdf')"><i class="fas fa-file-pdf"></i> PDF</button>
+                <button class="btn btn-success" onclick="exportWithFilters('word')"><i class="fas fa-file-word"></i> Word</button>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="card">
-    <div class="card-h"><h2><i class="fas fa-file-export"></i> Export Data</h2><p style="font-size:12px;color:var(--muted)">Export data in various formats</p></div>
+    <div class="card-h"><h2><i class="fas fa-file-export"></i> Export Data</h2><p style="font-size:12px;color:var(--muted)">Export filtered data in various formats</p></div>
     <div class="card-b">
         <div class="grid-3">
             <div class="card">
@@ -1481,16 +1616,155 @@ function openEditFeaturedProduct(id,name,desc,image,website,company,order,active
     openModal('featuredProductModal');
 }
 
-function exportData(type, format) {
+let currentExportType = '';
+let currentFilterMode = 'all';
+
+// Export type selection
+function selectExportType(type) {
+    currentExportType = type;
+    
+    // Update button states
+    document.querySelectorAll('[id^="btn-"]').forEach(btn => {
+        btn.classList.remove('btn-success');
+        btn.classList.add('btn-primary');
+    });
+    document.getElementById('btn-' + type).classList.remove('btn-primary');
+    document.getElementById('btn-' + type).classList.add('btn-success');
+    
+    // Show filter section and export options
+    document.getElementById('filterSection').style.display = 'block';
+    document.getElementById('exportOptions').style.display = 'block';
+    
+    // Load specific filter fields
+    loadFilterFields(type);
+}
+
+// Toggle filter mode
+function toggleFilterMode(mode) {
+    currentFilterMode = mode;
+    const filterFields = document.getElementById('filterFields');
+    filterFields.style.display = mode === 'filter' ? 'block' : 'none';
+}
+
+// Load filter fields based on export type
+function loadFilterFields(type) {
+    const filterFields = document.getElementById('filterFields');
+    let html = '';
+    
+    switch(type) {
+        case 'users':
+            html = `
+                <form method="GET" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;align-items:end">
+                    <input type="hidden" name="section" value="export_data">
+                    <input type="hidden" name="export_type" value="users">
+                    <input type="hidden" name="filter_mode" value="filter">
+                    <div><label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">Date From</label><input type="date" name="date_from" value="<?php echo h($expFilters['users']['date_from']);?>" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:inherit"></div>
+                    <div><label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">Date To</label><input type="date" name="date_to" value="<?php echo h($expFilters['users']['date_to']);?>" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:inherit"></div>
+                    <div><label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">Role</label><select name="filter_role" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:inherit"><option value="">All Roles</option><option value="super_admin">Super Admin</option><option value="admin">Admin</option><option value="manager">Manager</option><option value="user">User</option></select></div>
+                    <div><label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">Status</label><select name="filter_status" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:inherit"><option value="">All Status</option><option value="active">Active</option><option value="inactive">Inactive</option><option value="suspended">Suspended</option></select></div>
+                </form>
+            `;
+            break;
+        case 'quotations':
+            html = `
+                <form method="GET" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;align-items:end">
+                    <input type="hidden" name="section" value="export_data">
+                    <input type="hidden" name="export_type" value="quotations">
+                    <input type="hidden" name="filter_mode" value="filter">
+                    <div><label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">Date From</label><input type="date" name="date_from" value="<?php echo h($expFilters['quotations']['date_from']);?>" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:inherit"></div>
+                    <div><label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">Date To</label><input type="date" name="date_to" value="<?php echo h($expFilters['quotations']['date_to']);?>" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:inherit"></div>
+                    <div><label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">Customer</label><input type="text" name="filter_user" value="<?php echo h($expFilters['quotations']['user']);?>" placeholder="Username" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:inherit"></div>
+                    <div><label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">Status</label><select name="filter_status" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:inherit"><option value="">All Status</option><option value="pending">Pending</option><option value="processing">Processing</option><option value="quoted">Quoted</option><option value="approved">Approved</option><option value="rejected">Rejected</option><option value="completed">Completed</option></select></div>
+                    <div><label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">Product Type</label><select name="filter_product_type" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:inherit"><option value="">All Types</option><option value="Engine Parts">Engine Parts</option><option value="Body Parts">Body Parts</option><option value="Electrical Parts">Electrical Parts</option><option value="Other">Other</option></select></div>
+                </form>
+            `;
+            break;
+        case 'transport':
+            html = `
+                <form method="GET" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;align-items:end">
+                    <input type="hidden" name="section" value="export_data">
+                    <input type="hidden" name="export_type" value="transport">
+                    <input type="hidden" name="filter_mode" value="filter">
+                    <div><label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">Date From</label><input type="date" name="date_from" value="<?php echo h($expFilters['transport']['date_from']);?>" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:inherit"></div>
+                    <div><label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">Date To</label><input type="date" name="date_to" value="<?php echo h($expFilters['transport']['date_to']);?>" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:inherit"></div>
+                    <div><label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">Customer</label><input type="text" name="filter_user" value="<?php echo h($expFilters['transport']['user']);?>" placeholder="Username" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:inherit"></div>
+                    <div><label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">Status</label><select name="filter_status" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:inherit"><option value="">All Status</option><option value="pending">Pending</option><option value="processing">Processing</option><option value="approved">Approved</option><option value="in_transit">In Transit</option><option value="delivered">Delivered</option><option value="rejected">Rejected</option><option value="completed">Completed</option></select></div>
+                    <div><label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">Service Type</label><select name="filter_service_type" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:inherit"><option value="">All Services</option><option value="domestic">Domestic Transport</option><option value="international">International Transport</option><option value="warehousing">Warehousing</option><option value="fleet_management">Fleet Management</option></select></div>
+                </form>
+            `;
+            break;
+        case 'activity':
+            html = `
+                <form method="GET" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;align-items:end">
+                    <input type="hidden" name="section" value="export_data">
+                    <input type="hidden" name="export_type" value="activity">
+                    <input type="hidden" name="filter_mode" value="filter">
+                    <div><label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">Date From</label><input type="date" name="date_from" value="<?php echo h($expFilters['activity']['date_from']);?>" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:inherit"></div>
+                    <div><label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">Date To</label><input type="date" name="date_to" value="<?php echo h($expFilters['activity']['date_to']);?>" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:inherit"></div>
+                    <div><label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">User</label><input type="text" name="filter_user" value="<?php echo h($expFilters['activity']['user']);?>" placeholder="Username" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:inherit"></div>
+                    <div><label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">Action</label><select name="filter_action" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:inherit"><option value="">All Actions</option><option value="LOGIN_SUCCESS">Login</option><option value="LOGIN_FAILED">Login Failed</option><option value="REGISTER_SUCCESS">Register</option><option value="PROFILE_UPDATED">Profile Update</option><option value="PASSWORD_CHANGED">Password Change</option><option value="KOCH_QUOTATION_CREATED">KOCH Quotation</option><option value="TNB_QUOTATION_CREATED">TNB Request</option><option value="CONTACT_MESSAGE_SENT">Contact Message</option><option value="SLIDER_CREATED">Slider Created</option><option value="SLIDER_UPDATED">Slider Updated</option><option value="SLIDER_DELETED">Slider Deleted</option><option value="PRODUCT_CREATED">Product Created</option><option value="PRODUCT_UPDATED">Product Updated</option><option value="PRODUCT_DELETED">Product Deleted</option><option value="TRUCK_TYPE_CREATED">Truck Type Created</option><option value="TRUCK_TYPE_UPDATED">Truck Type Updated</option><option value="TRUCK_TYPE_DELETED">Truck Type Deleted</option><option value="DATA_EXPORTED">Data Exported</option><option value="DATA_EXPORT_FAILED">Export Failed</option></select></div>
+                </form>
+            `;
+            break;
+        case 'contacts':
+            html = `
+                <form method="GET" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;align-items:end">
+                    <input type="hidden" name="section" value="export_data">
+                    <input type="hidden" name="export_type" value="contacts">
+                    <input type="hidden" name="filter_mode" value="filter">
+                    <div><label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">Date From</label><input type="date" name="date_from" value="<?php echo h($expFilters['contacts']['date_from']);?>" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:inherit"></div>
+                    <div><label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">Date To</label><input type="date" name="date_to" value="<?php echo h($expFilters['contacts']['date_to']);?>" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:inherit"></div>
+                    <div><label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">Status</label><select name="filter_status" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:inherit"><option value="">All Status</option><option value="new">New</option><option value="read">Read</option><option value="replied">Replied</option><option value="closed">Closed</option></select></div>
+                </form>
+            `;
+            break;
+    }
+    
+    filterFields.innerHTML = html;
+}
+
+// Export with filters
+function exportWithFilters(format) {
+    if (!currentExportType) {
+        alert('Please select an export type first.');
+        return;
+    }
+    
     const url = '<?php echo h(project_url('admin/api/export/handler.php'));?>';
     const params = new URLSearchParams({
-        type: type,
+        type: currentExportType,
         format: format,
         _csrf: '<?php echo h($csrfToken);?>'
     });
     
+    // Add filters if in filter mode
+    if (currentFilterMode === 'filter') {
+        const form = document.querySelector('#filterFields form');
+        if (form) {
+            const formData = new FormData(form);
+            for (let [key, value] of formData.entries()) {
+                if (key !== 'section' && key !== 'export_type' && key !== 'filter_mode') {
+                    params.append(key, value);
+                }
+            }
+        }
+    }
+    
     window.open(url + '?' + params.toString(), '_blank');
 }
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    // Load current export type if exists
+    const urlParams = new URLSearchParams(window.location.search);
+    const type = urlParams.get('export_type');
+    const mode = urlParams.get('filter_mode') || 'all';
+    
+    if (type) {
+        selectExportType(type);
+        toggleFilterMode(mode);
+    }
+});
 
 function openEditTruck(id,name,desc,image,capacity,order,active){
     document.getElementById('tt_title').textContent='Edit Truck Type #'+id;
