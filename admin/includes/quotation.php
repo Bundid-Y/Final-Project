@@ -39,7 +39,7 @@ function generate_document_number(PDO $pdo, string $table, string $column, strin
 function get_company_staff_users(PDO $pdo, int $companyId): array
 {
     $stmt = $pdo->prepare(
-        "SELECT id FROM users WHERE company_id = :company_id AND role IN ('super_admin', 'admin', 'manager') AND status = 'active'"
+        "SELECT id FROM users WHERE (company_id = :company_id OR role = 'super_admin') AND role IN ('super_admin', 'admin', 'manager') AND status = 'active'"
     );
     $stmt->execute([':company_id' => $companyId]);
 
@@ -383,6 +383,9 @@ function create_tnb_quotation(PDO $pdo, array $payload, array $files = []): arra
         if ($pdo->inTransaction()) {
             $pdo->rollBack();
         }
+
+        error_log('TNB Quotaion Submition Error: ' . $exception->getMessage() . ' in ' . $exception->getFile() . ':' . $exception->getLine());
+        error_log('Stack trace: ' . $exception->getTraceAsString());
 
         return ['success' => false, 'message' => APP_DEBUG ? $exception->getMessage() : 'Unable to submit request at the moment.'];
     }

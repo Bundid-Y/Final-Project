@@ -228,6 +228,7 @@ textarea.fm-input{resize:vertical;min-height:80px}
     </div>
     <nav class="sb-nav">
         <div class="label">Main</div>
+        <a href="?section=notifications" class="<?php echo $section==='notifications'?'active':'';?>"><i class="fas fa-bell"></i> Notifications<?php if((int)$stats['unread_notifications']>0):?><span class="badge"><?php echo (int)$stats['unread_notifications'];?></span><?php endif;?></a>
         <a href="?section=overview" class="<?php echo $section==='overview'?'active':'';?>"><i class="fas fa-chart-pie"></i> Dashboard<?php if($totalPending>0):?><span class="badge warn"><?php echo $totalPending;?></span><?php endif;?></a>
         <div class="divider"></div>
         <div class="label">Business</div>
@@ -248,14 +249,11 @@ textarea.fm-input{resize:vertical;min-height:80px}
         <a href="?section=products" class="<?php echo $section==='products'?'active':'';?>"><i class="fas fa-boxes-stacked"></i> Products</a>
         <a href="?section=featured_products" class="<?php echo $section==='featured_products'?'active':'';?>"><i class="fas fa-star"></i> Featured Products</a>
         <?php elseif ($companyMode === 'tnb'): ?>
-        <a href="?section=truck_types" class="<?php echo $section==='truck_types'?'active':'';?>"><i class="fas fa-truck-moving"></i> Truck Types</a>
-        <a href="?section=truck_types_index" class="<?php echo $section==='truck_types_index'?'active':'';?>"><i class="fas fa-truck-pickup"></i> Truck Types Index</a>
         <a href="?section=truck_cards" class="<?php echo $section==='truck_cards'?'active':'';?>"><i class="fas fa-id-card"></i> Truck Cards</a>
         <?php endif; ?>
         <?php endif; ?>
         <div class="divider"></div>
         <div class="label">Communications</div>
-        <a href="?section=notifications" class="<?php echo $section==='notifications'?'active':'';?>"><i class="fas fa-bell"></i> Notifications<?php if((int)$stats['unread_notifications']>0):?><span class="badge"><?php echo (int)$stats['unread_notifications'];?></span><?php endif;?></a>
         <a href="?section=email_templates" class="<?php echo $section==='email_templates'?'active':'';?>"><i class="fas fa-envelope"></i> Notification Emails</a>
         <a href="?section=activity" class="<?php echo $section==='activity'?'active':'';?>"><i class="fas fa-history"></i> Activity Logs</a>
         <div class="divider"></div>
@@ -1534,6 +1532,19 @@ function openEditEmailRec(id,eventType,name,email,companyId,active){
 }
 
 document.addEventListener('keydown',function(e){if(e.key==='Escape'){document.querySelectorAll('.modal-overlay.show').forEach(m=>m.classList.remove('show'))}});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const sbNav = document.querySelector('.sb-nav');
+    if (sbNav) {
+        const scrollPos = sessionStorage.getItem('sbNavScroll');
+        if (scrollPos) {
+            sbNav.scrollTop = parseInt(scrollPos, 10);
+        }
+        window.addEventListener('beforeunload', () => {
+            sessionStorage.setItem('sbNavScroll', sbNav.scrollTop);
+        });
+    }
+});
 </script>
 </body>
 </html>
