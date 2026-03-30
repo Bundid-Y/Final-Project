@@ -661,10 +661,9 @@ if ($ext['tnb_pending'] > 0) {
 $actFilters = [
     'date_from' => $_GET['date_from'] ?? '',
     'date_to' => $_GET['date_to'] ?? '',
-    'user_id' => $_GET['filter_user'] ?? '',
+    'user' => $_GET['filter_user'] ?? '',
     'company_id' => $filterCompanyId ?? '',
     'action' => $_GET['filter_action'] ?? '',
-    'ip_address' => $_GET['filter_ip'] ?? '',
 ];
 $actResult = get_activity_logs_filtered($pdo, $actFilters, 50, 0);
 $distinctActions = get_distinct_actions($pdo);
@@ -676,24 +675,23 @@ $distinctActions = get_distinct_actions($pdo);
             <input type="hidden" name="section" value="activity">
             <div><label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">Date From</label><input type="date" name="date_from" value="<?php echo h($actFilters['date_from']);?>" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:inherit"></div>
             <div><label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">Date To</label><input type="date" name="date_to" value="<?php echo h($actFilters['date_to']);?>" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:inherit"></div>
+            <div><label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">User</label><input type="text" name="filter_user" value="<?php echo h($actFilters['user']);?>" placeholder="Username" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:inherit"></div>
             <div><label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">Action</label><select name="filter_action" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:inherit"><option value="">All Actions</option><?php foreach($distinctActions as $da):?><option value="<?php echo h($da);?>" <?php echo $actFilters['action']===$da?'selected':'';?>><?php echo h($da);?></option><?php endforeach;?></select></div>
-            <div><label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">IP Address</label><input type="text" name="filter_ip" value="<?php echo h($actFilters['ip_address']);?>" placeholder="e.g. 192.168" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:inherit"></div>
             <div style="display:flex;gap:6px"><button type="submit" class="tb-btn primary" style="flex:1"><i class="fas fa-search"></i> Filter</button><a href="?section=activity" class="tb-btn ghost" style="flex:1;text-align:center"><i class="fas fa-times"></i> Clear</a></div>
         </form>
     </div>
 </div>
 <div class="card">
     <div class="card-h"><h2><i class="fas fa-history"></i> Activity Logs</h2><span style="font-size:12px;color:var(--muted)"><?php echo number_format($actResult['total']);?> records</span></div>
-    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Date</th><th>User</th><th>Company</th><th>Action</th><th>Table</th><th>Record</th><th>IP</th></tr></thead><tbody>
-    <?php if($actResult['data']===[]):?><tr class="empty"><td colspan="7">No activity logs found</td></tr>
+    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Date</th><th>User</th><th>Company</th><th>Table</th><th>Record</th><th>Details</th></tr></thead><tbody>
+    <?php if($actResult['data']===[]):?><tr class="empty"><td colspan="6">No activity logs found</td></tr>
     <?php else: foreach($actResult['data'] as $a):?><tr>
         <td style="font-size:12px;white-space:nowrap"><?php echo h(date('d/m/Y H:i',strtotime((string)$a['created_at'])));?></td>
         <td style="font-size:12px;font-weight:600"><?php echo h((string)($a['username']??'System'));?></td>
         <td style="font-size:12px"><?php echo h((string)($a['company_code']??'-'));?></td>
-        <td style="font-size:12px"><?php echo h(admin_action_label((string)$a['action']));?></td>
         <td style="font-size:12px;color:var(--muted)"><?php echo h((string)($a['table_name']??'-'));?></td>
         <td style="font-size:12px"><?php echo h((string)($a['record_id']??'-'));?></td>
-        <td style="font-size:11px;color:var(--muted);font-family:monospace"><?php echo h((string)($a['ip_address']??'-'));?></td>
+        <td style="font-size:12px;color:var(--primary)"><?php echo h(admin_action_label((string)$a['action']));?></td>
     </tr><?php endforeach; endif;?>
     </tbody></table></div></div>
 </div>
