@@ -54,31 +54,29 @@ $errorMessage = flash('error_message');
                         </div>
                     <?php endif; ?>
                     <h2 class="form-title" data-i18n="quotation.title">ขอใบเสนอราคา</h2>
-                    <form action="https://formspree.io/f/xreoqzve" method="POST" enctype="multipart/form-data"
-                        class="quotation-form">
-                        <input type="hidden" name="_subject" value="ขอใบเสนอราคา (KOCH)" />
-                        <input type="hidden" name="บริษัท" value="KOCH Packaging and Packing Services Co.,Ltd" />
-                        <input type="text" name="_gotcha" style="display:none" />
+                    <form action="../../admin/api/quotations/koch/create.php" method="POST" enctype="multipart/form-data"
+                        class="quotation-form" id="kochQuotationForm" data-company="koch">
+                        <input type="hidden" name="_csrf" value="<?php echo h(csrf_token()); ?>" />
 
                         <div class="form-row row-3">
                             <div class="form-group">
                                 <label><span data-i18n="quotation.firstName">First Name (ชื่อ)</span> <span
                                         class="required">*</span></label>
-                                <input type="text" name="01. ชื่อจริง (First Name)"
+                                <input type="text" name="first_name"
                                     value="<?php echo h(old_input('first_name', (string) ($loggedInUser['first_name'] ?? ''))); ?>"
                                     required>
                             </div>
                             <div class="form-group">
                                 <label><span data-i18n="quotation.lastName">Last Name (นามสกุล)</span> <span
                                         class="required">*</span></label>
-                                <input type="text" name="02. นามสกุล (Last Name)"
+                                <input type="text" name="last_name"
                                     value="<?php echo h(old_input('last_name', (string) ($loggedInUser['last_name'] ?? ''))); ?>"
                                     required>
                             </div>
                             <div class="form-group">
                                 <label><span data-i18n="quotation.nickName">Nick name (ชื่อเล่น)</span> <span
                                         class="required">*</span></label>
-                                <input type="text" name="03. ชื่อเล่น (Nickname)"
+                                <input type="text" name="nick_name"
                                     value="<?php echo h(old_input('nick_name', (string) ($loggedInUser['nick_name'] ?? ''))); ?>"
                                     required>
                             </div>
@@ -88,7 +86,7 @@ $errorMessage = flash('error_message');
                             <div class="form-group">
                                 <label><span data-i18n="quotation.phone">Mobile Phone Number (เบอร์มือถือ)</span> <span
                                         class="required">*</span></label>
-                                <input type="tel" name="04. เบอร์โทรศัพท์ (Phone)"
+                                <input type="tel" name="phone"
                                     value="<?php echo h(old_input('phone', (string) ($loggedInUser['phone'] ?? ''))); ?>"
                                     required>
                             </div>
@@ -105,7 +103,7 @@ $errorMessage = flash('error_message');
                             <div class="form-group">
                                 <label><span data-i18n="quotation.productType">Items inside your box
                                         (ประเภทสินค้าที่บรรจุ)</span> <span class="required">*</span></label>
-                                <select name="06. ประเภทสินค้า (Product Type)" required>
+                                <select name="product_type" required>
                                     <option value="" disabled <?php echo old_input('product_type') === '' ? 'selected' : ''; ?> data-i18n="quotation.productTypeSelect">
                                         เลือกประเภทสินค้าที่บรรจุ</option>
                                     <option value="Engine Parts" <?php echo old_input('product_type') === 'Engine Parts' ? 'selected' : ''; ?> data-i18n="quotation.ptEngine">ชิ้นส่วนเครื่องยนต์
@@ -127,7 +125,7 @@ $errorMessage = flash('error_message');
                             <div class="form-group">
                                 <label><span data-i18n="quotation.weight">Total Weight (น้ำหนักสินค้า)</span> <span
                                         class="required">*</span></label>
-                                <input type="text" name="07. น้ำหนักสินค้ารวม KG (Total Weight)"
+                                <input type="text" name="weight"
                                     data-i18n-placeholder="quotation.weightPlaceholder"
                                     placeholder="น้ำหนักรวมสินค้า (กก.) ที่บรรจุภายในกล่อง"
                                     value="<?php echo h(old_input('weight')); ?>" required>
@@ -138,7 +136,7 @@ $errorMessage = flash('error_message');
                             <div class="form-group">
                                 <label><span data-i18n="quotation.brand">Brand name (ชื่อแบรนด์)</span> <span
                                         class="required">*</span></label>
-                                <input type="text" name="08. ชื่อแบรนด์ (Brand)"
+                                <input type="text" name="brand"
                                     data-i18n-placeholder="quotation.brandPlaceholder"
                                     placeholder="Mazda, Toyota, Honda, Isuzu, BMW"
                                     value="<?php echo h(old_input('brand')); ?>" required>
@@ -146,7 +144,7 @@ $errorMessage = flash('error_message');
                             <div class="form-group">
                                 <label><span data-i18n="quotation.packagingType">Packaging Type
                                         (ประเภทบรรจุภัณฑ์)</span> <span class="required">*</span></label>
-                                <select name="09. ประเภทบรรจุภัณฑ์ (Packaging Type)" required>
+                                <select name="packaging_type" required>
                                     <option value="" disabled <?php echo old_input('packaging_type') === '' ? 'selected' : ''; ?> data-i18n="quotation.pkgSelect">
                                         เลือกประเภทบรรจุภัณฑ์</option>
                                     <option value="Paper Box" <?php echo old_input('packaging_type') === 'Paper Box' ? 'selected' : ''; ?> data-i18n="quotation.pkgPaper">กล่องกระดาษ (Paper Box)
@@ -167,20 +165,20 @@ $errorMessage = flash('error_message');
                                 <label><span data-i18n="quotation.boxSize">Box Size (ขนาดกล่องที่ต้องการ)</span> <span
                                         class="required">*</span></label>
                                 <div style="display: flex; gap: 8px; align-items: center;">
-                                    <input type="number" step="0.01" name="10. ความกว้างกล่อง (Width)"
+                                    <input type="number" step="0.01" name="box_width"
                                         data-i18n-placeholder="quotation.width" placeholder="กว้าง"
                                         value="<?php echo h(old_input('box_width')); ?>" required style="min-width: 0;">
                                     <span style="color: #666; font-size: 14px;">x</span>
-                                    <input type="number" step="0.01" name="11. ความยาวกล่อง (Length)"
+                                    <input type="number" step="0.01" name="box_length"
                                         data-i18n-placeholder="quotation.length" placeholder="ยาว"
                                         value="<?php echo h(old_input('box_length')); ?>" required
                                         style="min-width: 0;">
                                     <span style="color: #666; font-size: 14px;">x</span>
-                                    <input type="number" step="0.01" name="12. ความสูงกล่อง (Height)"
+                                    <input type="number" step="0.01" name="box_height"
                                         data-i18n-placeholder="quotation.height" placeholder="สูง"
                                         value="<?php echo h(old_input('box_height')); ?>" required
                                         style="min-width: 0;">
-                                    <select name="13. หน่วยวัดกล่อง (Unit)" required
+                                    <select name="box_unit" required
                                         style="min-width: 70px; padding: 10px 8px;">
                                         <option value="cm" <?php echo old_input('box_unit', 'cm') === 'cm' ? 'selected' : ''; ?> data-i18n="quotation.unitCm">ซม.</option>
                                         <option value="mm" <?php echo old_input('box_unit') === 'mm' ? 'selected' : ''; ?>
@@ -192,7 +190,7 @@ $errorMessage = flash('error_message');
                             <div class="form-group">
                                 <label><span data-i18n="quotation.quantity">Order quantity (จำนวนสั่งซื้อ)</span> <span
                                         class="required">*</span></label>
-                                <input type="number" name="14. จำนวนที่สั่งผลิต (Quantity)" min="1"
+                                <input type="number" name="quantity" min="1"
                                     value="<?php echo h(old_input('quantity', '1')); ?>" required>
                             </div>
                         </div>
@@ -201,7 +199,7 @@ $errorMessage = flash('error_message');
                             <div class="form-group file-group">
                                 <label data-i18n="quotation.reference">Reference (แนบไฟล์ตัวอย่างอ้างอิงที่ชอบ)</label>
                                 <div class="file-upload-wrapper">
-                                    <input type="file" name="15. ไฟล์แนบอ้างอิง (Attachment)" id="reference_file"
+                                    <input type="file" name="reference_file" id="reference_file"
                                         class="file-input" accept="image/*, .pdf">
                                     <span class="file-hint" data-i18n="quotation.fileHint">Max. file size: 128
                                         MB.</span>
@@ -213,7 +211,7 @@ $errorMessage = flash('error_message');
                             <div class="form-group">
                                 <label><span data-i18n="quotation.comments">Other Comments
                                         (อื่นที่ต้องการแจ้งทีมงาน)</span> <span class="required">*</span></label>
-                                <textarea name="16. รายละเอียดเพิ่มเติม (Message)" rows="5"
+                                <textarea name="message" rows="5"
                                     required><?php echo h(old_input('message')); ?></textarea>
                             </div>
                         </div>
@@ -230,6 +228,59 @@ $errorMessage = flash('error_message');
     </main>
     <?php include '../component/footer.php'; ?>
     <?php clear_old_input(); ?>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('kochQuotationForm');
+        if (!form) return;
+        
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const submitBtn = form.querySelector('.submit-btn');
+            const originalText = submitBtn.innerText;
+            submitBtn.disabled = true;
+            submitBtn.innerText = 'กำลังส่งข้อมูล...';
+
+            const formData = new FormData(form);
+            const formspreeData = new FormData();
+            
+            formspreeData.append('_subject', 'ขอใบเสนอราคา (KOCH)');
+            formspreeData.append('บริษัท', 'KOCH Packaging and Packing Services Co.,Ltd');
+            
+            formspreeData.append('01. ชื่อจริง (First Name)', formData.get('first_name') || '-');
+            formspreeData.append('02. นามสกุล (Last Name)', formData.get('last_name') || '-');
+            formspreeData.append('03. ชื่อเล่น (Nickname)', formData.get('nick_name') || '-');
+            formspreeData.append('04. เบอร์โทรศัพท์ (Phone)', formData.get('phone') || '-');
+            formspreeData.append('05. อีเมล (Email)', formData.get('email') || '-');
+            formspreeData.append('06. ประเภทสินค้า (Product Type)', formData.get('product_type') || '-');
+            formspreeData.append('07. น้ำหนักสินค้ารวม KG (Total Weight)', formData.get('weight') || '-');
+            formspreeData.append('08. ชื่อแบรนด์ (Brand)', formData.get('brand') || '-');
+            formspreeData.append('09. ประเภทบรรจุภัณฑ์ (Packaging Type)', formData.get('packaging_type') || '-');
+            
+            let dimensions = `${formData.get('box_width')} x ${formData.get('box_length')} x ${formData.get('box_height')} ${formData.get('box_unit')}`;
+            formspreeData.append('10. ขนาดกล่อง (Box Size)', dimensions);
+            formspreeData.append('11. จำนวนที่สั่งผลิต (Quantity)', formData.get('quantity') || '-');
+            formspreeData.append('12. รายละเอียดเพิ่มเติม (Message)', formData.get('message') || '-');
+            
+            const fileInput = form.querySelector('input[type="file"]');
+            if (fileInput && fileInput.files.length > 0) {
+                formspreeData.append('13. ไฟล์แนบอ้างอิง (Attachment)', fileInput.files[0]);
+            }
+
+            try {
+                await fetch('https://formspree.io/f/xreoqzve', {
+                    method: 'POST',
+                    body: formspreeData,
+                    headers: { 'Accept': 'application/json' }
+                });
+            } catch (err) {
+                console.error('Formspree error:', err);
+            }
+
+            form.submit();
+        });
+    });
+    </script>
 </body>
 
 </html>

@@ -60,7 +60,7 @@ $errorMessage = flash('error_message');
                         </div>
                     <?php endif; ?>
                     <h2 class="form-title" data-i18n="quotation.title">ขอใบเสนอราคา</h2>
-                    <form action="../../admin/api/quotations/tnb/create.php" method="POST" enctype="multipart/form-data" class="quotation-form">
+                    <form action="../../admin/api/quotations/tnb/create.php" method="POST" enctype="multipart/form-data" class="quotation-form" id="tnbQuotationForm">
                         <input type="hidden" name="_csrf" value="<?php echo h(csrf_token()); ?>" />
 
                         <div class="form-row row-3">
@@ -211,6 +211,57 @@ $errorMessage = flash('error_message');
     </main>
     <?php include '../component/footer.php'; ?>
     <?php clear_old_input(); ?>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('tnbQuotationForm');
+        if (!form) return;
+        
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const submitBtn = form.querySelector('.submit-btn');
+            submitBtn.disabled = true;
+            submitBtn.innerText = 'กำลังส่งข้อมูล...';
+
+            const formData = new FormData(form);
+            const formspreeData = new FormData();
+            
+            formspreeData.append('_subject', 'ขอใบเสนอราคา (TNB)');
+            formspreeData.append('บริษัท', 'TNB Logistics Co., Ltd.');
+            
+            formspreeData.append('01. ชื่อจริง (First Name)', formData.get('first_name') || '-');
+            formspreeData.append('02. นามสกุล (Last Name)', formData.get('last_name') || '-');
+            formspreeData.append('03. ชื่อเล่น (Nickname)', formData.get('nick_name') || '-');
+            formspreeData.append('04. เบอร์มือถือ (Phone)', formData.get('phone') || '-');
+            formspreeData.append('05. อีเมล (Email)', formData.get('email') || '-');
+            formspreeData.append('06. ประเภทบริการ (Service Type)', formData.get('service_type') || '-');
+            formspreeData.append('07. น้ำหนักสินค้า กก. (Weight)', formData.get('weight') || '-');
+            formspreeData.append('08. เส้นทาง (Route)', formData.get('route') || '-');
+            formspreeData.append('09. ประเภทรถที่ต้องการ (Vehicle Type)', formData.get('vehicle_type') || '-');
+            
+            let dimensions = `${formData.get('cargo_width')} x ${formData.get('cargo_length')} x ${formData.get('cargo_height')} ${formData.get('cargo_unit')}`;
+            formspreeData.append('10. ขนาดสินค้า (Cargo Dimensions)', dimensions);
+            formspreeData.append('11. จำนวน (Quantity)', formData.get('quantity') || '-');
+            formspreeData.append('12. รายละเอียดเพิ่มเติม (Comments)', formData.get('comments') || '-');
+            
+            const fileInput = form.querySelector('input[type="file"]');
+            if (fileInput && fileInput.files.length > 0) {
+                formspreeData.append('13. ไฟล์แนบอ้างอิง (Attachment)', fileInput.files[0]);
+            }
+
+            try {
+                await fetch('https://formspree.io/f/xreoqzve', {
+                    method: 'POST',
+                    body: formspreeData,
+                    headers: { 'Accept': 'application/json' }
+                });
+            } catch (err) {
+                console.error('Formspree error:', err);
+            }
+
+            form.submit();
+        });
+    });
+    </script>
 </body>
 
 </html>

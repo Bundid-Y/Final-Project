@@ -336,8 +336,11 @@ function resolve_or_create_customer_user(PDO $pdo, array $contact, string $compa
     $lastName = sanitize_text((string) ($contact['last_name'] ?? 'User'));
     $nickName = sanitize_text((string) ($contact['nick_name'] ?? ''));
 
-    $existing = find_user_by_email($pdo, $email, (int) $company['id']);
-    if ($existing !== null) {
+    $stmt = $pdo->prepare('SELECT id FROM users WHERE email = :email LIMIT 1');
+    $stmt->execute([':email' => $email]);
+    $existing = $stmt->fetch();
+
+    if ($existing) {
         $update = $pdo->prepare(
             'UPDATE users
              SET first_name = :first_name, last_name = :last_name, nick_name = :nick_name, phone = :phone, updated_at = NOW()
