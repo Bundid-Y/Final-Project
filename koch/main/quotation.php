@@ -211,8 +211,8 @@ $errorMessage = flash('error_message');
                             <div class="form-group">
                                 <label><span data-i18n="quotation.comments">Other Comments
                                         (อื่นที่ต้องการแจ้งทีมงาน)</span> <span class="required">*</span></label>
-                                <textarea name="message" rows="5"
-                                    required><?php echo h(old_input('message')); ?></textarea>
+                                <textarea name="comments" rows="5"
+                                    required><?php echo h(old_input('comments')); ?></textarea>
                             </div>
                         </div>
 
@@ -260,7 +260,7 @@ $errorMessage = flash('error_message');
             let dimensions = `${formData.get('box_width')} x ${formData.get('box_length')} x ${formData.get('box_height')} ${formData.get('box_unit')}`;
             formspreeData.append('10. ขนาดกล่อง (Box Size)', dimensions);
             formspreeData.append('11. จำนวนที่สั่งผลิต (Quantity)', formData.get('quantity') || '-');
-            formspreeData.append('12. รายละเอียดเพิ่มเติม (Message)', formData.get('message') || '-');
+            formspreeData.append('12. รายละเอียดเพิ่มเติม (Message)', formData.get('comments') || '-');
             
             const fileInput = form.querySelector('input[type="file"]');
             if (fileInput && fileInput.files.length > 0) {

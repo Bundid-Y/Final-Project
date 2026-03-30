@@ -133,12 +133,15 @@ function create_koch_quotation(PDO $pdo, array $payload, array $files = []): arr
             save_attachment_record($pdo, 'koch_quotations', $quotationId, $uploadedFile, (int) $user['id']);
         }
 
+        $kochCompany = get_company_by_slug($pdo, 'koch');
+        $kochCompanyId = $kochCompany !== null ? (int) $kochCompany['id'] : 1;
+
         log_activity($pdo, (int) $user['id'], 'KOCH_QUOTATION_CREATED', 'koch_quotations', $quotationId, [], [
             'quotation_number' => $quotationNumber,
             'product_type' => sanitize_text((string) $payload['product_type']),
-        ]);
+        ], $kochCompanyId);
 
-        foreach (get_company_staff_users($pdo, (int) $user['company_id']) as $staff) {
+        foreach (get_company_staff_users($pdo, $kochCompanyId) as $staff) {
             create_notification(
                 $pdo,
                 (int) $staff['id'],
@@ -147,7 +150,8 @@ function create_koch_quotation(PDO $pdo, array $payload, array $files = []): arr
                 'info',
                 'koch_quotations',
                 $quotationId,
-                'normal'
+                'normal',
+                $kochCompanyId
             );
         }
 
@@ -301,12 +305,15 @@ function create_tnb_quotation(PDO $pdo, array $payload, array $files = []): arra
             save_attachment_record($pdo, 'tnb_quotations', $quotationId, $uploadedFile, (int) $user['id']);
         }
 
+        $tnbCompany = get_company_by_slug($pdo, 'tnb');
+        $tnbCompanyId = $tnbCompany !== null ? (int) $tnbCompany['id'] : 2;
+
         log_activity($pdo, (int) $user['id'], 'TNB_QUOTATION_CREATED', 'tnb_quotations', $quotationId, [], [
             'request_number' => $requestNumber,
             'service_type' => sanitize_text((string) $payload['service_type']),
-        ]);
+        ], $tnbCompanyId);
 
-        foreach (get_company_staff_users($pdo, (int) $user['company_id']) as $staff) {
+        foreach (get_company_staff_users($pdo, $tnbCompanyId) as $staff) {
             create_notification(
                 $pdo,
                 (int) $staff['id'],
@@ -315,7 +322,8 @@ function create_tnb_quotation(PDO $pdo, array $payload, array $files = []): arra
                 'info',
                 'tnb_quotations',
                 $quotationId,
-                'normal'
+                'normal',
+                $tnbCompanyId
             );
         }
 
