@@ -7,16 +7,25 @@ require_once __DIR__ . '/../../includes/auth.php';
 $pdo = Database::connection();
 $currentUser = authenticated_user();
 
-// Determine company from current URL or user data
-$requestUri = $_SERVER['REQUEST_URI'] ?? '';
-$company = 'koch'; // default
+// Determine company BEFORE destroying session
+$company = 'koch'; // default fallback
 
-if (strpos($requestUri, '/tnb/') !== false) {
-    $company = 'tnb';
-} elseif (strpos($requestUri, '/koch/') !== false) {
-    $company = 'koch';
-} elseif ($currentUser !== null) {
+// Priority 1: Check company cookie (most reliable)
+if (isset($_COOKIE['app_company']) && $_COOKIE['app_company'] !== '') {
+    $company = strtolower((string) $_COOKIE['app_company']);
+}
+// Priority 2: Check current user data
+elseif ($currentUser !== null) {
     $company = company_slug_from_code((string) ($currentUser['company_code'] ?? 'KOCH'));
+}
+// Priority 3: Check HTTP referer (where logout was clicked from)
+elseif (isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] !== '') {
+    $referer = $_SERVER['HTTP_REFERER'];
+    if (strpos($referer, '/tnb/') !== false) {
+        $company = 'tnb';
+    } elseif (strpos($referer, '/koch/') !== false) {
+        $company = 'koch';
+    }
 }
 
 if ($currentUser !== null) {
