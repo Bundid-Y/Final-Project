@@ -2,6 +2,18 @@
 require_once __DIR__ . '/../../admin/includes/bootstrap.php';
 
 $loggedInUser = authenticated_user();
+
+// Validate company if user is logged in (allow admins)
+if ($loggedInUser !== null) {
+    $userCompany = strtoupper((string) ($loggedInUser['company_code'] ?? ''));
+    $isAdmin = in_array((string) ($loggedInUser['role'] ?? 'user'), ['super_admin', 'admin', 'manager'], true);
+    
+    if ($userCompany !== 'TNB' && !$isAdmin) {
+        // Redirect to correct company quotation page
+        redirect_to(project_url(company_slug_from_code($userCompany) . '/main/quotation.php'));
+    }
+}
+
 $successMessage = flash('success_message');
 $errorMessage = flash('error_message');
 ?>

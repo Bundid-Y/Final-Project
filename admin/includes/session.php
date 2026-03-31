@@ -15,8 +15,33 @@ function start_app_session(): void
     }
 
     $isHttps = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
+    
+    // Determine company context from multiple sources (priority order)
+    $requestUri = $_SERVER['REQUEST_URI'] ?? '';
+    $postCompany = strtolower((string) ($_POST['company'] ?? ''));
+    $cookieCompany = strtolower((string) ($_COOKIE['app_company'] ?? ''));
+    $sessionCompany = '';
+    
+    // Priority: POST > Cookie > URL
+    if ($postCompany !== '') {
+        $sessionCompany = $postCompany;
+    } elseif ($cookieCompany !== '') {
+        $sessionCompany = $cookieCompany;
+    } elseif (strpos($requestUri, '/tnb/') !== false) {
+        $sessionCompany = 'tnb';
+    } elseif (strpos($requestUri, '/koch/') !== false) {
+        $sessionCompany = 'koch';
+    }
+    
+    // Set session name based on company
+    $sessionName = SESSION_NAME;
+    if ($sessionCompany === 'tnb') {
+        $sessionName = 'tnb_session';
+    } elseif ($sessionCompany === 'koch') {
+        $sessionName = 'koch_session';
+    }
 
-    session_name(SESSION_NAME);
+    session_name($sessionName);
     session_set_cookie_params([
         'lifetime' => SESSION_LIFETIME,
         'path' => '/',
@@ -30,6 +55,23 @@ function start_app_session(): void
 
     if (!isset($_SESSION['_csrf_token'])) {
         $_SESSION['_csrf_token'] = bin2hex(random_bytes(32));
+    }
+    
+    // Store company in session and cookie for persistence
+    if ($sessionCompany !== '') {
+        $_SESSION['_app_company'] = $sessionCompany;
+        
+        // Set company cookie to persist across pages
+        if (!isset($_COOKIE['app_company']) || $_COOKIE['app_company'] !== $sessionCompany) {
+            setcookie('app_company', $sessionCompany, [
+                'expires' => time() + SESSION_LIFETIME,
+                'path' => '/',
+                'domain' => '',
+                'secure' => $isHttps,
+                'httponly' => true,
+                'samesite' => 'Lax',
+            ]);
+        }
     }
 }
 
@@ -137,6 +179,9 @@ function destroy_authenticated_session(): ?array
     if (ini_get('session.use_cookies')) {
         $params = session_get_cookie_params();
         setcookie(session_name(), '', time() - 3600, $params['path'], $params['domain'], (bool) $params['secure'], (bool) $params['httponly']);
+        
+        // Also clear company cookie
+        setcookie('app_company', '', time() - 3600, '/', '', (bool) $params['secure'], true);
     }
 
     session_destroy();

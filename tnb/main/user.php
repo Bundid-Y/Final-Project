@@ -3,8 +3,18 @@ require_once __DIR__ . '/../../admin/includes/bootstrap.php';
 require_once __DIR__ . '/../../admin/includes/profile.php';
 
 $currentUser = authenticated_user();
-if ($currentUser === null) { redirect_to(project_url('tnb/main/Login.php')); }
-if ((string) ($currentUser['company_code'] ?? 'TNB') !== 'TNB' && !in_array((string) ($currentUser['role'] ?? 'user'), ['super_admin', 'admin', 'manager'], true)) { redirect_to(user_page_by_company((string) $currentUser['company_code'])); }
+if ($currentUser === null) {
+    redirect_to(project_url('tnb/main/Login.php'));
+}
+
+// Strict company validation - TNB users ONLY (except admins)
+$userCompany = strtoupper((string) ($currentUser['company_code'] ?? ''));
+$isAdmin = in_array((string) ($currentUser['role'] ?? 'user'), ['super_admin', 'admin', 'manager'], true);
+
+if ($userCompany !== 'TNB' && !$isAdmin) {
+    // Not a TNB user and not admin - redirect to correct company page
+    redirect_to(user_page_by_company($userCompany));
+}
 
 $pdo = Database::connection();
 $profile = get_profile_summary($pdo, (int) $currentUser['id']);

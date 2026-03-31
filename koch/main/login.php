@@ -3,9 +3,19 @@ require_once __DIR__ . '/../../admin/includes/bootstrap.php';
 
 $loggedInUser = authenticated_user();
 if ($loggedInUser !== null) {
+    // Validate company - KOCH users can ONLY access KOCH
+    $userCompany = strtoupper((string) ($loggedInUser['company_code'] ?? ''));
+    
+    if ($userCompany !== 'KOCH' && !in_array((string) ($loggedInUser['role'] ?? 'user'), ['super_admin', 'admin', 'manager'], true)) {
+        // User is not KOCH and not admin - destroy session and show error
+        destroy_authenticated_session();
+        set_flash('error_message', 'คุณไม่มีสิทธิ์เข้าถึงระบบ KOCH กรุณาเข้าสู่ระบบด้วยบัญชีที่ถูกต้อง');
+        redirect_to(project_url('koch/main/login.php'));
+    }
+    
     $targetUrl = in_array((string) ($loggedInUser['role'] ?? 'user'), ['super_admin', 'admin', 'manager'], true)
         ? project_url('admin/dashboard.php')
-        : user_page_by_company((string) ($loggedInUser['company_code'] ?? 'KOCH'));
+        : user_page_by_company('KOCH');
 
     redirect_to($targetUrl);
 }

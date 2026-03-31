@@ -7,8 +7,13 @@ if ($currentUser === null) {
     redirect_to(project_url('koch/main/login.php'));
 }
 
-if ((string) ($currentUser['company_code'] ?? 'KOCH') !== 'KOCH' && !in_array((string) ($currentUser['role'] ?? 'user'), ['super_admin', 'admin', 'manager'], true)) {
-    redirect_to(user_page_by_company((string) $currentUser['company_code']));
+// Strict company validation - KOCH users ONLY (except admins)
+$userCompany = strtoupper((string) ($currentUser['company_code'] ?? ''));
+$isAdmin = in_array((string) ($currentUser['role'] ?? 'user'), ['super_admin', 'admin', 'manager'], true);
+
+if ($userCompany !== 'KOCH' && !$isAdmin) {
+    // Not a KOCH user and not admin - redirect to correct company page
+    redirect_to(user_page_by_company($userCompany));
 }
 
 $pdo = Database::connection();
