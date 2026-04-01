@@ -534,6 +534,20 @@ function update_user_role(PDO $pdo, int $userId, string $newRole, int $adminId):
     if (!in_array($newRole, $validRoles, true)) {
         return ['success' => false, 'message' => 'Invalid role.'];
     }
+    
+    // Prevent editing own role (only super_admin can change anyone's role)
+    if ($userId === $adminId) {
+        return ['success' => false, 'message' => 'You cannot change your own role.'];
+    }
+    
+    // Only super_admin can assign super_admin role
+    $adminStmt = $pdo->prepare('SELECT role FROM users WHERE id = :id LIMIT 1');
+    $adminStmt->execute([':id' => $adminId]);
+    $adminRole = $adminStmt->fetchColumn();
+    if ($newRole === 'super_admin' && $adminRole !== 'super_admin') {
+        return ['success' => false, 'message' => 'Only Super Admin can assign Super Admin role.'];
+    }
+    
     $stmt = $pdo->prepare('UPDATE users SET role = :role WHERE id = :id');
     $stmt->execute([':role' => $newRole, ':id' => $userId]);
     log_activity($pdo, $adminId, 'USER_ROLE_CHANGED', 'users', $userId);
@@ -546,6 +560,12 @@ function update_user_status(PDO $pdo, int $userId, string $newStatus, int $admin
     if (!in_array($newStatus, $validStatuses, true)) {
         return ['success' => false, 'message' => 'Invalid status.'];
     }
+    
+    // Prevent editing own status
+    if ($userId === $adminId) {
+        return ['success' => false, 'message' => 'You cannot change your own status.'];
+    }
+    
     $stmt = $pdo->prepare('UPDATE users SET status = :status WHERE id = :id');
     $stmt->execute([':status' => $newStatus, ':id' => $userId]);
     log_activity($pdo, $adminId, 'USER_STATUS_CHANGED', 'users', $userId);

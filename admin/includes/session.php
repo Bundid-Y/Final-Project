@@ -16,33 +16,26 @@ function start_app_session(): void
 
     $isHttps = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
     
-    // Determine company context from multiple sources (priority order)
+    // Determine session name from URL path and request parameters
+    // Priority: URL path > POST/GET company param > default
+    // NO shared cookie - prevents cross-session contamination between tabs
     $requestUri = $_SERVER['REQUEST_URI'] ?? '';
-    $postCompany = strtolower((string) ($_POST['company'] ?? ''));
-    $cookieCompany = strtolower((string) ($_COOKIE['app_company'] ?? ''));
-    $sessionCompany = '';
+    $sessionName = SESSION_NAME; // default for admin dashboard
     
-    // Priority: POST > Cookie > URL
-    if ($postCompany !== '') {
-        $sessionCompany = $postCompany;
-    } elseif ($cookieCompany !== '') {
-        $sessionCompany = $cookieCompany;
-    } elseif (strpos($requestUri, '/tnb/') !== false) {
-        $sessionCompany = 'tnb';
-    } elseif (strpos($requestUri, '/koch/') !== false) {
-        $sessionCompany = 'koch';
-    } elseif (strpos($requestUri, '/admin/') !== false) {
-        // Admin dashboard: use default session or try to detect from existing sessions
-        // Try to find active session by checking both session names
-        $sessionCompany = ''; // Will use default SESSION_NAME
-    }
-    
-    // Set session name based on company
-    $sessionName = SESSION_NAME;
-    if ($sessionCompany === 'tnb') {
+    // 1. URL path detection (highest priority - always correct for page requests)
+    if (strpos($requestUri, '/tnb/') !== false) {
         $sessionName = 'tnb_session';
-    } elseif ($sessionCompany === 'koch') {
+    } elseif (strpos($requestUri, '/koch/') !== false) {
         $sessionName = 'koch_session';
+    } elseif (strpos($requestUri, '/admin/') !== false) {
+        // 2. For admin API calls, check POST/GET company parameter
+        $company = strtolower((string) ($_POST['company'] ?? $_GET['company'] ?? ''));
+        if ($company === 'tnb') {
+            $sessionName = 'tnb_session';
+        } elseif ($company === 'koch') {
+            $sessionName = 'koch_session';
+        }
+        // No company param → use default SESSION_NAME (admin dashboard pages)
     }
 
     session_name($sessionName);
@@ -59,23 +52,6 @@ function start_app_session(): void
 
     if (!isset($_SESSION['_csrf_token'])) {
         $_SESSION['_csrf_token'] = bin2hex(random_bytes(32));
-    }
-    
-    // Store company in session and cookie for persistence
-    if ($sessionCompany !== '') {
-        $_SESSION['_app_company'] = $sessionCompany;
-        
-        // Set company cookie to persist across pages
-        if (!isset($_COOKIE['app_company']) || $_COOKIE['app_company'] !== $sessionCompany) {
-            setcookie('app_company', $sessionCompany, [
-                'expires' => time() + SESSION_LIFETIME,
-                'path' => '/',
-                'domain' => '',
-                'secure' => $isHttps,
-                'httponly' => true,
-                'samesite' => 'Lax',
-            ]);
-        }
     }
 }
 
@@ -139,7 +115,11 @@ function set_authenticated_user(array $user, string $sessionToken): void
     start_app_session();
     session_regenerate_id(true);
 
-    $_SESSION['auth_user'] = [
+    // Determine which login page the user came from (based on current session name)
+    $currentSessName = session_name();
+    $loginCompany = ($currentSessName === 'tnb_session') ? 'tnb' : 'koch';
+
+    $authData = [
         'id' => (int) $user['id'],
         'username' => (string) $user['username'],
         'email' => (string) $user['email'],
@@ -153,13 +133,51 @@ function set_authenticated_user(array $user, string $sessionToken): void
         'company_name' => (string) $user['company_name'],
         'status' => (string) $user['status'],
         'session_token' => $sessionToken,
+        'login_company' => $loginCompany,
     ];
 
+    $_SESSION['auth_user'] = $authData;
     $_SESSION['user_id'] = (int) $user['id'];
     $_SESSION['username'] = (string) $user['username'];
     $_SESSION['user_role'] = (string) $user['role'];
     $_SESSION['company_id'] = (int) $user['company_id'];
     $_SESSION['company_code'] = (string) $user['company_code'];
+
+    // If admin/manager user, also store auth in admin dashboard session
+    // This allows admin dashboard to work independently from company pages
+    if (in_array((string) $user['role'], ['super_admin', 'admin', 'manager'], true)) {
+        $currentSessionName = session_name();
+        if ($currentSessionName !== SESSION_NAME) {
+            $isHttps = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
+            session_write_close();
+
+            session_name(SESSION_NAME);
+            session_set_cookie_params([
+                'lifetime' => SESSION_LIFETIME,
+                'path' => '/',
+                'domain' => '',
+                'secure' => $isHttps,
+                'httponly' => true,
+                'samesite' => 'Lax',
+            ]);
+            session_start();
+            session_regenerate_id(true);
+            $_SESSION['auth_user'] = $authData;
+            $_SESSION['user_id'] = (int) $user['id'];
+            $_SESSION['username'] = (string) $user['username'];
+            $_SESSION['user_role'] = (string) $user['role'];
+            $_SESSION['company_id'] = (int) $user['company_id'];
+            $_SESSION['company_code'] = (string) $user['company_code'];
+            if (!isset($_SESSION['_csrf_token'])) {
+                $_SESSION['_csrf_token'] = bin2hex(random_bytes(32));
+            }
+            session_write_close();
+
+            // Switch back to original company session
+            session_name($currentSessionName);
+            session_start();
+        }
+    }
 }
 
 function authenticated_user(): ?array
@@ -183,9 +201,7 @@ function destroy_authenticated_session(): ?array
     if (ini_get('session.use_cookies')) {
         $params = session_get_cookie_params();
         setcookie(session_name(), '', time() - 3600, $params['path'], $params['domain'], (bool) $params['secure'], (bool) $params['httponly']);
-        
-        // Also clear company cookie
-        setcookie('app_company', '', time() - 3600, '/', '', (bool) $params['secure'], true);
+        // DO NOT delete other cookies - each session is independent
     }
 
     session_destroy();

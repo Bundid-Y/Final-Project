@@ -318,7 +318,7 @@ textarea.fm-input{resize:vertical;min-height:80px}
         <a href="<?php echo h(user_page_by_company((string)$user['company_code']));?>"><i class="fas fa-external-link-alt"></i> Front User Page</a>
         <a href="<?php echo h(project_url('koch/main/index.php'));?>"><i class="fas fa-globe"></i> KOCH Website</a>
         <a href="<?php echo h(project_url('tnb/main/index.php'));?>"><i class="fas fa-globe"></i> TNB Website</a>
-        <a href="<?php echo h(project_url('admin/api/auth/logout.php'));?>"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        <a href="<?php echo h(project_url('admin/api/auth/logout.php'));?>?company=<?php echo h((string)($user['login_company'] ?? strtolower((string)($user['company_code'] ?? 'koch'))));?>"><i class="fas fa-sign-out-alt"></i> Logout</a>
     </div>
 </aside>
 

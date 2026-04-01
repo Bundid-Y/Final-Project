@@ -257,13 +257,17 @@ function koch_action_label(string $action): string {
 
         /* Alert */
         .k-alert {
+            position: fixed; top: 22px; right: 22px; z-index: 9999;
             padding: 14px 20px; border-radius: var(--koch-radius);
-            margin-bottom: 20px; font-weight: 500; font-size: 14px;
+            font-weight: 500; font-size: 14px;
             display: flex; align-items: center; gap: 10px;
+            box-shadow: 0 6px 24px rgba(0,0,0,.15); max-width: 400px;
+            animation: kAlertIn .3s ease;
         }
         .k-alert.success { background: #dcfce7; color: #166534; }
         .k-alert.error { background: #fee2e2; color: #991b1b; }
         .k-alert i { font-size: 18px; }
+        @keyframes kAlertIn { from { opacity:0; transform: translateX(110%); } to { opacity:1; transform: translateX(0); } }
 
         /* Stats Cards */
         .stats-grid {
@@ -530,10 +534,10 @@ function koch_action_label(string $action): string {
 
         <div class="main-content">
             <?php if ($successMessage): ?>
-                <div class="k-alert success"><i class="fas fa-check-circle"></i> <?php echo h((string) $successMessage); ?></div>
+                <div class="k-alert success" id="flashAlert"><i class="fas fa-check-circle"></i> <?php echo h((string) $successMessage); ?></div>
             <?php endif; ?>
             <?php if ($errorMessage): ?>
-                <div class="k-alert error"><i class="fas fa-exclamation-circle"></i> <?php echo h((string) $errorMessage); ?></div>
+                <div class="k-alert error" id="flashAlert"><i class="fas fa-exclamation-circle"></i> <?php echo h((string) $errorMessage); ?></div>
             <?php endif; ?>
 
             <?php if ($section === 'dashboard'): ?>
@@ -1040,6 +1044,16 @@ function koch_action_label(string $action): string {
             document.getElementById('userSidebar').classList.toggle('open');
             document.getElementById('sidebarOverlay').classList.toggle('show');
         }
+        document.addEventListener('DOMContentLoaded', function() {
+            var a = document.getElementById('flashAlert');
+            if (a) {
+                setTimeout(function() {
+                    a.style.transition = 'opacity .5s ease';
+                    a.style.opacity = '0';
+                    setTimeout(function() { a.remove(); }, 500);
+                }, 5000);
+            }
+        });
     </script>
     <?php clear_old_input(); ?>
 </body>

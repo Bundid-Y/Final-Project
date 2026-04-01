@@ -103,8 +103,9 @@ body{font-family:'Sarabun','Inter',sans-serif;background:var(--bg);color:var(--t
 .topbar-btn:hover{background:var(--tp)}
 .mob-tog{display:none;background:none;border:none;font-size:22px;cursor:pointer;color:var(--tx);padding:8px}
 .mc{padding:28px 32px 48px}
-.ta{padding:14px 20px;border-radius:var(--r);margin-bottom:20px;font-weight:500;font-size:14px;display:flex;align-items:center;gap:10px}
+.ta{position:fixed;top:22px;right:22px;z-index:9999;padding:14px 20px;border-radius:var(--r);font-weight:500;font-size:14px;display:flex;align-items:center;gap:10px;box-shadow:0 6px 24px rgba(0,0,0,.15);max-width:400px;animation:taSlide .3s ease}
 .ta.ok{background:#dcfce7;color:#166534}.ta.er{background:#fee2e2;color:#991b1b}
+@keyframes taSlide{from{opacity:0;transform:translateX(110%)}to{opacity:1;transform:translateX(0)}}
 .sg{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:28px}
 .sc{background:var(--card);border-radius:var(--r);padding:22px;box-shadow:var(--sh);position:relative;overflow:hidden}
 .sc::before{content:'';position:absolute;top:0;left:0;right:0;height:4px}
@@ -188,8 +189,8 @@ body{font-family:'Sarabun','Inter',sans-serif;background:var(--bg);color:var(--t
         <div><a href="../main/quotation.php" class="topbar-btn"><i class="fas fa-plus"></i> ขอบริการขนส่ง</a></div>
     </div>
     <div class="mc">
-        <?php if($successMessage):?><div class="ta ok"><i class="fas fa-check-circle"></i> <?php echo h((string)$successMessage);?></div><?php endif;?>
-        <?php if($errorMessage):?><div class="ta er"><i class="fas fa-exclamation-circle"></i> <?php echo h((string)$errorMessage);?></div><?php endif;?>
+        <?php if($successMessage):?><div class="ta ok" id="flashAlert"><i class="fas fa-check-circle"></i> <?php echo h((string)$successMessage);?></div><?php endif;?>
+        <?php if($errorMessage):?><div class="ta er" id="flashAlert"><i class="fas fa-exclamation-circle"></i> <?php echo h((string)$errorMessage);?></div><?php endif;?>
 
 <?php if($section==='dashboard'): ?>
 <div class="sg">
@@ -337,7 +338,8 @@ $os='Unknown';if(str_contains($ua,'Windows'))$os='Windows';elseif(str_contains($
 
     </div>
 </div>
-<script>function toggleSidebar(){document.getElementById('userSidebar').classList.toggle('open');document.getElementById('sidebarOverlay').classList.toggle('show')}</script>
+<script>function toggleSidebar(){document.getElementById('userSidebar').classList.toggle('open');document.getElementById('sidebarOverlay').classList.toggle('show')}
+document.addEventListener('DOMContentLoaded',function(){var a=document.getElementById('flashAlert');if(a){setTimeout(function(){a.style.transition='opacity .5s ease';a.style.opacity='0';setTimeout(function(){a.remove()},500)},5000);}});</script>
 <?php clear_old_input(); ?>
 </body>
 </html>

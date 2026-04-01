@@ -9,11 +9,73 @@ function require_authenticated_user(): array
 {
     $user = authenticated_user();
 
+    // Fallback: if no auth in current session (admin dashboard), try company sessions
+    if ($user === null) {
+        $user = find_auth_from_company_sessions();
+    }
+
     if ($user === null) {
         redirect_to(project_url('koch/main/login.php'));
     }
 
     return $user;
+}
+
+function find_auth_from_company_sessions(): ?array
+{
+    $currentName = session_name();
+    $isHttps = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
+    session_write_close();
+
+    foreach (['koch_session', 'tnb_session'] as $companySession) {
+        session_name($companySession);
+        session_set_cookie_params([
+            'lifetime' => SESSION_LIFETIME,
+            'path' => '/',
+            'domain' => '',
+            'secure' => $isHttps,
+            'httponly' => true,
+            'samesite' => 'Lax',
+        ]);
+        if (session_start()) {
+            $user = isset($_SESSION['auth_user']) && is_array($_SESSION['auth_user']) ? $_SESSION['auth_user'] : null;
+            session_write_close();
+
+            if ($user !== null && in_array((string) ($user['role'] ?? ''), ['super_admin', 'admin', 'manager'], true)) {
+                // Found admin auth, copy to admin session
+                session_name($currentName);
+                session_set_cookie_params([
+                    'lifetime' => SESSION_LIFETIME,
+                    'path' => '/',
+                    'domain' => '',
+                    'secure' => $isHttps,
+                    'httponly' => true,
+                    'samesite' => 'Lax',
+                ]);
+                session_start();
+                $_SESSION['auth_user'] = $user;
+                $_SESSION['user_id'] = (int) $user['id'];
+                $_SESSION['username'] = (string) $user['username'];
+                $_SESSION['user_role'] = (string) $user['role'];
+                $_SESSION['company_id'] = (int) $user['company_id'];
+                $_SESSION['company_code'] = (string) $user['company_code'];
+                return $user;
+            }
+        }
+    }
+
+    // No auth found, restore original session
+    session_name($currentName);
+    session_set_cookie_params([
+        'lifetime' => SESSION_LIFETIME,
+        'path' => '/',
+        'domain' => '',
+        'secure' => $isHttps,
+        'httponly' => true,
+        'samesite' => 'Lax',
+    ]);
+    session_start();
+    return null;
 }
 
 function require_admin_user(): array
