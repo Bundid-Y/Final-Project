@@ -33,6 +33,14 @@ if (!in_array($section, $validSections, true)) {
     $section = 'dashboard';
 }
 
+// Auto-mark notifications as read when viewing notifications section
+if ($section === 'notifications' && $unreadCount > 0) {
+    $stmt = $pdo->prepare('UPDATE notifications SET is_read = 1 WHERE user_id = :uid AND is_read = 0');
+    $stmt->execute([':uid' => (int) $currentUser['id']]);
+    // Refresh notification count
+    $unreadCount = 0;
+}
+
 $fullName = trim(($profile['first_name'] ?? '') . ' ' . ($profile['last_name'] ?? ''));
 $avatarUrl = !empty($profile['avatar_url']) ? h((string) $profile['avatar_url']) : '../img/company_logo/logo 2.png';
 $isAdmin = in_array((string) ($currentUser['role'] ?? 'user'), ['super_admin', 'admin', 'manager'], true);

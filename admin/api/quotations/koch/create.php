@@ -14,10 +14,27 @@ if (!verify_csrf_token($_POST['_csrf'] ?? null)) {
     form_response(false, 'Security token mismatch. Please try again.', $redirectBack, $_POST, [], 422);
 }
 
-$result = create_koch_quotation(Database::connection(), $_POST, $_FILES);
+$pdo = Database::connection();
+$result = create_koch_quotation($pdo, $_POST, $_FILES);
 
 if (!$result['success']) {
     form_response(false, $result['message'], $redirectBack, $_POST, $result, 422);
+}
+
+// Create notification for quotation submission
+if (isset($result['user_id']) && isset($result['company_id'])) {
+    require_once __DIR__ . '/../../../includes/activity.php';
+    create_notification(
+        $pdo,
+        (int) $result['user_id'],
+        'ส่งใบเสนอราคาสำเร็จ',
+        'ใบเสนอราคาของคุณได้รับการบันทึกเรียบร้อยแล้ว เจ้าหน้าที่จะติดต่อกลับโดยเร็วที่สุด',
+        'success',
+        'koch_quotations',
+        (int) ($result['quotation_id'] ?? 0),
+        'normal',
+        (int) $result['company_id']
+    );
 }
 
 form_response(true, $result['message'], $redirectBack, [], $result);

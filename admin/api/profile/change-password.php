@@ -32,6 +32,22 @@ $result = change_user_password(
     post_string('confirm_new_password')
 );
 
+// Create notification for password change
+if ($result['success']) {
+    require_once __DIR__ . '/../../includes/activity.php';
+    create_notification(
+        $pdo,
+        (int) $currentUser['id'],
+        'เปลี่ยนรหัสผ่านสำเร็จ',
+        'รหัสผ่านของคุณได้รับการเปลี่ยนแปลงเรียบร้อยแล้ว หากไม่ใช่คุณที่ทำการเปลี่ยนแปลง กรุณาติดต่อผู้ดูแลระบบทันที',
+        'warning',
+        'users',
+        (int) $currentUser['id'],
+        'high',
+        (int) $currentUser['company_id']
+    );
+}
+
 form_response(
     $result['success'],
     $result['message'],
