@@ -315,10 +315,23 @@ textarea.fm-input{resize:vertical;min-height:80px}
         <a href="?section=settings" class="<?php echo $section==='settings'?'active':'';?>"><i class="fas fa-cog"></i> Settings</a>
     </nav>
     <div class="sb-foot">
-        <a href="<?php echo h(user_page_by_company((string)$user['company_code']));?>"><i class="fas fa-external-link-alt"></i> Front User Page</a>
+        <?php
+        // Determine user page company: login_company (new sessions) → cookie detection (old sessions) → company_code
+        // CRITICAL: Must use login origin, NOT user's actual company, to avoid cross-company redirect bug
+        $userPageCompany = $user['login_company'] ?? null;
+        if ($userPageCompany === null) {
+            $hasTnb  = isset($_COOKIE['tnb_session']);
+            $hasKoch = isset($_COOKIE['koch_session']);
+            if ($hasTnb && !$hasKoch) { $userPageCompany = 'tnb'; }
+            elseif ($hasKoch && !$hasTnb) { $userPageCompany = 'koch'; }
+            else { $userPageCompany = strtolower((string)($user['company_code'] ?? 'koch')); }
+        }
+        $userPageUrl = user_page_by_company(company_code_from_slug($userPageCompany));
+        ?>
+        <a href="<?php echo h($userPageUrl);?>"><i class="fas fa-external-link-alt"></i> Front User Page</a>
         <a href="<?php echo h(project_url('koch/main/index.php'));?>"><i class="fas fa-globe"></i> KOCH Website</a>
         <a href="<?php echo h(project_url('tnb/main/index.php'));?>"><i class="fas fa-globe"></i> TNB Website</a>
-        <a href="<?php echo h(project_url('admin/api/auth/logout.php'));?>?company=<?php echo h((string)($user['login_company'] ?? strtolower((string)($user['company_code'] ?? 'koch'))));?>"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        <a href="<?php echo h(project_url('admin/api/auth/logout.php'));?>?company=<?php echo h($userPageCompany);?>"><i class="fas fa-sign-out-alt"></i> Logout</a>
     </div>
 </aside>
 
