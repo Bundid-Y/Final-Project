@@ -34,11 +34,31 @@ if (!in_array($section, $validSections, true)) {
 }
 
 // Auto-mark notifications as read when viewing notifications section
-if ($section === 'notifications' && $unreadCount > 0) {
+if ($section === 'notifications') {
     $stmt = $pdo->prepare('UPDATE notifications SET is_read = 1 WHERE user_id = :uid AND is_read = 0');
     $stmt->execute([':uid' => (int) $currentUser['id']]);
-    // Refresh notification count
-    $unreadCount = 0;
+    $unreadCount = get_unread_notification_count($pdo, (int) $currentUser['id']);
+}
+
+// Quotation badge logic: only show badge when there are NEW pending quotations since last visit
+// Uses cookie (not session) — persists reliably across admin/company session switches
+$currPending = (int) $qStats['pending'];
+$cookieParams = ['expires' => time() + 86400 * 90, 'path' => '/', 'httponly' => true, 'samesite' => 'Lax'];
+$prevSeen = isset($_COOKIE['koch_q_seen']) ? (int) $_COOKIE['koch_q_seen'] : -1;
+
+if ($prevSeen === -1) {
+    // First visit ever — initialize cookie, no badge (user already sees the data)
+    setcookie('koch_q_seen', (string) $currPending, $cookieParams);
+    $_COOKIE['koch_q_seen'] = (string) $currPending;
+    $newQuotations = 0;
+} elseif ($section === 'quotations') {
+    // Viewing quotations — update cookie, clear badge
+    setcookie('koch_q_seen', (string) $currPending, $cookieParams);
+    $_COOKIE['koch_q_seen'] = (string) $currPending;
+    $newQuotations = 0;
+} else {
+    // Badge only if pending count increased (new quotations added)
+    $newQuotations = max(0, $currPending - $prevSeen);
 }
 
 $fullName = trim(($profile['first_name'] ?? '') . ' ' . ($profile['last_name'] ?? ''));
@@ -475,8 +495,8 @@ function koch_action_label(string $action): string {
             </a>
             <a href="?section=quotations" class="<?php echo $section === 'quotations' ? 'active' : ''; ?>">
                 <i class="fas fa-file-invoice"></i> ใบเสนอราคา
-                <?php if ((int)$qStats['pending'] > 0): ?>
-                    <span class="nav-badge"><?php echo (int)$qStats['pending']; ?></span>
+                <?php if ($newQuotations > 0): ?>
+                    <span class="nav-badge"><?php echo $newQuotations; ?></span>
                 <?php endif; ?>
             </a>
             <a href="?section=tracking" class="<?php echo $section === 'tracking' ? 'active' : ''; ?>">
