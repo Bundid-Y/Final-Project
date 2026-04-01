@@ -557,10 +557,13 @@ function delete_user_admin(PDO $pdo, int $userId, int $adminId): array
     if ($userId === $adminId) {
         return ['success' => false, 'message' => 'Cannot delete yourself.'];
     }
-    $stmt = $pdo->prepare('DELETE FROM users WHERE id = :id');
-    $stmt->execute([':id' => $userId]);
+    
+    // Soft delete - ไม่ลบข้อมูลจริง แค่เปลี่ยนสถานะ
+    $stmt = $pdo->prepare('UPDATE users SET status = :status, updated_at = NOW() WHERE id = :id');
+    $stmt->execute([':id' => $userId, ':status' => 'deleted']);
+    
     log_activity($pdo, $adminId, 'USER_DELETED', 'users', $userId);
-    return ['success' => true, 'message' => 'User deleted.'];
+    return ['success' => true, 'message' => 'User deleted successfully.'];
 }
 
 // =============================================

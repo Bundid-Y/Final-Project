@@ -45,7 +45,7 @@ $modeColors = match($companyMode) {
 };
 
 function admin_status_badge(string $status): string {
-    $m = ['pending'=>['#fff3e0','#e65100','Pending'],'processing'=>['#e3f2fd','#1565c0','Processing'],'quoted'=>['#f3e5f5','#7b1fa2','Quoted'],'approved'=>['#e8f5e9','#2e7d32','Approved'],'in_transit'=>['#e0f7fa','#00838f','In Transit'],'delivered'=>['#e8f5e9','#1b5e20','Delivered'],'completed'=>['#e0f2f1','#00695c','Completed'],'rejected'=>['#fbe9e7','#bf360c','Rejected'],'cancelled'=>['#efebe9','#4e342e','Cancelled'],'active'=>['#dcfce7','#166534','Active'],'inactive'=>['#f1f5f9','#64748b','Inactive'],'suspended'=>['#fee2e2','#991b1b','Suspended']];
+    $m = ['pending'=>['#fff3e0','#e65100','Pending'],'processing'=>['#e3f2fd','#1565c0','Processing'],'quoted'=>['#f3e5f5','#7b1fa2','Quoted'],'approved'=>['#e8f5e9','#2e7d32','Approved'],'in_transit'=>['#e0f7fa','#00838f','In Transit'],'delivered'=>['#e8f5e9','#1b5e20','Delivered'],'completed'=>['#e0f2f1','#00695c','Completed'],'rejected'=>['#fbe9e7','#bf360c','Rejected'],'cancelled'=>['#efebe9','#4e342e','Cancelled'],'active'=>['#dcfce7','#166534','Active'],'inactive'=>['#f1f5f9','#64748b','Inactive'],'suspended'=>['#fee2e2','#991b1b','Suspended'],'deleted'=>['#fee2e2','#991b1b','Deleted']];
     $s = $m[$status] ?? ['#f5f5f5','#616161',$status];
     return '<span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background:'.$s[0].';color:'.$s[1].'">'.h($s[2]).'</span>';
 }
@@ -586,7 +586,7 @@ textarea.fm-input{resize:vertical;min-height:80px}
     <div class="card-h"><h2><i class="fas fa-users"></i> All Users</h2></div>
     <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>User</th><th>Email</th><th>Company</th><th>Role</th><th>Status</th><th>Joined</th><th>Actions</th></tr></thead><tbody>
     <?php
-    $allUsers = $pdo->prepare('SELECT u.*, c.name AS company_name FROM users u LEFT JOIN companies c ON c.id = u.company_id' . ($filterCompanyId !== null ? ' WHERE u.company_id = :cid' : '') . ' ORDER BY u.created_at DESC LIMIT 50');
+    $allUsers = $pdo->prepare('SELECT u.*, c.name AS company_name FROM users u LEFT JOIN companies c ON c.id = u.company_id' . ($filterCompanyId !== null ? ' WHERE u.company_id = :cid AND u.status != \'deleted\'' : ' WHERE u.status != \'deleted\'') . ' ORDER BY u.created_at DESC LIMIT 50');
     $allUsers->execute($filterCompanyId !== null ? [':cid' => $filterCompanyId] : []);
     $allUsersList = $allUsers->fetchAll();
     if($allUsersList===[]):?><tr class="empty"><td colspan="7">No users found</td></tr>
