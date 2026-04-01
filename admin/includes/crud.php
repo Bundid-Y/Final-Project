@@ -560,7 +560,7 @@ function delete_user_admin(PDO $pdo, int $userId, int $adminId): array
     
     // Soft delete - ไม่ลบข้อมูลจริง แค่เปลี่ยนสถานะ
     $stmt = $pdo->prepare('UPDATE users SET status = :status, updated_at = NOW() WHERE id = :id');
-    $stmt->execute([':id' => $userId, ':status' => 'deleted']);
+    $stmt->execute([':id' => $userId, ':status' => 'inactive']);
     
     log_activity($pdo, $adminId, 'USER_DELETED', 'users', $userId);
     return ['success' => true, 'message' => 'User deleted successfully.'];

@@ -37,7 +37,7 @@ function admin_dashboard_stats(PDO $pdo, ?int $companyId = null): array
         $params[':company_id'] = $companyId;
     }
 
-    $usersStmt = $pdo->prepare('SELECT COUNT(*) FROM users' . $companyFilter);
+    $usersStmt = $pdo->prepare('SELECT COUNT(*) FROM users WHERE status != \'inactive\'' . ($companyId !== null ? ' AND company_id = :company_id' : ''));
     $usersStmt->execute($params);
 
     $kochStmt = $pdo->prepare('SELECT COUNT(*) FROM koch_quotations' . ($companyId !== null ? ' WHERE user_id IN (SELECT id FROM users WHERE company_id = :company_id)' : ''));
@@ -89,7 +89,7 @@ function admin_extended_stats(PDO $pdo, ?int $companyId = null): array
     $activeUsers = $pdo->prepare("SELECT COUNT(*) FROM users" . ($cf !== '' ? $cf . " AND status = 'active'" : " WHERE status = 'active'"));
     $activeUsers->execute($params);
 
-    $newUsersMonth = $pdo->prepare("SELECT COUNT(*) FROM users WHERE created_at >= DATE_FORMAT(NOW(), '%Y-%m-01')" . ($companyId !== null ? " AND company_id = :cid" : ''));
+    $newUsersMonth = $pdo->prepare("SELECT COUNT(*) FROM users WHERE status != 'inactive' AND created_at >= DATE_FORMAT(NOW(), '%Y-%m-01')" . ($companyId !== null ? " AND company_id = :cid" : ''));
     $newUsersMonth->execute($params);
 
     $kochPending = $pdo->prepare("SELECT COUNT(*) FROM koch_quotations WHERE is_read = 0" . ($companyId !== null ? " AND user_id IN (SELECT id FROM users WHERE company_id = :cid)" : ''));
@@ -151,8 +151,10 @@ function admin_recent_users(PDO $pdo, ?int $companyId = null, int $limit = 5): a
     $sql = 'SELECT u.id, u.username, u.email, u.first_name, u.last_name, u.role, u.status, u.created_at, c.name AS company_name FROM users u LEFT JOIN companies c ON c.id = u.company_id';
     $params = [];
     if ($companyId !== null) {
-        $sql .= ' WHERE u.company_id = :cid';
+        $sql .= ' WHERE u.company_id = :cid AND u.status != \'inactive\'';
         $params[':cid'] = $companyId;
+    } else {
+        $sql .= ' WHERE u.status != \'inactive\'';
     }
     $sql .= ' ORDER BY u.created_at DESC LIMIT ' . (int) $limit;
     $stmt = $pdo->prepare($sql);

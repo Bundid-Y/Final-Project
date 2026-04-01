@@ -30,12 +30,24 @@ $errorMessage = flash('error_message');
 $section = $_GET['section'] ?? 'dashboard';
 if (!in_array($section, ['dashboard','profile','quotations','tracking','transport','notifications','sessions','settings'], true)) $section = 'dashboard';
 
-// Auto-mark notifications as read when viewing notifications section
-if ($section === 'notifications' && $unreadCount > 0) {
+// Auto-mark notifications as read when viewing notifications or quotations sections
+if ($section === 'notifications' || $section === 'quotations') {
+    // Force mark ALL unread notifications as read for this user (regardless of count)
     $stmt = $pdo->prepare('UPDATE notifications SET is_read = 1 WHERE user_id = :uid AND is_read = 0');
     $stmt->execute([':uid' => (int) $currentUser['id']]);
-    // Refresh notification count
-    $unreadCount = 0;
+    
+    // Force refresh unread count from database to ensure it's 0
+    $unreadCount = get_unread_notification_count($pdo, (int) $currentUser['id']);
+    
+    // Mark that user has viewed quotations section to hide pending badge
+    if ($section === 'quotations') {
+        $_SESSION['tnb_viewed_quotations'] = true;
+    }
+}
+
+// Clear viewed flag when there are no more pending quotations (real data update)
+if ((int)$qStats['pending'] === 0) {
+    unset($_SESSION['tnb_viewed_quotations']);
 }
 $fullName = trim(($profile['first_name'] ?? '') . ' ' . ($profile['last_name'] ?? ''));
 $avatarUrl = !empty($profile['avatar_url']) ? h((string) $profile['avatar_url']) : '../img/company_logo/tnb_logo.webp';
@@ -152,7 +164,7 @@ body{font-family:'Sarabun','Inter',sans-serif;background:var(--bg);color:var(--t
         <div class="lb">เมนูหลัก</div>
         <a href="?section=dashboard" class="<?php echo $section==='dashboard'?'active':''; ?>"><i class="fas fa-chart-pie"></i> แดชบอร์ด</a>
         <a href="?section=profile" class="<?php echo $section==='profile'?'active':''; ?>"><i class="fas fa-user-circle"></i> โปรไฟล์ของฉัน</a>
-        <a href="?section=quotations" class="<?php echo $section==='quotations'?'active':''; ?>"><i class="fas fa-file-invoice"></i> ใบขอบริการ<?php if((int)$qStats['pending']>0):?><span class="nb"><?php echo (int)$qStats['pending'];?></span><?php endif;?></a>
+        <a href="?section=quotations" class="<?php echo $section==='quotations'?'active':''; ?>"><i class="fas fa-file-invoice"></i> ใบขอบริการ<?php if((int)$qStats['pending']>0 && !isset($_SESSION['tnb_viewed_quotations'])):?><span class="nb"><?php echo (int)$qStats['pending'];?></span><?php endif;?></a>
         <a href="?section=tracking" class="<?php echo $section==='tracking'?'active':''; ?>"><i class="fas fa-shipping-fast"></i> ติดตามการขนส่ง</a>
         <a href="?section=transport" class="<?php echo $section==='transport'?'active':''; ?>"><i class="fas fa-truck"></i> ข้อมูลรถและเส้นทาง</a>
         <div class="dv"></div>

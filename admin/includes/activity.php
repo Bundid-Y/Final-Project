@@ -5,6 +5,19 @@ require_once __DIR__ . '/helpers.php';
 
 function log_activity(PDO $pdo, ?int $userId, string $action, ?string $tableName = null, ?int $recordId = null, array $oldValues = [], array $newValues = [], ?int $companyId = null): void
 {
+    // Get company_id from user if not provided
+    if ($companyId === null && $userId !== null) {
+        $userStmt = $pdo->prepare('SELECT company_id FROM users WHERE id = :id LIMIT 1');
+        $userStmt->execute([':id' => $userId]);
+        $userCompanyId = $userStmt->fetchColumn();
+        $companyId = $userCompanyId !== false ? (int) $userCompanyId : null;
+    }
+    
+    // Fallback to session context if still null
+    if ($companyId === null) {
+        $companyId = $_SESSION['admin_company_id_context'] ?? null;
+    }
+    
     $stmt = $pdo->prepare(
         'INSERT INTO activity_logs (user_id, company_id, action, table_name, record_id, old_values, new_values, ip_address, user_agent)
          VALUES (:user_id, :company_id, :action, :table_name, :record_id, :old_values, :new_values, :ip_address, :user_agent)'
@@ -12,7 +25,7 @@ function log_activity(PDO $pdo, ?int $userId, string $action, ?string $tableName
 
     $stmt->execute([
         ':user_id' => $userId,
-        ':company_id' => $companyId ?? ($_SESSION['admin_company_id_context'] ?? null),
+        ':company_id' => $companyId,
         ':action' => $action,
         ':table_name' => $tableName,
         ':record_id' => $recordId,
@@ -25,6 +38,19 @@ function log_activity(PDO $pdo, ?int $userId, string $action, ?string $tableName
 
 function create_notification(PDO $pdo, int $userId, string $title, string $message, string $type = 'info', ?string $relatedTable = null, ?int $relatedId = null, string $priority = 'normal', ?int $companyId = null): void
 {
+    // Get company_id from user if not provided
+    if ($companyId === null) {
+        $userStmt = $pdo->prepare('SELECT company_id FROM users WHERE id = :id LIMIT 1');
+        $userStmt->execute([':id' => $userId]);
+        $userCompanyId = $userStmt->fetchColumn();
+        $companyId = $userCompanyId !== false ? (int) $userCompanyId : null;
+    }
+    
+    // Fallback to session context if still null
+    if ($companyId === null) {
+        $companyId = $_SESSION['admin_company_id_context'] ?? null;
+    }
+    
     $stmt = $pdo->prepare(
         'INSERT INTO notifications (user_id, company_id, title, message, type, related_table, related_id, priority)
          VALUES (:user_id, :company_id, :title, :message, :type, :related_table, :related_id, :priority)'
@@ -32,7 +58,7 @@ function create_notification(PDO $pdo, int $userId, string $title, string $messa
 
     $stmt->execute([
         ':user_id' => $userId,
-        ':company_id' => $companyId ?? ($_SESSION['admin_company_id_context'] ?? null),
+        ':company_id' => $companyId,
         ':title' => $title,
         ':message' => $message,
         ':type' => $type,

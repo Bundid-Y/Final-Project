@@ -31,6 +31,10 @@ function start_app_session(): void
         $sessionCompany = 'tnb';
     } elseif (strpos($requestUri, '/koch/') !== false) {
         $sessionCompany = 'koch';
+    } elseif (strpos($requestUri, '/admin/') !== false) {
+        // Admin dashboard: use default session or try to detect from existing sessions
+        // Try to find active session by checking both session names
+        $sessionCompany = ''; // Will use default SESSION_NAME
     }
     
     // Set session name based on company

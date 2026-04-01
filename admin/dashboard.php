@@ -26,6 +26,19 @@ $filterCompanyId = match($companyMode) {
 };
 // Store company context in session so notification/activity functions know which company is active
 $_SESSION['admin_company_id_context'] = $filterCompanyId;
+
+// Auto-mark notifications as read when viewing notifications section (BEFORE loading stats)
+if ($section === 'notifications') {
+    $markSql = 'UPDATE notifications SET is_read = 1 WHERE is_read = 0';
+    if ($filterCompanyId !== null) {
+        $markSql .= ' AND company_id = :cid';
+        $markStmt = $pdo->prepare($markSql);
+        $markStmt->execute([':cid' => $filterCompanyId]);
+    } else {
+        $pdo->exec($markSql);
+    }
+}
+
 $stats = admin_dashboard_stats($pdo, $filterCompanyId);
 $ext = admin_extended_stats($pdo, $filterCompanyId);
 $activities = latest_admin_activities($pdo, $filterCompanyId, 8);
@@ -586,7 +599,7 @@ textarea.fm-input{resize:vertical;min-height:80px}
     <div class="card-h"><h2><i class="fas fa-users"></i> All Users</h2></div>
     <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>User</th><th>Email</th><th>Company</th><th>Role</th><th>Status</th><th>Joined</th><th>Actions</th></tr></thead><tbody>
     <?php
-    $allUsers = $pdo->prepare('SELECT u.*, c.name AS company_name FROM users u LEFT JOIN companies c ON c.id = u.company_id' . ($filterCompanyId !== null ? ' WHERE u.company_id = :cid AND u.status != \'deleted\'' : ' WHERE u.status != \'deleted\'') . ' ORDER BY u.created_at DESC LIMIT 50');
+    $allUsers = $pdo->prepare('SELECT u.*, c.name AS company_name FROM users u LEFT JOIN companies c ON c.id = u.company_id' . ($filterCompanyId !== null ? ' WHERE u.company_id = :cid AND u.status != \'inactive\'' : ' WHERE u.status != \'inactive\'') . ' ORDER BY u.created_at DESC LIMIT 50');
     $allUsers->execute($filterCompanyId !== null ? [':cid' => $filterCompanyId] : []);
     $allUsersList = $allUsers->fetchAll();
     if($allUsersList===[]):?><tr class="empty"><td colspan="7">No users found</td></tr>
@@ -736,21 +749,6 @@ $distinctActions = get_distinct_actions($pdo);
 
 <?php elseif($section==='notifications'): ?>
 <!-- =================== NOTIFICATIONS =================== -->
-<?php
-// Auto-mark all notifications as read when entering this section
-if ((int)$stats['unread_notifications'] > 0) {
-    $markSql = 'UPDATE notifications SET is_read = 1 WHERE is_read = 0';
-    if ($filterCompanyId !== null) {
-        $markSql .= ' AND company_id = :cid';
-        $markStmt = $pdo->prepare($markSql);
-        $markStmt->execute([':cid' => $filterCompanyId]);
-    } else {
-        $pdo->exec($markSql);
-    }
-    // Refresh the count after marking
-    $stats['unread_notifications'] = 0;
-}
-?>
 <div class="card">
     <div class="card-h">
         <h2><i class="fas fa-bell"></i> System Notifications</h2>
