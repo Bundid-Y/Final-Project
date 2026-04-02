@@ -305,6 +305,7 @@ $companyInfo = get_company_info($pdo, 'TNB');
                 display: none !important;
             }
         }
+
     </style>
     <div class="content-section section-partners" style="padding-top: 80px; padding-bottom: 80px;">
         <!-- ส่วนหัวข้อ (Heading) -->
@@ -323,21 +324,40 @@ $companyInfo = get_company_info($pdo, 'TNB');
 
         <!-- logo ลูกค้าเลื่อน loop slides -->
         <section class="loop-images-quotation" style="--bg: white; height: auto; min-height: 160px; padding: 15px 0;">
-            <?php if (!empty($dbPartners)): $pTotal = count($dbPartners); ?>
+            <?php if (!empty($dbPartners)):
+                $pReal = count($dbPartners);
+                $minItems = 12;
+                $pTotal = $pReal >= $minItems ? $pReal : (int)(ceil($minItems / $pReal) * $pReal);
+            ?>
             <div class="login-track" style="--time: <?php echo max(30, $pTotal * 5); ?>s; --total: <?php echo $pTotal; ?>;">
-                <?php foreach ($dbPartners as $pi => $partner): ?>
+                <?php for ($pi = 0; $pi < $pTotal; $pi++):
+                    $partner = $dbPartners[$pi % $pReal];
+                ?>
                 <div class="login-item" style="--i: <?php echo $pi + 1; ?>;">
                     <?php if (!empty($partner['website_url'])): ?><a href="<?php echo htmlspecialchars((string)$partner['website_url']); ?>" target="_blank" rel="noopener noreferrer"><?php endif; ?>
-                    <img src="<?php echo htmlspecialchars(resolve_image_url((string)$partner['logo_url'])); ?>" alt="<?php echo htmlspecialchars((string)$partner['name']); ?>" loading="lazy">
+                    <?php
+                    $logoUrl = resolve_image_url((string)$partner['logo_url']);
+                    $imageExists = !empty($logoUrl) && !empty($partner['logo_url']) && file_exists(__DIR__ . '/../../' . ltrim($partner['logo_url'], '/'));
+                    ?>
+                    <?php if ($imageExists): ?>
+                        <img src="<?php echo htmlspecialchars($logoUrl); ?>" alt="<?php echo htmlspecialchars((string)$partner['name']); ?>" loading="lazy">
+                    <?php else: ?>
+                        <div style="width: 100%; height: 100%; background: #f1f5f9; border: 2px dashed #cbd5e1; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #94a3b8; font-size: 11px; text-align: center; padding: 8px;">No Logo</div>
+                    <?php endif; ?>
                     <?php if (!empty($partner['website_url'])): ?></a><?php endif; ?>
                 </div>
-                <?php endforeach; ?>
+                <?php endfor; ?>
             </div>
             <?php else: ?>
-            <div class="login-track" style="--time: 60s; --total: 3;">
-                <div class="login-item" style="--i: 1;"><div style="width:120px;height:60px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:12px;border-radius:8px">No Partners</div></div>
-                <div class="login-item" style="--i: 2;"><div style="width:120px;height:60px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:12px;border-radius:8px">No Partners</div></div>
-                <div class="login-item" style="--i: 3;"><div style="width:120px;height:60px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:12px;border-radius:8px">No Partners</div></div>
+            <!-- Empty state: show placeholder boxes to indicate CRUD capability -->
+            <div class="login-track" style="--time: 60s; --total: 12;">
+                <?php for ($i = 1; $i <= 12; $i++): ?>
+                <div class="login-item" style="--i: <?php echo $i; ?>;">
+                    <div style="width: 100%; height: 100%; background: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #94a3b8; font-size: 11px; text-align: center; padding: 8px;">
+                        Partner Logo<br><span style="font-size: 9px; opacity: 0.7;">Add from Admin</span>
+                    </div>
+                </div>
+                <?php endfor; ?>
             </div>
             <?php endif; ?>
         </section>

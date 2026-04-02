@@ -10,6 +10,7 @@ $dbPartners = get_active_partners($pdo, $companyId);
 $dbProducts = get_active_featured_products($pdo);
 $dbBranches = get_active_branches($pdo, $companyId);
 $companyInfo = get_company_info($pdo, 'KOCH');
+
 ?>
 <!doctype html>
 <html lang="th">
@@ -237,30 +238,40 @@ $companyInfo = get_company_info($pdo, 'KOCH');
 
         <!-- logo ลูกค้าเลื่อน loop slides -->
         <section class="loop-images-quotation" style="--bg: white; height: auto; min-height: 220px; padding: 20px 0;">
-            <?php if (!empty($dbPartners)): $pTotal = count($dbPartners); ?>
+            <?php if (!empty($dbPartners)):
+                $pReal = count($dbPartners);
+                $minItems = 12;
+                $pTotal = $pReal >= $minItems ? $pReal : (int)(ceil($minItems / $pReal) * $pReal);
+            ?>
             <div class="login-track" style="--time: <?php echo max(30, $pTotal * 5); ?>s; --total: <?php echo $pTotal; ?>;">
-                <?php foreach ($dbPartners as $pi => $partner): ?>
+                <?php for ($pi = 0; $pi < $pTotal; $pi++):
+                    $partner = $dbPartners[$pi % $pReal];
+                ?>
                 <div class="login-item" style="--i: <?php echo $pi + 1; ?>;">
                     <?php if (!empty($partner['website_url'])): ?><a href="<?php echo htmlspecialchars((string)$partner['website_url']); ?>" target="_blank" rel="noopener noreferrer"><?php endif; ?>
-                    <img src="<?php echo htmlspecialchars(resolve_image_url((string)$partner['logo_url'])); ?>" alt="<?php echo htmlspecialchars((string)$partner['name']); ?>" loading="lazy">
+                    <?php 
+                    $logoUrl = resolve_image_url((string)$partner['logo_url']);
+                    $imageExists = !empty($logoUrl) && !empty($partner['logo_url']) && file_exists(__DIR__ . '/../../' . ltrim($partner['logo_url'], '/'));
+                    ?>
+                    <?php if ($imageExists): ?>
+                        <img src="<?php echo htmlspecialchars($logoUrl); ?>" alt="<?php echo htmlspecialchars((string)$partner['name']); ?>" loading="lazy" style="max-height: 60px; object-fit: contain;">
+                    <?php else: ?>
+                        <div style="width: 100%; height: 100%; background: #f1f5f9; border: 2px dashed #cbd5e1; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #94a3b8; font-size: 11px; text-align: center; padding: 8px;">No Logo</div>
+                    <?php endif; ?>
                     <?php if (!empty($partner['website_url'])): ?></a><?php endif; ?>
                 </div>
-                <?php endforeach; ?>
+                <?php endfor; ?>
             </div>
             <?php else: ?>
+            <!-- Empty state: show placeholder boxes to indicate CRUD capability -->
             <div class="login-track" style="--time: 60s; --total: 12;">
-                <div class="login-item" style="--i: 1;"><img src="../img/customer_logo/Mazda.png" alt="Mazda"></div>
-                <div class="login-item" style="--i: 2;"><img src="../img/customer_logo/Suzuki.png" alt="Suzuki"></div>
-                <div class="login-item" style="--i: 3;"><img src="../img/customer_logo/Changan.png" alt="Changan"></div>
-                <div class="login-item" style="--i: 4;"><img src="../img/customer_logo/Kn.webp" alt="KN"></div>
-                <div class="login-item" style="--i: 5;"><img src="../img/customer_logo/Honda.png" alt="Honda"></div>
-                <div class="login-item" style="--i: 6;"><img src="../img/customer_logo/Alpla.png" alt="Alpla"></div>
-                <div class="login-item" style="--i: 7;"><img src="../img/customer_logo/BROSE_Excellence.png" alt="Brose"></div>
-                <div class="login-item" style="--i: 8;"><img src="../img/customer_logo/nhk.webp" alt="NHK"></div>
-                <div class="login-item" style="--i: 9;"><img src="../img/customer_logo/siamgoshi.jpg" alt="Siam Goshi"></div>
-                <div class="login-item" style="--i: 10;"><img src="../img/customer_logo/dn.png" alt="DN"></div>
-                <div class="login-item" style="--i: 11;"><img src="../img/customer_logo/lat.png" alt="LAT"></div>
-                <div class="login-item" style="--i: 12;"><img src="../img/customer_logo/mitsuboshi.png" alt="Mitsuboshi"></div>
+                <?php for ($i = 1; $i <= 12; $i++): ?>
+                <div class="login-item" style="--i: <?php echo $i; ?>;">
+                    <div style="width: 100%; height: 100%; background: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #94a3b8; font-size: 11px; text-align: center; padding: 8px;">
+                        Partner Logo<br><span style="font-size: 9px; opacity: 0.7;">Add from Admin</span>
+                    </div>
+                </div>
+                <?php endfor; ?>
             </div>
             <?php endif; ?>
         </section>
