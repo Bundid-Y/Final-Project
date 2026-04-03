@@ -700,19 +700,17 @@ if ($ext['tnb_pending'] > 0) {
 </div>
 <div class="card">
     <div class="card-h"><h2><i class="fas fa-truck"></i> All TNB Requests</h2><a href="<?php echo h(project_url('tnb/main/quotation.php'));?>" class="tb-btn primary" style="font-size:11px;padding:6px 12px"><i class="fas fa-plus"></i> New</a></div>
-    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Number</th><th>Customer</th><th>Service</th><th>Route</th><th>Price</th><th>Tracking</th><th>Status</th><th>Date</th></tr></thead><tbody>
+    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Number</th><th>Customer</th><th>Service</th><th>Route</th><th>Status</th><th>Date</th></tr></thead><tbody>
     <?php
     $tAll = $pdo->prepare('SELECT * FROM tnb_quotations ORDER BY created_at DESC LIMIT 50');
     $tAll->execute();
     $tList = $tAll->fetchAll();
-    if($tList===[]):?><tr class="empty"><td colspan="8">No TNB requests found</td></tr>
+    if($tList===[]):?><tr class="empty"><td colspan="6">No TNB requests found</td></tr>
     <?php else: foreach($tList as $q):?><tr>
         <td style="font-weight:600;font-size:12px"><?php echo h((string)$q['request_number']);?></td>
         <td style="font-size:12px"><?php echo h($q['first_name'].' '.$q['last_name']);?></td>
         <td style="font-size:12px"><?php echo h((string)$q['service_type']);?></td>
         <td style="font-size:12px"><?php echo h((string)($q['route']??'-'));?></td>
-        <td style="font-size:12px"><?php echo $q['quoted_price']!==null?h(number_format((float)$q['quoted_price'],2)).' ฿':'<span style="color:var(--muted)">-</span>';?></td>
-        <td style="font-size:12px"><?php echo h((string)($q['tracking_number']??'-'));?></td>
         <td><?php echo admin_status_badge((string)$q['status']);?></td>
         <td style="font-size:12px;white-space:nowrap"><?php echo h(date('d/m/Y H:i',strtotime((string)$q['created_at'])));?></td>
     </tr><?php endforeach; endif;?>
@@ -778,15 +776,14 @@ $distinctActions = get_distinct_actions($pdo);
             <?php endif;?>
         </div>
     </div>
-    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Type</th><th>Title</th><th>Message</th><th>User</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Title</th><th>Message</th><th>User</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead><tbody>
     <?php
     $nSql = 'SELECT n.*, u.username FROM notifications n LEFT JOIN users u ON u.id = n.user_id' . ($filterCompanyId !== null ? ' WHERE n.company_id = :cid' : '') . ' ORDER BY n.created_at DESC LIMIT 50';
     $nStmt = $pdo->prepare($nSql);
     $nStmt->execute($filterCompanyId !== null ? [':cid' => $filterCompanyId] : []);
     $nList = $nStmt->fetchAll();
-    if($nList===[]):?><tr class="empty"><td colspan="7">No notifications found</td></tr>
+    if($nList===[]):?><tr class="empty"><td colspan="6">No notifications found</td></tr>
     <?php else: foreach($nList as $n):?><tr style="<?php echo !$n['is_read']?'background:#f0f9ff':'';?>">
-        <td><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:<?php echo match((string)($n['type']??'info')){'success'=>'var(--success)','warning'=>'var(--warning)','error'=>'var(--danger)',default=>'var(--info)'};?>"></span></td>
         <td style="font-size:12px;font-weight:600"><?php echo h((string)$n['title']);?></td>
         <td style="font-size:12px;color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><?php echo h((string)$n['message']);?></td>
         <td style="font-size:12px"><?php echo h((string)($n['username']??'-'));?></td>
