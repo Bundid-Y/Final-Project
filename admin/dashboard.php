@@ -452,13 +452,12 @@ textarea.fm-input{resize:vertical;min-height:80px}
     <div>
         <div class="card">
             <div class="card-h"><h2><i class="fas fa-box"></i> Recent KOCH Quotations</h2><a href="?section=koch_quotations" class="link">View All &rarr;</a></div>
-            <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Number</th><th>Customer</th><th>Product</th><th>Price</th><th>Status</th></tr></thead><tbody>
-            <?php if($recentKoch===[]):?><tr class="empty"><td colspan="5">No quotations yet</td></tr>
+            <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Number</th><th>Customer</th><th>Product</th><th>Status</th></tr></thead><tbody>
+            <?php if($recentKoch===[]):?><tr class="empty"><td colspan="4">No quotations yet</td></tr>
             <?php else: foreach($recentKoch as $q):?><tr>
                 <td style="font-weight:600;font-size:12px"><?php echo h((string)$q['quotation_number']);?></td>
                 <td style="font-size:12px"><?php echo h($q['first_name'].' '.$q['last_name']);?></td>
                 <td style="font-size:12px"><?php echo h((string)$q['product_type']);?></td>
-                <td style="font-size:12px"><?php echo $q['quoted_price']!==null?h(number_format((float)$q['quoted_price'],2)):'<span style="color:var(--muted)">-</span>';?></td>
                 <td><?php echo admin_status_badge((string)$q['status']);?></td>
             </tr><?php endforeach; endif;?>
             </tbody></table></div></div>
@@ -661,18 +660,17 @@ if ($ext['koch_pending'] > 0) {
 </div>
 <div class="card">
     <div class="card-h"><h2><i class="fas fa-box"></i> All KOCH Quotations</h2><a href="<?php echo h(project_url('koch/main/quotation.php'));?>" class="tb-btn primary" style="font-size:11px;padding:6px 12px"><i class="fas fa-plus"></i> New</a></div>
-    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Number</th><th>Customer</th><th>Product</th><th>Quantity</th><th>Price</th><th>Status</th><th>Date</th></tr></thead><tbody>
+    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Number</th><th>Customer</th><th>Product</th><th>Quantity</th><th>Status</th><th>Date</th></tr></thead><tbody>
     <?php
     $kAll = $pdo->prepare('SELECT * FROM koch_quotations ORDER BY created_at DESC LIMIT 50');
     $kAll->execute();
     $kList = $kAll->fetchAll();
-    if($kList===[]):?><tr class="empty"><td colspan="7">No KOCH quotations found</td></tr>
+    if($kList===[]):?><tr class="empty"><td colspan="6">No KOCH quotations found</td></tr>
     <?php else: foreach($kList as $q):?><tr>
         <td style="font-weight:600;font-size:12px"><?php echo h((string)$q['quotation_number']);?></td>
         <td style="font-size:12px"><?php echo h($q['first_name'].' '.$q['last_name']);?></td>
         <td style="font-size:12px"><?php echo h((string)$q['product_type']);?></td>
         <td style="font-size:12px"><?php echo h((string)($q['quantity']??'-'));?></td>
-        <td style="font-size:12px"><?php echo $q['quoted_price']!==null?h(number_format((float)$q['quoted_price'],2)).' ฿':'<span style="color:var(--muted)">-</span>';?></td>
         <td><?php echo admin_status_badge((string)$q['status']);?></td>
         <td style="font-size:12px;white-space:nowrap"><?php echo h(date('d/m/Y H:i',strtotime((string)$q['created_at'])));?></td>
     </tr><?php endforeach; endif;?>
@@ -745,14 +743,12 @@ $distinctActions = get_distinct_actions($pdo);
 </div>
 <div class="card">
     <div class="card-h"><h2><i class="fas fa-history"></i> Activity Logs</h2><span style="font-size:12px;color:var(--muted)"><?php echo number_format($actResult['total']);?> records</span></div>
-    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Date</th><th>User</th><th>Company</th><th>Table</th><th>Record</th><th>Details</th></tr></thead><tbody>
-    <?php if($actResult['data']===[]):?><tr class="empty"><td colspan="6">No activity logs found</td></tr>
+    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Date</th><th>User</th><th>Company</th><th>Details</th></tr></thead><tbody>
+    <?php if($actResult['data']===[]):?><tr class="empty"><td colspan="4">No activity logs found</td></tr>
     <?php else: foreach($actResult['data'] as $a):?><tr>
         <td style="font-size:12px;white-space:nowrap"><?php echo h(date('d/m/Y H:i',strtotime((string)$a['created_at'])));?></td>
         <td style="font-size:12px;font-weight:600"><?php echo h((string)($a['username']??'System'));?></td>
         <td style="font-size:12px"><?php echo h((string)($a['company_code']??'-'));?></td>
-        <td style="font-size:12px;color:var(--muted)"><?php echo h((string)($a['table_name']??'-'));?></td>
-        <td style="font-size:12px"><?php echo h((string)($a['record_id']??'-'));?></td>
         <td style="font-size:12px;color:var(--primary)"><?php echo h(admin_action_label((string)$a['action']));?></td>
     </tr><?php endforeach; endif;?>
     </tbody></table></div></div>
@@ -831,7 +827,7 @@ $distinctActions = get_distinct_actions($pdo);
         <td style="font-size:12px;text-align:center"><?php echo (int)$s['slide_order'];?></td>
         <td><?php echo admin_status_badge($s['is_active']?'active':'inactive');?></td>
         <td><div class="act-btns">
-            <button class="btn btn-xs btn-ghost" onclick="openEditSlider(<?php echo (int)$s['id'];?>,'<?php echo h(addslashes((string)$s['title']));?>','<?php echo h(addslashes((string)($s['subtitle']??'')));?>','<?php echo h(addslashes((string)($s['image_url']??'')));?>','<?php echo h(addslashes((string)($s['button_text']??'')));?>','<?php echo h(addslashes((string)($s['button_url']??'')));?>',<?php echo (int)($s['company_id']??0);?>,<?php echo (int)$s['slide_order'];?>,<?php echo $s['is_active']?1:0;?>)"><i class="fas fa-edit"></i></button>
+            <button class="btn btn-xs btn-ghost" onclick="openEditSlider(<?php echo (int)$s['id'];?>,'<?php echo h(addslashes((string)$s['title']));?>','<?php echo h(addslashes((string)($s['subtitle']??'')));?>',<?php echo (int)($s['company_id']??0);?>,<?php echo $s['is_active']?1:0;?>)"><i class="fas fa-edit"></i></button>
             <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete this slider?')"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>"><input type="hidden" name="entity" value="slider"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?php echo (int)$s['id'];?>"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=sliders'));?>"><button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></button></form>
         </div></td>
     </tr><?php endforeach; endif;?>
@@ -843,18 +839,15 @@ $distinctActions = get_distinct_actions($pdo);
 <?php $allPartners = get_all_partners($pdo, $filterCompanyId); ?>
 <div class="card">
     <div class="card-h"><h2><i class="fas fa-handshake"></i> Partners</h2><div style="display:flex;gap:8px;align-items:center"><span style="font-size:12px;color:var(--muted)"><?php echo count($allPartners);?> partners</span><button class="btn btn-sm btn-primary" onclick="openModal('partnerModal')"><i class="fas fa-plus"></i> Add Partner</button></div></div>
-    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>ID</th><th>Logo</th><th>Name</th><th>Website</th><th>Company</th><th>Order</th><th>Status</th><th>Actions</th></tr></thead><tbody>
-    <?php if($allPartners===[]):?><tr class="empty"><td colspan="8">No partners found</td></tr>
+    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Logo</th><th>Name</th><th>Company</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+    <?php if($allPartners===[]):?><tr class="empty"><td colspan="5">No partners found</td></tr>
     <?php else: foreach($allPartners as $p):?><tr>
-        <td style="font-size:12px;font-weight:600">#<?php echo (int)$p['id'];?></td>
         <td><?php if($p['logo_url']):?><img src="<?php echo h(resolve_image_url((string)$p['logo_url']));?>" style="width:40px;height:40px;object-fit:contain;border-radius:6px;background:#f8fafc;padding:4px" alt=""><?php else:?><span style="color:var(--muted);font-size:11px">-</span><?php endif;?></td>
         <td style="font-size:12px;font-weight:600"><?php echo h((string)$p['name']);?></td>
-        <td style="font-size:11px;color:var(--muted)"><?php echo $p['website_url']?'<a href="'.h((string)$p['website_url']).'" target="_blank" style="color:var(--primary)">Visit</a>':'-';?></td>
         <td style="font-size:12px"><?php echo h((string)($p['company_name']??'-'));?></td>
-        <td style="font-size:12px;text-align:center"><?php echo (int)$p['partner_order'];?></td>
         <td><?php echo admin_status_badge($p['is_active']?'active':'inactive');?></td>
         <td><div class="act-btns">
-            <button class="btn btn-xs btn-ghost" onclick="openEditPartner(<?php echo (int)$p['id'];?>,'<?php echo h(addslashes((string)$p['name']));?>','<?php echo h(addslashes((string)($p['logo_url']??'')));?>','<?php echo h(addslashes((string)($p['website_url']??'')));?>',<?php echo (int)($p['company_id']??0);?>,<?php echo (int)$p['partner_order'];?>,<?php echo $p['is_active']?1:0;?>)"><i class="fas fa-edit"></i></button>
+            <button class="btn btn-xs btn-ghost" onclick="openEditPartner(<?php echo (int)$p['id'];?>,'<?php echo h(addslashes((string)$p['name']));?>',<?php echo (int)($p['company_id']??0);?>,<?php echo $p['is_active']?1:0;?>)"><i class="fas fa-edit"></i></button>
             <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete?')"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>"><input type="hidden" name="entity" value="partner"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?php echo (int)$p['id'];?>"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=partners'));?>"><button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></button></form>
         </div></td>
     </tr><?php endforeach; endif;?>
@@ -866,17 +859,15 @@ $distinctActions = get_distinct_actions($pdo);
 <?php $allProducts = get_all_products_admin($pdo, $filterCompanyId); ?>
 <div class="card">
     <div class="card-h"><h2><i class="fas fa-boxes-stacked"></i> Products (KOCH)</h2><div style="display:flex;gap:8px;align-items:center"><span style="font-size:12px;color:var(--muted)"><?php echo count($allProducts);?> products</span><button class="btn btn-sm btn-primary" onclick="openModal('productModal')"><i class="fas fa-plus"></i> Add Product</button></div></div>
-    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>ID</th><th>Image</th><th>Name</th><th>Category</th><th>Order</th><th>Status</th><th>Actions</th></tr></thead><tbody>
-    <?php if($allProducts===[]):?><tr class="empty"><td colspan="7">No products found</td></tr>
+    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Image</th><th>Name</th><th>Category</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+    <?php if($allProducts===[]):?><tr class="empty"><td colspan="5">No products found</td></tr>
     <?php else: foreach($allProducts as $p):?><tr>
-        <td style="font-size:12px;font-weight:600">#<?php echo (int)$p['id'];?></td>
         <td><?php if($p['image_url']):?><img src="<?php echo h(resolve_image_url((string)$p['image_url']));?>" style="width:40px;height:40px;object-fit:cover;border-radius:6px" alt=""><?php else:?><span style="color:var(--muted);font-size:11px">-</span><?php endif;?></td>
         <td style="font-size:12px;font-weight:600"><?php echo h((string)$p['name']);?></td>
         <td style="font-size:12px"><?php echo h(ucfirst((string)($p['category']??'')));?></td>
-        <td style="font-size:12px;text-align:center"><?php echo (int)$p['display_order'];?></td>
         <td><?php echo admin_status_badge($p['is_active']?'active':'inactive');?></td>
         <td><div class="act-btns">
-            <button class="btn btn-xs btn-ghost" onclick="openEditProduct(<?php echo (int)$p['id'];?>,'<?php echo h(addslashes((string)$p['name']));?>','<?php echo h(addslashes((string)($p['description']??'')));?>','<?php echo h(addslashes((string)($p['image_url']??'')));?>','<?php echo h(addslashes((string)($p['category']??'')));?>',<?php echo (int)$p['display_order'];?>,<?php echo $p['is_active']?1:0;?>)"><i class="fas fa-edit"></i></button>
+            <button class="btn btn-xs btn-ghost" onclick="openEditProduct(<?php echo (int)$p['id'];?>,'<?php echo h(addslashes((string)$p['name']));?>','<?php echo h(addslashes((string)($p['description']??'')));?>','<?php echo h(addslashes((string)($p['category']??'')));?>',<?php echo $p['is_active']?1:0;?>)"><i class="fas fa-edit"></i></button>
             <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete?')"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>"><input type="hidden" name="entity" value="product"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?php echo (int)$p['id'];?>"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=products'));?>"><button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></button></form>
         </div></td>
     </tr><?php endforeach; endif;?>
@@ -888,18 +879,14 @@ $distinctActions = get_distinct_actions($pdo);
 <?php $allFeaturedProducts = get_all_featured_products_admin($pdo, $filterCompanyId); ?>
 <div class="card">
     <div class="card-h"><h2><i class="fas fa-star"></i> Featured Products</h2><div style="display:flex;gap:8px;align-items:center"><span style="font-size:12px;color:var(--muted)"><?php echo count($allFeaturedProducts);?> items</span><button class="btn btn-sm btn-primary" onclick="openModal('featuredProductModal')"><i class="fas fa-plus"></i> Add Featured Product</button></div></div>
-    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>ID</th><th>Company</th><th>Name</th><th>Image</th><th>Website</th><th>Order</th><th>Status</th><th>Actions</th></tr></thead><tbody>
-    <?php if($allFeaturedProducts===[]):?><tr class="empty"><td colspan="8">No featured products found</td></tr>
+    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Image</th><th>Name</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+    <?php if($allFeaturedProducts===[]):?><tr class="empty"><td colspan="4">No featured products found</td></tr>
     <?php else: foreach($allFeaturedProducts as $fp):?><tr>
-        <td style="font-size:12px;font-weight:600">#<?php echo (int)$fp['id'];?></td>
-        <td style="font-size:12px"><?php echo h((string)($fp['company_name']??'Unknown'));?></td>
-        <td style="font-size:12px;font-weight:600"><?php echo h((string)$fp['name']);?></td>
         <td><?php if($fp['image_url']):?><img src="<?php echo h(resolve_image_url((string)$fp['image_url']));?>" style="width:40px;height:40px;object-fit:cover;border-radius:6px" alt=""><?php else:?><span style="color:var(--muted);font-size:11px">-</span><?php endif;?></td>
-        <td style="font-size:12px"><?php if($fp['website_url']):?><a href="<?php echo h((string)$fp['website_url']);?>" target="_blank" style="color:var(--primary)">🔗</a><?php else:?>-<?php endif;?></td>
-        <td style="font-size:12px;text-align:center"><?php echo (int)$fp['display_order'];?></td>
+        <td style="font-size:12px;font-weight:600"><?php echo h((string)$fp['name']);?></td>
         <td><?php echo admin_status_badge($fp['is_active']?'active':'inactive');?></td>
         <td><div class="act-btns">
-            <button class="btn btn-xs btn-ghost" onclick="openEditFeaturedProduct(<?php echo (int)$fp['id'];?>,'<?php echo h(addslashes((string)$fp['name']));?>','<?php echo h(addslashes((string)($fp['description']??'')));?>','<?php echo h(addslashes((string)($fp['image_url']??'')));?>','<?php echo h(addslashes((string)($fp['website_url']??'')));?>',<?php echo (int)$fp['company_id'];?>,<?php echo (int)$fp['display_order'];?>,<?php echo $fp['is_active']?1:0;?>)"><i class="fas fa-edit"></i></button>
+            <button class="btn btn-xs btn-ghost" onclick="openEditFeaturedProduct(<?php echo (int)$fp['id'];?>,'<?php echo h(addslashes((string)$fp['name']));?>','<?php echo h(addslashes((string)($fp['description']??'')));?>',<?php echo $fp['is_active']?1:0;?>)"><i class="fas fa-edit"></i></button>
             <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete?')"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>"><input type="hidden" name="entity" value="featured_product"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?php echo (int)$fp['id'];?>"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=featured_products'));?>"><button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></button></form>
         </div></td>
     </tr><?php endforeach; endif;?>
@@ -929,7 +916,7 @@ $allTrucks = get_all_truck_types_admin($pdo, $filterCompanyId);
         <td><?php echo admin_status_badge($t['is_active']?'active':'inactive');?></td>
         <td><span style="font-size:11px;color:var(--muted)">Will show on TNB index page</span></td>
         <td><div class="act-btns">
-            <button class="btn btn-xs btn-ghost" onclick="openEditTruck(<?php echo (int)$t['id'];?>,'<?php echo h(addslashes((string)$t['name']));?>','<?php echo h(addslashes((string)($t['description']??'')));?>','<?php echo h(addslashes((string)($t['image_url']??'')));?>','<?php echo h(addslashes((string)($t['capacity']??'')));?>',<?php echo (int)$t['display_order'];?>,<?php echo $t['is_active']?1:0;?>)"><i class="fas fa-edit"></i></button>
+            <button class="btn btn-xs btn-ghost" onclick="openEditTruck(<?php echo (int)$t['id'];?>,'<?php echo h(addslashes((string)$t['name']));?>','<?php echo h(addslashes((string)($t['description']??'')));?>','<?php echo h(addslashes((string)($t['capacity']??'')));?>',<?php echo $t['is_active']?1:0;?>)"><i class="fas fa-edit"></i></button>
             <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete?')"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>"><input type="hidden" name="entity" value="truck_type"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?php echo (int)$t['id'];?>"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=truck_types_index'));?>"><button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></button></form>
         </div></td>
     </tr><?php endforeach; endif;?>
@@ -958,7 +945,7 @@ $allTrucks = get_all_truck_types_admin($pdo, $filterCompanyId);
         <td style="font-size:12px;text-align:center"><?php echo (int)$t['display_order'];?></td>
         <td><?php echo admin_status_badge($t['is_active']?'active':'inactive');?></td>
         <td><div class="act-btns">
-            <button class="btn btn-xs btn-ghost" onclick="openEditTruck(<?php echo (int)$t['id'];?>,'<?php echo h(addslashes((string)$t['name']));?>','<?php echo h(addslashes((string)($t['description']??'')));?>','<?php echo h(addslashes((string)($t['image_url']??'')));?>','<?php echo h(addslashes((string)($t['capacity']??'')));?>',<?php echo (int)$t['display_order'];?>,<?php echo $t['is_active']?1:0;?>)"><i class="fas fa-edit"></i></button>
+            <button class="btn btn-xs btn-ghost" onclick="openEditTruck(<?php echo (int)$t['id'];?>,'<?php echo h(addslashes((string)$t['name']));?>','<?php echo h(addslashes((string)($t['description']??'')));?>','<?php echo h(addslashes((string)($t['capacity']??'')));?>',<?php echo $t['is_active']?1:0;?>)"><i class="fas fa-edit"></i></button>
             <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete?')"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>"><input type="hidden" name="entity" value="truck_type"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?php echo (int)$t['id'];?>"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=truck_types'));?>"><button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></button></form>
         </div></td>
     </tr><?php endforeach; endif;?>
@@ -1108,10 +1095,9 @@ foreach($stmt->fetchAll() as $row) {
 <?php $allContacts = get_all_contact_messages($pdo, $filterCompanyId); ?>
 <div class="card">
     <div class="card-h"><h2><i class="fas fa-envelope-open-text"></i> Contact Messages</h2><span style="font-size:12px;color:var(--muted)"><?php echo count($allContacts);?> messages</span></div>
-    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Subject</th><th>Message</th><th>Company</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead><tbody>
-    <?php if($allContacts===[]):?><tr class="empty"><td colspan="9">No contact messages found</td></tr>
+    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Name</th><th>Email</th><th>Subject</th><th>Message</th><th>Company</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead><tbody>
+    <?php if($allContacts===[]):?><tr class="empty"><td colspan="8">No contact messages found</td></tr>
     <?php else: foreach($allContacts as $cm):?><tr>
-        <td style="font-size:12px;font-weight:600">#<?php echo (int)$cm['id'];?></td>
         <td style="font-size:12px;font-weight:600"><?php echo h((string)$cm['name']);?></td>
         <td style="font-size:12px"><?php echo h((string)$cm['email']);?></td>
         <td style="font-size:12px;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><?php echo h((string)($cm['subject']??'-'));?></td>
@@ -1384,15 +1370,9 @@ $expFilters = [
         <div class="modal-body">
             <div class="fm-group"><label>Title<span>*</span></label><input type="text" name="title" id="sm_name" class="fm-input" required maxlength="255"></div>
             <div class="fm-group"><label>Subtitle</label><input type="text" name="subtitle" id="sm_subtitle" class="fm-input" maxlength="500"></div>
-            <div class="fm-group"><label>Image URL<span>*</span></label><input type="url" name="image_url" id="sm_image" class="fm-input" placeholder="https://..."></div>
-            <div class="fm-group"><label>OR Upload Image</label><input type="file" name="image_file" id="sm_file" class="fm-input" accept="image/jpeg,image/png,image/webp"><small style="color:var(--muted);font-size:11px">JPG, PNG, WEBP up to 10MB. Will override URL if provided.</small></div>
-            <div class="fm-row">
-                <div class="fm-group"><label>Button Text</label><input type="text" name="button_text" id="sm_btn_text" class="fm-input" maxlength="100"></div>
-                <div class="fm-group"><label>Button URL</label><input type="text" name="button_url" id="sm_btn_url" class="fm-input" maxlength="500"></div>
-            </div>
-            <div class="fm-row">
+            <div class="fm-group"><label>OR Upload Image</label><input type="file" name="image_file" id="sm_file" class="fm-input" accept="image/jpeg,image/png,image/webp"><small style="color:var(--muted);font-size:11px">JPG, PNG, WEBP up to 10MB.</small></div>
+            <div class="fm-group">
                 <div class="fm-group"><label>Company<span>*</span></label><select name="company_id" id="sm_company" class="fm-input" required><option value="<?php echo $kochId;?>">KOCH</option><option value="<?php echo $tnbId;?>">TNB</option></select></div>
-                <div class="fm-group"><label>Display Order</label><input type="number" name="slide_order" id="sm_order" class="fm-input" value="0" min="0"></div>
             </div>
             <div class="fm-check"><input type="checkbox" name="is_active" id="sm_active" value="1" checked><label for="sm_active">Active</label></div>
         </div>
@@ -1412,12 +1392,9 @@ $expFilters = [
         <input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=partners'));?>">
         <div class="modal-body">
             <div class="fm-group"><label>Partner Name<span>*</span></label><input type="text" name="name" id="pm_name" class="fm-input" required maxlength="255"></div>
-            <div class="fm-group"><label>Logo URL</label><input type="url" name="logo_url" id="pm_logo" class="fm-input" placeholder="https://..."></div>
-            <div class="fm-group"><label>OR Upload Logo</label><input type="file" name="logo_file" id="pm_file" class="fm-input" accept="image/jpeg,image/png,image/webp"><small style="color:var(--muted);font-size:11px">JPG, PNG, WEBP up to 10MB. Will override URL if provided.</small></div>
-            <div class="fm-group"><label>Website URL</label><input type="url" name="website_url" id="pm_website" class="fm-input" placeholder="https://..."></div>
-            <div class="fm-row">
+            <div class="fm-group"><label>OR Upload Logo</label><input type="file" name="logo_file" id="pm_file" class="fm-input" accept="image/jpeg,image/png,image/webp"><small style="color:var(--muted);font-size:11px">JPG, PNG, WEBP up to 10MB.</small></div>
+            <div class="fm-group">
                 <div class="fm-group"><label>Company<span>*</span></label><select name="company_id" id="pm_company" class="fm-input" required><option value="<?php echo $kochId;?>">KOCH</option><option value="<?php echo $tnbId;?>">TNB</option></select></div>
-                <div class="fm-group"><label>Display Order</label><input type="number" name="partner_order" id="pm_order" class="fm-input" value="0" min="0"></div>
             </div>
             <div class="fm-check"><input type="checkbox" name="is_active" id="pm_active" value="1" checked><label for="pm_active">Active</label></div>
         </div>
@@ -1438,10 +1415,8 @@ $expFilters = [
         <div class="modal-body">
             <div class="fm-group"><label>Product Name<span>*</span></label><input type="text" name="name" id="prd_name" class="fm-input" required maxlength="255"></div>
             <div class="fm-group"><label>Description</label><textarea name="description" id="prd_desc" class="fm-input"></textarea></div>
-            <div class="fm-group"><label>Image URL</label><input type="url" name="image_url" id="prd_image" class="fm-input" placeholder="https://..."></div>
-            <div class="fm-group"><label>OR Upload Image</label><input type="file" name="image_file" id="prd_file" class="fm-input" accept="image/jpeg,image/png,image/webp"><small style="color:var(--muted);font-size:11px">JPG, PNG, WEBP up to 10MB. Will override URL if provided.</small></div>
+            <div class="fm-group"><label>OR Upload Image</label><input type="file" name="image_file" id="prd_file" class="fm-input" accept="image/jpeg,image/png,image/webp"><small style="color:var(--muted);font-size:11px">JPG, PNG, WEBP up to 10MB.</small></div>
             <div class="fm-group"><label>Category<span>*</span></label><select name="category" id="prd_cat" class="fm-input" required><option value="">Select Category</option><option value="mail">กล่องกระดาษ</option><option value="corrugated">บรรจุภัณฑ์ไม้</option><option value="diecut">บรรจุภัณฑ์พลาสติก</option><option value="accessory">บรรจุภัณฑ์เหล็ก</option></select></div>
-            <div class="fm-group"><label>Display Order</label><input type="number" name="display_order" id="prd_order" class="fm-input" value="0" min="0"></div>
             <div class="fm-check"><input type="checkbox" name="is_active" id="prd_active" value="1" checked><label for="prd_active">Active</label></div>
         </div>
         <div class="modal-foot"><button type="button" class="btn btn-ghost" onclick="closeModal('productModal')">Cancel</button><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save</button></div>
@@ -1461,11 +1436,9 @@ $expFilters = [
         <div class="modal-body">
             <div class="fm-group"><label>Truck Name<span>*</span></label><input type="text" name="name" id="tt_name" class="fm-input" required maxlength="255"></div>
             <div class="fm-group"><label>Description</label><textarea name="description" id="tt_desc" class="fm-input"></textarea></div>
-            <div class="fm-group"><label>Image URL</label><input type="url" name="image_url" id="tt_image" class="fm-input" placeholder="https://..."></div>
-            <div class="fm-group"><label>OR Upload Image</label><input type="file" name="image_file" id="tt_file" class="fm-input" accept="image/jpeg,image/png,image/webp"><small style="color:var(--muted);font-size:11px">JPG, PNG, WEBP up to 10MB. Will override URL if provided.</small></div>
-            <div class="fm-row">
+            <div class="fm-group"><label>OR Upload Image</label><input type="file" name="image_file" id="tt_file" class="fm-input" accept="image/jpeg,image/png,image/webp"><small style="color:var(--muted);font-size:11px">JPG, PNG, WEBP up to 10MB.</small></div>
+            <div class="fm-group">
                 <div class="fm-group"><label>Capacity</label><input type="text" name="capacity" id="tt_cap" class="fm-input" maxlength="100" placeholder="e.g. 10 tons"></div>
-                <div class="fm-group"><label>Display Order</label><input type="number" name="display_order" id="tt_order" class="fm-input" value="0" min="0"></div>
             </div>
             <div class="fm-check"><input type="checkbox" name="is_active" id="tt_active" value="1" checked><label for="tt_active">Active</label></div>
         </div>
@@ -1484,13 +1457,9 @@ $expFilters = [
         <input type="hidden" name="id" id="fp_id" value="0">
         <input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=featured_products'));?>">
         <div class="modal-body">
-            <div class="fm-group"><label>Company<span>*</span></label><select name="company_id" id="fp_company" class="fm-input" required><option value="">Select Company</option><option value="1">KOCH</option><option value="2">TNB</option></select></div>
             <div class="fm-group"><label>Product Name<span>*</span></label><input type="text" name="name" id="fp_name" class="fm-input" required maxlength="255"></div>
             <div class="fm-group"><label>Description</label><textarea name="description" id="fp_desc" class="fm-input"></textarea></div>
-            <div class="fm-group"><label>Image URL</label><input type="url" name="image_url" id="fp_image" class="fm-input" placeholder="https://..."></div>
-            <div class="fm-group"><label>OR Upload Image</label><input type="file" name="image_file" id="fp_file" class="fm-input" accept="image/jpeg,image/png,image/webp"><small style="color:var(--muted);font-size:11px">JPG, PNG, WEBP up to 10MB. Will override URL if provided.</small></div>
-            <div class="fm-group"><label>Website URL</label><input type="url" name="website_url" id="fp_website" class="fm-input" placeholder="https://..."></div>
-            <div class="fm-group"><label>Display Order</label><input type="number" name="display_order" id="fp_order" class="fm-input" value="0" min="0"></div>
+            <div class="fm-group"><label>OR Upload Image</label><input type="file" name="image_file" id="fp_file" class="fm-input" accept="image/jpeg,image/png,image/webp"><small style="color:var(--muted);font-size:11px">JPG, PNG, WEBP up to 10MB.</small></div>
             <div class="fm-check"><input type="checkbox" name="is_active" id="fp_active" value="1" checked><label for="fp_active">Active</label></div>
         </div>
         <div class="modal-foot"><button type="button" class="btn btn-ghost" onclick="closeModal('featuredProductModal')">Cancel</button><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save</button></div>
@@ -1569,57 +1538,44 @@ function openUserModal(id,name,role,status){
     openModal('userModal');
 }
 
-function openEditSlider(id,title,subtitle,image,btnText,btnUrl,companyId,order,active){
+function openEditSlider(id,title,subtitle,companyId,active){
     document.getElementById('sm_title').textContent='Edit Slider #'+id;
     document.getElementById('sm_action').value='update';
     document.getElementById('sm_id').value=id;
     document.getElementById('sm_name').value=title;
     document.getElementById('sm_subtitle').value=subtitle;
-    document.getElementById('sm_image').value=image;
-    document.getElementById('sm_btn_text').value=btnText;
-    document.getElementById('sm_btn_url').value=btnUrl;
     document.getElementById('sm_company').value=companyId;
-    document.getElementById('sm_order').value=order;
     document.getElementById('sm_active').checked=!!active;
     openModal('sliderModal');
 }
 
-function openEditPartner(id,name,logo,website,companyId,order,active){
+function openEditPartner(id,name,companyId,active){
     document.getElementById('pm_title').textContent='Edit Partner #'+id;
     document.getElementById('pm_action').value='update';
     document.getElementById('pm_id').value=id;
     document.getElementById('pm_name').value=name;
-    document.getElementById('pm_logo').value=logo;
-    document.getElementById('pm_website').value=website;
     document.getElementById('pm_company').value=companyId;
-    document.getElementById('pm_order').value=order;
     document.getElementById('pm_active').checked=!!active;
     openModal('partnerModal');
 }
 
-function openEditProduct(id,name,desc,image,category,order,active){
+function openEditProduct(id,name,desc,category,active){
     document.getElementById('prd_title').textContent='Edit Product #'+id;
     document.getElementById('prd_action').value='update';
     document.getElementById('prd_id').value=id;
     document.getElementById('prd_name').value=name;
     document.getElementById('prd_desc').value=desc;
-    document.getElementById('prd_image').value=image;
     document.getElementById('prd_cat').value=category;
-    document.getElementById('prd_order').value=order;
     document.getElementById('prd_active').checked=!!active;
     openModal('productModal');
 }
 
-function openEditFeaturedProduct(id,name,desc,image,website,company,order,active){
+function openEditFeaturedProduct(id,name,desc,active){
     document.getElementById('fp_title').textContent='Edit Featured Product #'+id;
     document.getElementById('fp_action').value='update';
     document.getElementById('fp_id').value=id;
     document.getElementById('fp_name').value=name;
     document.getElementById('fp_desc').value=desc;
-    document.getElementById('fp_image').value=image;
-    document.getElementById('fp_website').value=website;
-    document.getElementById('fp_company').value=company;
-    document.getElementById('fp_order').value=order;
     document.getElementById('fp_active').checked=!!active;
     openModal('featuredProductModal');
 }
@@ -1774,15 +1730,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-function openEditTruck(id,name,desc,image,capacity,order,active){
+function openEditTruck(id,name,desc,capacity,active){
     document.getElementById('tt_title').textContent='Edit Truck Type #'+id;
     document.getElementById('tt_action').value='update';
     document.getElementById('tt_id').value=id;
     document.getElementById('tt_name').value=name;
     document.getElementById('tt_desc').value=desc;
-    document.getElementById('tt_image').value=image;
     document.getElementById('tt_cap').value=capacity;
-    document.getElementById('tt_order').value=order;
     document.getElementById('tt_active').checked=!!active;
     openModal('truckModal');
 }
