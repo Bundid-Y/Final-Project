@@ -815,15 +815,14 @@ $distinctActions = get_distinct_actions($pdo);
 <?php $allSliders = get_all_sliders($pdo, $filterCompanyId); ?>
 <div class="card">
     <div class="card-h"><h2><i class="fas fa-images"></i> Slider Contents</h2><div style="display:flex;gap:8px;align-items:center"><span style="font-size:12px;color:var(--muted)"><?php echo count($allSliders);?> items</span><button class="btn btn-sm btn-primary" onclick="openModal('sliderModal')"><i class="fas fa-plus"></i> Add Slider</button></div></div>
-    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>ID</th><th>Image</th><th>Title</th><th>Subtitle</th><th>Company</th><th>Order</th><th>Status</th><th>Actions</th></tr></thead><tbody>
-    <?php if($allSliders===[]):?><tr class="empty"><td colspan="8">No sliders found</td></tr>
+    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>ID</th><th>Image</th><th>Title</th><th>Subtitle</th><th>Company</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+    <?php if($allSliders===[]):?><tr class="empty"><td colspan="7">No sliders found</td></tr>
     <?php else: foreach($allSliders as $s):?><tr>
         <td style="font-size:12px;font-weight:600">#<?php echo (int)$s['id'];?></td>
         <td><?php if($s['image_url']):?><img src="<?php echo h(resolve_image_url((string)$s['image_url']));?>" style="width:60px;height:35px;object-fit:cover;border-radius:6px" alt=""><?php else:?><span style="color:var(--muted);font-size:11px">No image</span><?php endif;?></td>
         <td style="font-size:12px;font-weight:600"><?php echo h((string)$s['title']);?></td>
         <td style="font-size:12px;color:var(--muted);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><?php echo h((string)($s['subtitle']??''));?></td>
         <td style="font-size:12px"><?php echo h((string)($s['company_name']??'-'));?></td>
-        <td style="font-size:12px;text-align:center"><?php echo (int)$s['slide_order'];?></td>
         <td><?php echo admin_status_badge($s['is_active']?'active':'inactive');?></td>
         <td><div class="act-btns">
             <button class="btn btn-xs btn-ghost" onclick="openEditSlider(<?php echo (int)$s['id'];?>,'<?php echo h(addslashes((string)$s['title']));?>','<?php echo h(addslashes((string)($s['subtitle']??'')));?>',<?php echo (int)($s['company_id']??0);?>,<?php echo $s['is_active']?1:0;?>)"><i class="fas fa-edit"></i></button>
@@ -1127,19 +1126,6 @@ $expFilters = [
                 <div style="display:flex;justify-content:space-between;padding:12px;background:var(--bg);border-radius:10px"><span style="font-size:13px;color:var(--muted)">Session Lifetime</span><strong style="font-size:13px"><?php echo number_format(SESSION_LIFETIME/3600,1);?>h</strong></div>
                 <div style="display:flex;justify-content:space-between;padding:12px;background:var(--bg);border-radius:10px"><span style="font-size:13px;color:var(--muted)">Max Upload</span><strong style="font-size:13px"><?php echo number_format(UPLOAD_MAX_SIZE/1048576,0);?>MB</strong></div>
                 <div style="display:flex;justify-content:space-between;padding:12px;background:var(--bg);border-radius:10px"><span style="font-size:13px;color:var(--muted)">Debug Mode</span><strong style="font-size:13px"><?php echo APP_DEBUG?'ON':'OFF';?></strong></div>
-            </div>
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-h"><h2><i class="fas fa-link"></i> Quick Links</h2></div>
-        <div class="card-b">
-            <div style="display:grid;gap:10px">
-                <a href="<?php echo h(project_url('koch/main/index.php'));?>" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--bg);border-radius:10px;text-decoration:none;color:var(--text);font-size:13px;font-weight:600;transition:background .15s" onmouseover="this.style.background='#e2e8f0'" onmouseout="this.style.background='var(--bg)'"><i class="fas fa-globe" style="color:#ED2A2A"></i> KOCH Website</a>
-                <a href="<?php echo h(project_url('tnb/main/index.php'));?>" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--bg);border-radius:10px;text-decoration:none;color:var(--text);font-size:13px;font-weight:600;transition:background .15s" onmouseover="this.style.background='#e2e8f0'" onmouseout="this.style.background='var(--bg)'"><i class="fas fa-globe" style="color:#0d2d6b"></i> TNB Website</a>
-                <a href="<?php echo h(project_url('koch/main/user.php'));?>" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--bg);border-radius:10px;text-decoration:none;color:var(--text);font-size:13px;font-weight:600;transition:background .15s" onmouseover="this.style.background='#e2e8f0'" onmouseout="this.style.background='var(--bg)'"><i class="fas fa-user" style="color:#ED2A2A"></i> KOCH User Page</a>
-                <a href="<?php echo h(project_url('tnb/main/user.php'));?>" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--bg);border-radius:10px;text-decoration:none;color:var(--text);font-size:13px;font-weight:600;transition:background .15s" onmouseover="this.style.background='#e2e8f0'" onmouseout="this.style.background='var(--bg)'"><i class="fas fa-user" style="color:#0d2d6b"></i> TNB User Page</a>
-                <a href="<?php echo h(project_url('koch/main/quotation.php'));?>" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--bg);border-radius:10px;text-decoration:none;color:var(--text);font-size:13px;font-weight:600;transition:background .15s" onmouseover="this.style.background='#e2e8f0'" onmouseout="this.style.background='var(--bg)'"><i class="fas fa-box" style="color:#ED2A2A"></i> KOCH Quotation Form</a>
-                <a href="<?php echo h(project_url('tnb/main/quotation.php'));?>" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--bg);border-radius:10px;text-decoration:none;color:var(--text);font-size:13px;font-weight:600;transition:background .15s" onmouseover="this.style.background='#e2e8f0'" onmouseout="this.style.background='var(--bg)'"><i class="fas fa-truck" style="color:#0d2d6b"></i> TNB Quotation Form</a>
             </div>
         </div>
     </div>

@@ -16,7 +16,7 @@ function get_all_sliders(PDO $pdo, ?int $companyId = null): array
         $sql .= ' WHERE s.company_id = :cid';
         $params[':cid'] = $companyId;
     }
-    $sql .= ' ORDER BY s.company_id, s.slide_order ASC';
+    $sql .= ' ORDER BY s.company_id ASC';
     $stmt = $pdo->prepare($sql);
     $stmt->execute($params);
     return $stmt->fetchAll();
@@ -46,8 +46,8 @@ function create_slider(PDO $pdo, array $data, int $adminId, array $files = []): 
     }
 
     $stmt = $pdo->prepare(
-        'INSERT INTO slider_contents (company_id, title, subtitle, image_url, button_text, button_url, slide_order, is_active)
-         VALUES (:company_id, :title, :subtitle, :image_url, :button_text, :button_url, :slide_order, :is_active)'
+        'INSERT INTO slider_contents (company_id, title, subtitle, image_url, button_text, button_url, is_active)
+         VALUES (:company_id, :title, :subtitle, :image_url, :button_text, :button_url, :is_active)'
     );
     $stmt->execute([
         ':company_id'  => (int) $data['company_id'],
@@ -56,7 +56,6 @@ function create_slider(PDO $pdo, array $data, int $adminId, array $files = []): 
         ':image_url'   => $imageUrl,
         ':button_text' => sanitize_text((string) ($data['button_text'] ?? '')),
         ':button_url'  => sanitize_text((string) ($data['button_url'] ?? '')),
-        ':slide_order' => (int) ($data['slide_order'] ?? 0),
         ':is_active'   => !empty($data['is_active']) ? 1 : 0,
     ]);
     $id = (int) $pdo->lastInsertId();
@@ -83,7 +82,7 @@ function update_slider(PDO $pdo, int $id, array $data, int $adminId, array $file
     $stmt = $pdo->prepare(
         'UPDATE slider_contents SET company_id = :company_id, title = :title, subtitle = :subtitle,
          image_url = :image_url, button_text = :button_text, button_url = :button_url,
-         slide_order = :slide_order, is_active = :is_active WHERE id = :id'
+         is_active = :is_active WHERE id = :id'
     );
     $stmt->execute([
         ':company_id'  => (int) $data['company_id'],
@@ -92,7 +91,6 @@ function update_slider(PDO $pdo, int $id, array $data, int $adminId, array $file
         ':image_url'   => $imageUrl,
         ':button_text' => sanitize_text((string) ($data['button_text'] ?? '')),
         ':button_url'  => sanitize_text((string) ($data['button_url'] ?? '')),
-        ':slide_order' => (int) ($data['slide_order'] ?? 0),
         ':is_active'   => !empty($data['is_active']) ? 1 : 0,
         ':id'          => $id,
     ]);
