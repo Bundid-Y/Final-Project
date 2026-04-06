@@ -5,7 +5,6 @@ require_once __DIR__ . '/../../admin/includes/content.php';
 $pdo = Database::connection();
 $companyId = get_company_id_by_code($pdo, 'KOCH');
 $companyInfo = get_company_info($pdo, 'KOCH');
-$dbBranches = get_active_branches($pdo, $companyId);
 ?>
 <!DOCTYPE html>
 <html lang="th">
