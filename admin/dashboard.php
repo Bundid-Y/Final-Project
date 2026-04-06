@@ -884,7 +884,7 @@ $distinctActions = get_distinct_actions($pdo);
         <td style="font-size:12px;font-weight:600"><?php echo h((string)$fp['name']);?></td>
         <td><?php echo admin_status_badge($fp['is_active']?'active':'inactive');?></td>
         <td><div class="act-btns">
-            <button class="btn btn-xs btn-ghost" onclick="openEditFeaturedProduct(<?php echo (int)$fp['id'];?>,'<?php echo h(addslashes((string)$fp['name']));?>','<?php echo h(addslashes((string)($fp['description']??'')));?>',<?php echo $fp['is_active']?1:0;?>)"><i class="fas fa-edit"></i></button>
+            <button class="btn btn-xs btn-ghost" onclick="openEditFeaturedProduct(<?php echo (int)$fp['id'];?>,'<?php echo h(addslashes((string)$fp['name']));?>','<?php echo h(addslashes((string)($fp['description']??'')));?>',<?php echo $fp['is_active']?1:0;?>,<?php echo (int)($fp['company_id']??0);?>)"><i class="fas fa-edit"></i></button>
             <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete?')"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>"><input type="hidden" name="entity" value="featured_product"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?php echo (int)$fp['id'];?>"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=featured_products'));?>"><button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></button></form>
         </div></td>
     </tr><?php endforeach; endif;?>
@@ -1268,6 +1268,7 @@ $expFilters = [
         <input type="hidden" name="entity" value="featured_product">
         <input type="hidden" name="action" id="fp_action" value="create">
         <input type="hidden" name="id" id="fp_id" value="0">
+        <input type="hidden" name="company_id" id="fp_company_id" value="<?php echo h((string)($filterCompanyId ?? 0));?>">
         <input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=featured_products'));?>">
         <div class="modal-body">
             <div class="fm-group"><label>Product Name<span>*</span></label><input type="text" name="name" id="fp_name" class="fm-input" required maxlength="255"></div>
@@ -1383,10 +1384,11 @@ function openEditProduct(id,name,desc,category,active){
     openModal('productModal');
 }
 
-function openEditFeaturedProduct(id,name,desc,active){
+function openEditFeaturedProduct(id,name,desc,active,companyId){
     document.getElementById('fp_title').textContent='Edit Featured Product #'+id;
     document.getElementById('fp_action').value='update';
     document.getElementById('fp_id').value=id;
+    document.getElementById('fp_company_id').value=companyId;
     document.getElementById('fp_name').value=name;
     document.getElementById('fp_desc').value=desc;
     document.getElementById('fp_active').checked=!!active;
