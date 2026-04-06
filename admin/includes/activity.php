@@ -17,15 +17,27 @@ function log_activity(PDO $pdo, ?int $userId, string $action, ?string $tableName
         $companyId = $userCompanyId !== false ? (int) $userCompanyId : null;
     }
     
+    // Get company name
+    $companyName = null;
+    if ($companyId !== null) {
+        $companyStmt = $pdo->prepare('SELECT name FROM companies WHERE id = :id LIMIT 1');
+        $companyStmt->execute([':id' => $companyId]);
+        $companyName = $companyStmt->fetchColumn();
+    }
+    
+    // Prepend company name to action for clarity
+    $actionWithCompany = $companyName ? "[{$companyName}] {$action}" : $action;
+    
     $stmt = $pdo->prepare(
-        'INSERT INTO activity_logs (user_id, company_id, action, table_name, record_id, old_values, new_values, ip_address, user_agent)
-         VALUES (:user_id, :company_id, :action, :table_name, :record_id, :old_values, :new_values, :ip_address, :user_agent)'
+        'INSERT INTO activity_logs (user_id, company_id, company_name, action, table_name, record_id, old_values, new_values, ip_address, user_agent)
+         VALUES (:user_id, :company_id, :company_name, :action, :table_name, :record_id, :old_values, :new_values, :ip_address, :user_agent)'
     );
 
     $stmt->execute([
         ':user_id' => $userId,
         ':company_id' => $companyId,
-        ':action' => $action,
+        ':company_name' => $companyName,
+        ':action' => $actionWithCompany,
         ':table_name' => $tableName,
         ':record_id' => $recordId,
         ':old_values' => $oldValues !== [] ? json_encode($oldValues, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) : null,

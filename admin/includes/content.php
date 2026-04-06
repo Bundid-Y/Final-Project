@@ -42,8 +42,8 @@ function get_active_products(PDO $pdo): array
 function get_active_truck_types(PDO $pdo): array
 {
     $stmt = $pdo->prepare(
-        'SELECT id, name, description, image_url, capacity, dimensions, price_range, display_order
-         FROM truck_types
+        'SELECT id, name, description, image_url, capacity, display_order
+         FROM truck_cards
          WHERE is_active = 1
          ORDER BY display_order ASC'
     );

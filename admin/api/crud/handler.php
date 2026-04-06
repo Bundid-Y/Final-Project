@@ -45,7 +45,7 @@ try {
         'slider'          => handle_slider($pdo, $action, $id, $_POST, $adminId),
         'partner'         => handle_partner($pdo, $action, $id, $_POST, $adminId),
         'product'         => handle_product($pdo, $action, $id, $_POST, $adminId),
-        'truck_type'      => handle_truck_type($pdo, $action, $id, $_POST, $adminId),
+        'truck_card'      => handle_truck_card($pdo, $action, $id, $_POST, $adminId),
         'branch'          => handle_branch($pdo, $action, $id, $_POST, $adminId),
         'email_template'  => handle_email_template($pdo, $action, $id, $_POST, $adminId),
         'email_recipient' => handle_email_recipient($pdo, $action, $id, $_POST, $adminId),
@@ -102,12 +102,12 @@ function handle_product(PDO $pdo, string $action, int $id, array $post, int $adm
     };
 }
 
-function handle_truck_type(PDO $pdo, string $action, int $id, array $post, int $adminId): array
+function handle_truck_card(PDO $pdo, string $action, int $id, array $post, int $adminId): array
 {
     return match ($action) {
-        'create' => create_truck_type($pdo, $post, $adminId, $_FILES),
-        'update' => update_truck_type($pdo, $id, $post, $adminId, $_FILES),
-        'delete' => delete_truck_type($pdo, $id, $adminId),
+        'create' => create_truck_card($pdo, $post, $adminId, $_FILES),
+        'update' => update_truck_card($pdo, $id, $post, $adminId, $_FILES),
+        'delete' => delete_truck_card($pdo, $id, $adminId),
         default  => ['success' => false, 'message' => 'Invalid action.'],
     };
 }

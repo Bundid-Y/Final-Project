@@ -298,30 +298,30 @@ function delete_product(PDO $pdo, int $id, int $adminId): array
 }
 
 // =============================================
-// TRUCK TYPES CRUD (TNB)
+// TRUCK CARDS CRUD (TNB)
 // =============================================
-function get_all_truck_types_admin(PDO $pdo, ?int $companyId = null): array
+function get_all_truck_cards_admin(PDO $pdo, ?int $companyId = null): array
 {
-    $stmt = $pdo->prepare('SELECT id, name, description, image_url, capacity, dimensions, price_range, is_active, display_order, created_at, updated_at FROM truck_types ORDER BY display_order ASC');
+    $stmt = $pdo->prepare('SELECT id, name, description, image_url, capacity, display_order, is_active, created_at, updated_at FROM truck_cards ORDER BY display_order ASC');
     $stmt->execute();
     return $stmt->fetchAll();
 }
 
-function get_truck_type_by_id(PDO $pdo, int $id): ?array
+function get_truck_card_by_id(PDO $pdo, int $id): ?array
 {
-    $stmt = $pdo->prepare('SELECT * FROM truck_types WHERE id = :id LIMIT 1');
+    $stmt = $pdo->prepare('SELECT * FROM truck_cards WHERE id = :id LIMIT 1');
     $stmt->execute([':id' => $id]);
     return $stmt->fetch() ?: null;
 }
 
-function create_truck_type(PDO $pdo, array $data, int $adminId, array $files = []): array
+function create_truck_card(PDO $pdo, array $data, int $adminId, array $files = []): array
 {
     // Handle file upload
     $imageUrl = sanitize_text((string) ($data['image_url'] ?? ''));
     if (!empty($files['image_file'])) {
         require_once __DIR__ . '/upload.php';
         try {
-            $upload = handle_uploaded_file('image_file', 'trucks');
+            $upload = handle_uploaded_file('image_file', 'truck-cards');
             if ($upload) {
                 $imageUrl = $upload['public_path'];
             }
@@ -331,32 +331,30 @@ function create_truck_type(PDO $pdo, array $data, int $adminId, array $files = [
     }
 
     $stmt = $pdo->prepare(
-        'INSERT INTO truck_types (name, description, image_url, capacity, dimensions, price_range, display_order, is_active)
-         VALUES (:name, :description, :image_url, :capacity, :dimensions, :price_range, :display_order, :is_active)'
+        'INSERT INTO truck_cards (name, description, image_url, capacity, display_order, is_active)
+         VALUES (:name, :description, :image_url, :capacity, :display_order, :is_active)'
     );
     $stmt->execute([
         ':name'          => sanitize_text((string) ($data['name'] ?? '')),
         ':description'   => sanitize_text((string) ($data['description'] ?? '')),
         ':image_url'     => $imageUrl,
         ':capacity'      => sanitize_text((string) ($data['capacity'] ?? '')),
-        ':dimensions'    => sanitize_text((string) ($data['dimensions'] ?? '')),
-        ':price_range'   => sanitize_text((string) ($data['price_range'] ?? '')),
         ':display_order' => (int) ($data['display_order'] ?? 0),
         ':is_active'     => !empty($data['is_active']) ? 1 : 0,
     ]);
     $id = (int) $pdo->lastInsertId();
-    log_activity($pdo, $adminId, 'TRUCK_TYPE_CREATED', 'truck_types', $id);
-    return ['success' => true, 'message' => 'Truck type created.', 'id' => $id];
+    log_activity($pdo, $adminId, 'TRUCK_CARD_CREATED', 'truck_cards', $id);
+    return ['success' => true, 'message' => 'Truck card created.', 'id' => $id];
 }
 
-function update_truck_type(PDO $pdo, int $id, array $data, int $adminId, array $files = []): array
+function update_truck_card(PDO $pdo, int $id, array $data, int $adminId, array $files = []): array
 {
     // Handle file upload
     $imageUrl = sanitize_text((string) ($data['image_url'] ?? ''));
     if (!empty($files['image_file'])) {
         require_once __DIR__ . '/upload.php';
         try {
-            $upload = handle_uploaded_file('image_file', 'trucks');
+            $upload = handle_uploaded_file('image_file', 'truck-cards');
             if ($upload) {
                 $imageUrl = $upload['public_path'];
             }
@@ -366,31 +364,28 @@ function update_truck_type(PDO $pdo, int $id, array $data, int $adminId, array $
     }
 
     $stmt = $pdo->prepare(
-        'UPDATE truck_types SET name = :name, description = :description, image_url = :image_url,
-         capacity = :capacity, dimensions = :dimensions, price_range = :price_range,
-         display_order = :display_order, is_active = :is_active WHERE id = :id'
+        'UPDATE truck_cards SET name = :name, description = :description, image_url = :image_url,
+         capacity = :capacity, display_order = :display_order, is_active = :is_active WHERE id = :id'
     );
     $stmt->execute([
         ':name'          => sanitize_text((string) ($data['name'] ?? '')),
         ':description'   => sanitize_text((string) ($data['description'] ?? '')),
         ':image_url'     => $imageUrl,
         ':capacity'      => sanitize_text((string) ($data['capacity'] ?? '')),
-        ':dimensions'    => sanitize_text((string) ($data['dimensions'] ?? '')),
-        ':price_range'   => sanitize_text((string) ($data['price_range'] ?? '')),
         ':display_order' => (int) ($data['display_order'] ?? 0),
         ':is_active'     => !empty($data['is_active']) ? 1 : 0,
         ':id'            => $id,
     ]);
-    log_activity($pdo, $adminId, 'TRUCK_TYPE_UPDATED', 'truck_types', $id);
-    return ['success' => true, 'message' => 'Truck type updated.'];
+    log_activity($pdo, $adminId, 'TRUCK_CARD_UPDATED', 'truck_cards', $id);
+    return ['success' => true, 'message' => 'Truck card updated.'];
 }
 
-function delete_truck_type(PDO $pdo, int $id, int $adminId): array
+function delete_truck_card(PDO $pdo, int $id, int $adminId): array
 {
-    $stmt = $pdo->prepare('DELETE FROM truck_types WHERE id = :id');
+    $stmt = $pdo->prepare('DELETE FROM truck_cards WHERE id = :id');
     $stmt->execute([':id' => $id]);
-    log_activity($pdo, $adminId, 'TRUCK_TYPE_DELETED', 'truck_types', $id);
-    return ['success' => true, 'message' => 'Truck type deleted.'];
+    log_activity($pdo, $adminId, 'TRUCK_CARD_DELETED', 'truck_cards', $id);
+    return ['success' => true, 'message' => 'Truck card deleted.'];
 }
 
 // =============================================
@@ -764,10 +759,10 @@ function delete_email_template(PDO $pdo, int $id, int $adminId): array
 // =============================================
 function get_activity_logs_filtered(PDO $pdo, array $filters = [], int $limit = 50, int $offset = 0): array
 {
-    $sql = 'SELECT al.*, u.username, u.first_name, u.last_name, c.code AS company_code
+    $sql = 'SELECT al.*, u.username, u.first_name, u.last_name, c.code AS company_code, c.name AS company_name
             FROM activity_logs al
             LEFT JOIN users u ON u.id = al.user_id
-            LEFT JOIN companies c ON c.id = u.company_id
+            LEFT JOIN companies c ON c.id = al.company_id
             WHERE 1=1';
     $params = [];
 

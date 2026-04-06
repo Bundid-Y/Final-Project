@@ -11,7 +11,7 @@ $user = require_admin_user();
 $isSuperAdmin = in_array((string) $user['role'], ['super_admin'], true);
 $companyId = $isSuperAdmin ? null : (int) $user['company_id'];
 $section = $_GET['section'] ?? 'overview';
-$validSections = ['overview','users','koch_quotations','tnb_quotations','notifications','activity','settings','sliders','partners','products','featured_products','truck_types','truck_types_index','truck_cards','email_templates','export_data'];
+$validSections = ['overview','users','koch_quotations','tnb_quotations','notifications','activity','settings','sliders','partners','products','featured_products','truck_cards','email_templates','export_data'];
 if (!in_array($section, $validSections, true)) $section = 'overview';
 
 // Company mode toggle
@@ -105,7 +105,7 @@ function admin_action_label(string $a): string {
     return $m[$a] ?? $a;
 }
 
-$sectionTitles = ['overview'=>'Dashboard Overview','users'=>'User Management','koch_quotations'=>'KOCH Quotations','tnb_quotations'=>'TNB Requests','notifications'=>'Notifications','activity'=>'Activity Logs','settings'=>'System Settings','sliders'=>'Slider Management','partners'=>'Partner Management','products'=>'Product Management','featured_products'=>'Featured Products','truck_types'=>'Truck Type Management','truck_types_index'=>'Truck Types Index','truck_cards'=>'Truck Cards','branches'=>'Branch Management','email_templates'=>'Notification Emails','contact_messages'=>'Contact Messages'];
+$sectionTitles = ['overview'=>'Dashboard Overview','users'=>'User Management','koch_quotations'=>'KOCH Quotations','tnb_quotations'=>'TNB Requests','notifications'=>'Notifications','activity'=>'Activity Logs','settings'=>'System Settings','sliders'=>'Slider Management','partners'=>'Partner Management','products'=>'Product Management','featured_products'=>'Featured Products','truck_cards'=>'Truck Cards','branches'=>'Branch Management','email_templates'=>'Notification Emails'];
 ?>
 <!DOCTYPE html>
 <html lang="th">
@@ -747,7 +747,7 @@ $distinctActions = get_distinct_actions($pdo);
     <?php else: foreach($actResult['data'] as $a):?><tr>
         <td style="font-size:12px;white-space:nowrap"><?php echo h(date('d/m/Y H:i',strtotime((string)$a['created_at'])));?></td>
         <td style="font-size:12px;font-weight:600"><?php echo h((string)($a['username']??'System'));?></td>
-        <td style="font-size:12px"><?php echo h((string)($a['company_code']??'-'));?></td>
+        <td style="font-size:12px"><?php echo h((string)($a['company_name']??'-'));?></td>
         <td style="font-size:12px;color:var(--primary)"><?php echo h(admin_action_label((string)$a['action']));?></td>
     </tr><?php endforeach; endif;?>
     </tbody></table></div></div>
@@ -892,65 +892,6 @@ $distinctActions = get_distinct_actions($pdo);
     </tbody></table></div></div>
 </div>
 
-<?php elseif($section==='truck_types_index'): ?>
-<!-- =================== TRUCK TYPES INDEX =================== -->
-<?php 
-// Block KOCH users from accessing truck types index
-if ($user['company_id'] == get_company_id_by_code($pdo, 'KOCH') && $user['role'] !== 'super_admin') {
-    header('Location: ' . project_url('admin/dashboard.php?section=overview'));
-    exit;
-}
-$allTrucks = get_all_truck_types_admin($pdo, $filterCompanyId); 
-?>
-<div class="card">
-    <div class="card-h"><h2><i class="fas fa-truck-pickup"></i> Truck Types Index (TNB)</h2><div style="display:flex;gap:8px;align-items:center"><span style="font-size:12px;color:var(--muted)"><?php echo count($allTrucks);?> types</span><button class="btn btn-sm btn-primary" onclick="openModal('truckModal')"><i class="fas fa-plus"></i> Add Truck Type</button></div></div>
-    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>ID</th><th>Image</th><th>Name</th><th>Capacity</th><th>Order</th><th>Status</th><th>Index Display</th><th>Actions</th></tr></thead><tbody>
-    <?php if($allTrucks===[]):?><tr class="empty"><td colspan="8">No truck types found</td></tr>
-    <?php else: foreach($allTrucks as $t):?><tr>
-        <td style="font-size:12px;font-weight:600">#<?php echo (int)$t['id'];?></td>
-        <td><?php if($t['image_url']):?><img src="<?php echo h(resolve_image_url((string)$t['image_url']));?>" style="width:50px;height:35px;object-fit:cover;border-radius:6px" alt=""><?php else:?><span style="color:var(--muted);font-size:11px">-</span><?php endif;?></td>
-        <td style="font-size:12px;font-weight:600"><?php echo h((string)$t['name']);?></td>
-        <td style="font-size:12px"><?php echo h((string)($t['capacity']??'-'));?></td>
-        <td style="font-size:12px;text-align:center"><?php echo (int)$t['display_order'];?></td>
-        <td><?php echo admin_status_badge($t['is_active']?'active':'inactive');?></td>
-        <td><span style="font-size:11px;color:var(--muted)">Will show on TNB index page</span></td>
-        <td><div class="act-btns">
-            <button class="btn btn-xs btn-ghost" onclick="openEditTruck(<?php echo (int)$t['id'];?>,'<?php echo h(addslashes((string)$t['name']));?>','<?php echo h(addslashes((string)($t['description']??'')));?>','<?php echo h(addslashes((string)($t['capacity']??'')));?>',<?php echo $t['is_active']?1:0;?>)"><i class="fas fa-edit"></i></button>
-            <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete?')"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>"><input type="hidden" name="entity" value="truck_type"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?php echo (int)$t['id'];?>"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=truck_types_index'));?>"><button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></button></form>
-        </div></td>
-    </tr><?php endforeach; endif;?>
-    </tbody></table></div></div>
-</div>
-
-<?php elseif($section==='truck_types'): ?>
-<!-- =================== TRUCK TYPES =================== -->
-<?php 
-// Block KOCH users from accessing truck types
-if ($user['company_id'] == get_company_id_by_code($pdo, 'KOCH') && $user['role'] !== 'super_admin') {
-    header('Location: ' . project_url('admin/dashboard.php?section=overview'));
-    exit;
-}
-$allTrucks = get_all_truck_types_admin($pdo, $filterCompanyId); 
-?>
-<div class="card">
-    <div class="card-h"><h2><i class="fas fa-truck-moving"></i> Truck Types (TNB)</h2><div style="display:flex;gap:8px;align-items:center"><span style="font-size:12px;color:var(--muted)"><?php echo count($allTrucks);?> types</span><button class="btn btn-sm btn-primary" onclick="openModal('truckModal')"><i class="fas fa-plus"></i> Add Truck Type</button></div></div>
-    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>ID</th><th>Image</th><th>Name</th><th>Capacity</th><th>Order</th><th>Status</th><th>Actions</th></tr></thead><tbody>
-    <?php if($allTrucks===[]):?><tr class="empty"><td colspan="7">No truck types found</td></tr>
-    <?php else: foreach($allTrucks as $t):?><tr>
-        <td style="font-size:12px;font-weight:600">#<?php echo (int)$t['id'];?></td>
-        <td><?php if($t['image_url']):?><img src="<?php echo h(resolve_image_url((string)$t['image_url']));?>" style="width:50px;height:35px;object-fit:cover;border-radius:6px" alt=""><?php else:?><span style="color:var(--muted);font-size:11px">-</span><?php endif;?></td>
-        <td style="font-size:12px;font-weight:600"><?php echo h((string)$t['name']);?></td>
-        <td style="font-size:12px"><?php echo h((string)($t['capacity']??'-'));?></td>
-        <td style="font-size:12px;text-align:center"><?php echo (int)$t['display_order'];?></td>
-        <td><?php echo admin_status_badge($t['is_active']?'active':'inactive');?></td>
-        <td><div class="act-btns">
-            <button class="btn btn-xs btn-ghost" onclick="openEditTruck(<?php echo (int)$t['id'];?>,'<?php echo h(addslashes((string)$t['name']));?>','<?php echo h(addslashes((string)($t['description']??'')));?>','<?php echo h(addslashes((string)($t['capacity']??'')));?>',<?php echo $t['is_active']?1:0;?>)"><i class="fas fa-edit"></i></button>
-            <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete?')"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>"><input type="hidden" name="entity" value="truck_type"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?php echo (int)$t['id'];?>"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=truck_types'));?>"><button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></button></form>
-        </div></td>
-    </tr><?php endforeach; endif;?>
-    </tbody></table></div></div>
-</div>
-
 <?php elseif($section==='truck_cards'): ?>
 <!-- =================== TRUCK CARDS (TNB Index Display) =================== -->
 <?php 
@@ -959,7 +900,7 @@ if ($user['company_id'] == get_company_id_by_code($pdo, 'KOCH') && $user['role']
     header('Location: ' . project_url('admin/dashboard.php?section=overview'));
     exit;
 }
-$allTruckCards = get_all_truck_types_admin($pdo, $filterCompanyId); 
+$allTruckCards = get_all_truck_cards_admin($pdo, $filterCompanyId); 
 ?>
 <div class="card">
     <div class="card-h"><h2><i class="fas fa-id-card"></i> Truck Cards (TNB)</h2><div style="display:flex;gap:8px;align-items:center"><span style="font-size:12px;color:var(--muted)"><?php echo count($allTruckCards);?> cards</span><button class="btn btn-sm btn-primary" onclick="openModal('truckModal')"><i class="fas fa-plus"></i> Add Truck Card</button></div></div>
@@ -981,7 +922,7 @@ $allTruckCards = get_all_truck_types_admin($pdo, $filterCompanyId);
                     </div>
                     <div style="display:flex;gap:4px;margin-top:8px">
                         <button class="btn btn-xs btn-ghost" onclick="openEditTruck(<?php echo (int)$tc['id'];?>,'<?php echo h(addslashes((string)$tc['name']));?>','<?php echo h(addslashes((string)($tc['description']??'')));?>','<?php echo h(addslashes((string)($tc['image_url']??'')));?>','<?php echo h(addslashes((string)($tc['capacity']??'')));?>',<?php echo (int)$tc['display_order'];?>,<?php echo $tc['is_active']?1:0;?>)"><i class="fas fa-edit"></i></button>
-                        <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete?')"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>"><input type="hidden" name="entity" value="truck_type"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?php echo (int)$tc['id'];?>"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=truck_cards'));?>"><button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></button></form>
+                        <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete?')"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>"><input type="hidden" name="entity" value="truck_card"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?php echo (int)$tc['id'];?>"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=truck_cards'));?>"><button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></button></form>
                     </div>
                 </div>
             </div>
@@ -1309,16 +1250,16 @@ $expFilters = [
     </form>
 </div></div>
 
-<!-- Truck Type Modal -->
+<!-- Truck Card Modal -->
 <div class="modal-overlay" id="truckModal" onclick="if(event.target===this)closeModal('truckModal')">
 <div class="modal">
-    <div class="modal-head"><h3><i class="fas fa-truck-moving"></i> <span id="tt_title">Add Truck Type</span></h3><button class="modal-close" onclick="closeModal('truckModal')">&times;</button></div>
+    <div class="modal-head"><h3><i class="fas fa-id-card"></i> <span id="tt_title">Add Truck Card</span></h3><button class="modal-close" onclick="closeModal('truckModal')">&times;</button></div>
     <form method="POST" action="<?php echo h($crudUrl);?>" enctype="multipart/form-data">
         <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>">
-        <input type="hidden" name="entity" value="truck_type">
+        <input type="hidden" name="entity" value="truck_card">
         <input type="hidden" name="action" id="tt_action" value="create">
         <input type="hidden" name="id" id="tt_id" value="0">
-        <input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=truck_types'));?>">
+        <input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=truck_cards'));?>">
         <div class="modal-body">
             <div class="fm-group"><label>Truck Name<span>*</span></label><input type="text" name="name" id="tt_name" class="fm-input" required maxlength="255"></div>
             <div class="fm-group"><label>Description</label><textarea name="description" id="tt_desc" class="fm-input"></textarea></div>
@@ -1619,7 +1560,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function openEditTruck(id,name,desc,capacity,active){
-    document.getElementById('tt_title').textContent='Edit Truck Type #'+id;
+    document.getElementById('tt_title').textContent='Edit Truck Card #'+id;
     document.getElementById('tt_action').value='update';
     document.getElementById('tt_id').value=id;
     document.getElementById('tt_name').value=name;
