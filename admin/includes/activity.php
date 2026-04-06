@@ -5,17 +5,16 @@ require_once __DIR__ . '/helpers.php';
 
 function log_activity(PDO $pdo, ?int $userId, string $action, ?string $tableName = null, ?int $recordId = null, array $oldValues = [], array $newValues = [], ?int $companyId = null): void
 {
-    // Get company_id from user if not provided
+    // Priority: explicit param > session context (dashboard company mode) > user's own company
+    if ($companyId === null) {
+        $companyId = $_SESSION['admin_company_id_context'] ?? null;
+    }
+    
     if ($companyId === null && $userId !== null) {
         $userStmt = $pdo->prepare('SELECT company_id FROM users WHERE id = :id LIMIT 1');
         $userStmt->execute([':id' => $userId]);
         $userCompanyId = $userStmt->fetchColumn();
         $companyId = $userCompanyId !== false ? (int) $userCompanyId : null;
-    }
-    
-    // Fallback to session context if still null
-    if ($companyId === null) {
-        $companyId = $_SESSION['admin_company_id_context'] ?? null;
     }
     
     $stmt = $pdo->prepare(
@@ -38,17 +37,16 @@ function log_activity(PDO $pdo, ?int $userId, string $action, ?string $tableName
 
 function create_notification(PDO $pdo, int $userId, string $title, string $message, string $type = 'info', ?string $relatedTable = null, ?int $relatedId = null, string $priority = 'normal', ?int $companyId = null): void
 {
-    // Get company_id from user if not provided
+    // Priority: explicit param > session context (dashboard company mode) > user's own company
+    if ($companyId === null) {
+        $companyId = $_SESSION['admin_company_id_context'] ?? null;
+    }
+    
     if ($companyId === null) {
         $userStmt = $pdo->prepare('SELECT company_id FROM users WHERE id = :id LIMIT 1');
         $userStmt->execute([':id' => $userId]);
         $userCompanyId = $userStmt->fetchColumn();
         $companyId = $userCompanyId !== false ? (int) $userCompanyId : null;
-    }
-    
-    // Fallback to session context if still null
-    if ($companyId === null) {
-        $companyId = $_SESSION['admin_company_id_context'] ?? null;
     }
     
     $stmt = $pdo->prepare(
