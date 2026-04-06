@@ -1053,12 +1053,26 @@ $expFilters = [
         'status' => $_GET['filter_status'] ?? '',
         'product_type' => $_GET['filter_product_type'] ?? '',
     ],
+    'transport' => [
+        'date_from' => $_GET['date_from'] ?? '',
+        'date_to' => $_GET['date_to'] ?? '',
+        'company_id' => $filterCompanyId ?? '',
+        'user' => $_GET['filter_user'] ?? '',
+        'status' => $_GET['filter_status'] ?? '',
+        'service_type' => $_GET['filter_service_type'] ?? '',
+    ],
     'activity' => [
         'date_from' => $_GET['date_from'] ?? '',
         'date_to' => $_GET['date_to'] ?? '',
         'company_id' => $filterCompanyId ?? '',
         'user' => $_GET['filter_user'] ?? '',
         'action' => $_GET['filter_action'] ?? '',
+    ],
+    'contacts' => [
+        'date_from' => $_GET['date_from'] ?? '',
+        'date_to' => $_GET['date_to'] ?? '',
+        'company_id' => $filterCompanyId ?? '',
+        'status' => $_GET['filter_status'] ?? '',
     ],
 ];
 ?>
