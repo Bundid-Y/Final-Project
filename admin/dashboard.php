@@ -105,7 +105,7 @@ function admin_action_label(string $a): string {
     return $m[$a] ?? $a;
 }
 
-$sectionTitles = ['overview'=>'Dashboard Overview','users'=>'User Management','koch_quotations'=>'KOCH Quotations','tnb_quotations'=>'TNB Requests','notifications'=>'Notifications','activity'=>'Activity Logs','settings'=>'System Settings','sliders'=>'Slider Management','partners'=>'Partner Management','products'=>'Product Management','featured_products'=>'Featured Products','truck_cards'=>'Truck Cards','branches'=>'Branch Management','email_templates'=>'Notification Emails'];
+$sectionTitles = ['overview'=>'Dashboard Overview','users'=>'User Management','koch_quotations'=>'KOCH Quotations','tnb_quotations'=>'TNB Requests','notifications'=>'Notifications','activity'=>'Activity Logs','settings'=>'System Settings','sliders'=>'Slider Management','partners'=>'Partner Management','products'=>'Product Management','featured_products'=>'Featured Products','truck_cards'=>'Truck Cards','email_templates'=>'Notification Emails'];
 ?>
 <!DOCTYPE html>
 <html lang="th">

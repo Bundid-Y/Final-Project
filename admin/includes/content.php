@@ -6,10 +6,10 @@ require_once __DIR__ . '/../config/database.php';
 function get_active_sliders(PDO $pdo, int $companyId): array
 {
     $stmt = $pdo->prepare(
-        'SELECT id, title, subtitle, image_url, button_text, button_url, slide_order
+        'SELECT id, title, subtitle, image_url, button_text, button_url
          FROM slider_contents
          WHERE company_id = :company_id AND is_active = 1
-         ORDER BY slide_order ASC'
+         ORDER BY id ASC'
     );
     $stmt->execute([':company_id' => $companyId]);
     return $stmt->fetchAll();

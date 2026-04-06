@@ -46,7 +46,6 @@ try {
         'partner'         => handle_partner($pdo, $action, $id, $_POST, $adminId),
         'product'         => handle_product($pdo, $action, $id, $_POST, $adminId),
         'truck_card'      => handle_truck_card($pdo, $action, $id, $_POST, $adminId),
-        'branch'          => handle_branch($pdo, $action, $id, $_POST, $adminId),
         'email_template'  => handle_email_template($pdo, $action, $id, $_POST, $adminId),
         'email_recipient' => handle_email_recipient($pdo, $action, $id, $_POST, $adminId),
         'user'            => handle_user($pdo, $action, $id, $_POST, $adminId),
@@ -108,16 +107,6 @@ function handle_truck_card(PDO $pdo, string $action, int $id, array $post, int $
         'create' => create_truck_card($pdo, $post, $adminId, $_FILES),
         'update' => update_truck_card($pdo, $id, $post, $adminId, $_FILES),
         'delete' => delete_truck_card($pdo, $id, $adminId),
-        default  => ['success' => false, 'message' => 'Invalid action.'],
-    };
-}
-
-function handle_branch(PDO $pdo, string $action, int $id, array $post, int $adminId): array
-{
-    return match ($action) {
-        'create' => create_branch($pdo, $post, $adminId),
-        'update' => update_branch($pdo, $id, $post, $adminId),
-        'delete' => delete_branch($pdo, $id, $adminId),
         default  => ['success' => false, 'message' => 'Invalid action.'],
     };
 }
