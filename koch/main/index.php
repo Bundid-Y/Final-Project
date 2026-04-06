@@ -253,7 +253,7 @@ $companyInfo = get_company_info($pdo, 'KOCH');
                     $imageExists = !empty($logoUrl) && !empty($partner['logo_url']) && file_exists(__DIR__ . '/../../' . ltrim($partner['logo_url'], '/'));
                     ?>
                     <?php if ($imageExists): ?>
-                        <img src="<?php echo htmlspecialchars($logoUrl); ?>" alt="<?php echo htmlspecialchars((string)$partner['name']); ?>" loading="lazy" style="max-height: 60px; object-fit: contain;">
+                        <img src="<?php echo htmlspecialchars($logoUrl); ?>" alt="<?php echo htmlspecialchars((string)$partner['name']); ?>" loading="lazy">
                     <?php else: ?>
                         <div style="width: 100%; height: 100%; background: #f1f5f9; border: 2px dashed #cbd5e1; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #94a3b8; font-size: 11px; text-align: center; padding: 8px;">No Logo</div>
                     <?php endif; ?>
