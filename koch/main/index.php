@@ -8,7 +8,6 @@ $companyId = get_company_id_by_code($pdo, 'KOCH');
 $dbSliders = get_active_sliders($pdo, $companyId);
 $dbPartners = get_active_partners($pdo, $companyId);
 $dbProducts = get_active_featured_products($pdo);
-$dbBranches = get_active_branches($pdo, $companyId);
 $companyInfo = get_company_info($pdo, 'KOCH');
 
 ?>

@@ -7,7 +7,6 @@ $companyId = get_company_id_by_code($pdo, 'TNB');
 $dbSliders = get_active_sliders($pdo, $companyId);
 $dbPartners = get_active_partners($pdo, $companyId);
 $dbTruckTypes = get_active_truck_types($pdo);
-$dbBranches = get_active_branches($pdo, $companyId);
 $companyInfo = get_company_info($pdo, 'TNB');
 ?>
 <!doctype html>
