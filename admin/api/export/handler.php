@@ -29,6 +29,7 @@ try {
         'role' => sanitize_text((string) ($_GET['filter_role'] ?? '')),
         'product_type' => sanitize_text((string) ($_GET['filter_product_type'] ?? '')),
         'action' => sanitize_text((string) ($_GET['filter_action'] ?? '')),
+        'company_mode' => sanitize_text((string) ($_GET['company_mode'] ?? 'all')),
     ];
     
     $validTypes = ['users', 'quotations', 'activity', 'reports'];
@@ -158,26 +159,28 @@ function get_export_users(PDO $pdo, array $filters = []): array
 
 function get_export_quotations(PDO $pdo, array $filters = []): array
 {
-    // Try different possible table names for quotations
-    $tables = ['koch_quotations', 'quotations', 'koch_quotation', 'quotation_requests'];
+    // Select table based on company mode
+    $companyMode = $filters['company_mode'] ?? 'all';
+    if ($companyMode === 'tnb') {
+        $tables = ['tnb_quotations'];
+    } elseif ($companyMode === 'koch') {
+        $tables = ['koch_quotations'];
+    } else {
+        $tables = ['koch_quotations', 'tnb_quotations'];
+    }
     
+    $allResults = [];
     foreach ($tables as $table) {
         try {
             $stmt = $pdo->query("SELECT COUNT(*) as count FROM information_schema.tables WHERE table_schema = 'koch_tnb_system' AND table_name = '$table'");
             $result = $stmt->fetch();
             if ($result && $result['count'] > 0) {
-                // Table exists, build query with filters
                 $sql = "SELECT q.*, u.username as customer_name FROM $table q LEFT JOIN users u ON u.id = q.user_id WHERE 1=1";
                 $params = [];
                 
                 if (!empty($filters['user'])) {
                     $sql .= ' AND u.username LIKE :user';
                     $params[':user'] = '%' . $filters['user'] . '%';
-                }
-                
-                if (!empty($filters['company_id'])) {
-                    $sql .= ' AND q.company_id = :company_id';
-                    $params[':company_id'] = $filters['company_id'];
                 }
                 
                 if (!empty($filters['status'])) {
@@ -204,15 +207,15 @@ function get_export_quotations(PDO $pdo, array $filters = []): array
                 
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute($params);
-                return $stmt->fetchAll() ?: [];
+                $rows = $stmt->fetchAll() ?: [];
+                $allResults = array_merge($allResults, $rows);
             }
         } catch (Exception $e) {
             continue;
         }
     }
     
-    // Return empty if no quotation table found
-    return [];
+    return $allResults;
 }
 
 function get_export_transport(PDO $pdo, array $filters = []): array

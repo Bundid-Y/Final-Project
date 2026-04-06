@@ -1584,7 +1584,9 @@ function exportWithFilters(format) {
     const params = new URLSearchParams({
         type: currentExportType,
         format: format,
-        _csrf: '<?php echo h($csrfToken);?>'
+        _csrf: '<?php echo h($csrfToken);?>',
+        company_id: '<?php echo $filterCompanyId !== null ? (int)$filterCompanyId : '';?>',
+        company_mode: '<?php echo h($companyMode);?>'
     });
     
     // Add filters if in filter mode
