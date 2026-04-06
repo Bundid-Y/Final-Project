@@ -647,18 +647,17 @@ function koch_action_label(string $action): string {
                     <div class="k-table-wrap">
                         <table class="k-table">
                             <thead>
-                                <tr><th>เลขที่</th><th>วันที่</th><th>ประเภทสินค้า</th><th>ราคาเสนอ</th><th>สถานะ</th></tr>
+                                <tr><th>เลขที่</th><th>วันที่</th><th>ประเภทสินค้า</th><th>สถานะ</th></tr>
                             </thead>
                             <tbody>
                             <?php if ($quotations === []): ?>
-                                <tr class="empty-row"><td colspan="5">ยังไม่มีใบเสนอราคา — <a href="../main/quotation.php" style="color:var(--koch-primary);font-weight:600;">ขอใบเสนอราคาแรก</a></td></tr>
+                                <tr class="empty-row"><td colspan="4">ยังไม่มีใบเสนอราคา — <a href="../main/quotation.php" style="color:var(--koch-primary);font-weight:600;">ขอใบเสนอราคาแรก</a></td></tr>
                             <?php else: ?>
                                 <?php foreach (array_slice($quotations, 0, 5) as $q): ?>
                                 <tr>
                                     <td style="font-weight:600;"><?php echo h((string) $q['quotation_number']); ?></td>
                                     <td style="white-space:nowrap;"><?php echo h(date('d/m/Y', strtotime((string) $q['created_at']))); ?></td>
                                     <td><?php echo h((string) $q['product_type']); ?></td>
-                                    <td><?php echo $q['quoted_price'] !== null ? h(number_format((float) $q['quoted_price'], 2)) . ' ฿' : '<span style="color:var(--koch-text-muted)">รอเสนอราคา</span>'; ?></td>
                                     <td><?php echo koch_status_badge((string) $q['status']); ?></td>
                                 </tr>
                                 <?php endforeach; ?>
@@ -784,20 +783,18 @@ function koch_action_label(string $action): string {
                                     <th>เลขที่</th>
                                     <th>วันที่</th>
                                     <th>ประเภทสินค้า</th>
-                                    <th>ราคาเสนอ</th>
                                     <th>สถานะ</th>
                                 </tr>
                             </thead>
                             <tbody>
                             <?php if ($quotations === []): ?>
-                                <tr class="empty-row"><td colspan="5">ยังไม่มีใบเสนอราคา</td></tr>
+                                <tr class="empty-row"><td colspan="4">ยังไม่มีใบเสนอราคา</td></tr>
                             <?php else: ?>
                                 <?php foreach ($quotations as $q): ?>
                                 <tr>
                                     <td style="font-weight:600;"><?php echo h((string) $q['quotation_number']); ?></td>
                                     <td style="white-space:nowrap;"><?php echo h(date('d/m/Y H:i', strtotime((string) $q['created_at']))); ?></td>
                                     <td><?php echo h((string) $q['product_type']); ?></td>
-                                    <td><?php echo $q['quoted_price'] !== null ? h(number_format((float) $q['quoted_price'], 2)) . ' ฿' : '<span style="color:var(--koch-text-muted)">รอเสนอราคา</span>'; ?></td>
                                     <td><?php echo koch_status_badge((string) $q['status']); ?></td>
                                 </tr>
                                 <?php endforeach; ?>
@@ -864,18 +861,17 @@ function koch_action_label(string $action): string {
                 <div class="k-card-body" style="padding:0;">
                     <div class="k-table-wrap">
                         <table class="k-table">
-                            <thead><tr><th>เลขที่</th><th>ประเภท</th><th>ราคา</th><th>วันที่เสร็จ</th><th>สถานะ</th></tr></thead>
+                            <thead><tr><th>เลขที่</th><th>ประเภท</th><th>วันที่เสร็จ</th><th>สถานะ</th></tr></thead>
                             <tbody>
                             <?php
                             $doneQuotations = array_filter($quotations, fn($q) => in_array((string)$q['status'], ['completed', 'rejected', 'cancelled']));
                             if ($doneQuotations === []): ?>
-                                <tr class="empty-row"><td colspan="5">ยังไม่มีงานที่เสร็จสิ้น</td></tr>
+                                <tr class="empty-row"><td colspan="4">ยังไม่มีงานที่เสร็จสิ้น</td></tr>
                             <?php else: ?>
                                 <?php foreach ($doneQuotations as $q): ?>
                                 <tr>
                                     <td style="font-weight:600;"><?php echo h((string) $q['quotation_number']); ?></td>
                                     <td><?php echo h((string) $q['product_type']); ?></td>
-                                    <td><?php echo $q['quoted_price'] !== null ? h(number_format((float) $q['quoted_price'], 2)) . ' ฿' : '-'; ?></td>
                                     <td style="white-space:nowrap;"><?php echo h(date('d/m/Y', strtotime((string) $q['created_at']))); ?></td>
                                     <td><?php echo koch_status_badge((string) $q['status']); ?></td>
                                 </tr>

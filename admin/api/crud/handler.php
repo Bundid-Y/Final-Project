@@ -47,7 +47,6 @@ try {
         'product'         => handle_product($pdo, $action, $id, $_POST, $adminId),
         'truck_card'      => handle_truck_card($pdo, $action, $id, $_POST, $adminId),
         'email_template'  => handle_email_template($pdo, $action, $id, $_POST, $adminId),
-        'email_recipient' => handle_email_recipient($pdo, $action, $id, $_POST, $adminId),
         'user'            => handle_user($pdo, $action, $id, $_POST, $adminId),
         'featured_product' => handle_featured_product($pdo, $action, $id, $_POST, $adminId),
         'system_settings' => handle_system_settings_emails($pdo, $action, $_POST, $adminId),
@@ -121,15 +120,6 @@ function handle_email_template(PDO $pdo, string $action, int $id, array $post, i
     };
 }
 
-function handle_email_recipient(PDO $pdo, string $action, int $id, array $post, int $adminId): array
-{
-    return match ($action) {
-        'create' => create_email_recipient($pdo, $post, $adminId),
-        'update' => update_email_recipient($pdo, $id, $post, $adminId),
-        'delete' => delete_email_recipient($pdo, $id, $adminId),
-        default  => ['success' => false, 'message' => 'Invalid action.'],
-    };
-}
 
 function handle_user(PDO $pdo, string $action, int $id, array $post, int $adminId): array
 {

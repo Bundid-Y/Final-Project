@@ -209,7 +209,7 @@ function delete_partner(PDO $pdo, int $id, int $adminId): array
 // =============================================
 function get_all_products_admin(PDO $pdo, ?int $companyId = null): array
 {
-    $stmt = $pdo->prepare('SELECT id, name, description, category, image_url, price, is_active, display_order, created_at, updated_at FROM products ORDER BY display_order ASC');
+    $stmt = $pdo->prepare('SELECT id, name, description, category, image_url, is_active, display_order, created_at, updated_at FROM products ORDER BY display_order ASC');
     $stmt->execute();
     return $stmt->fetchAll();
 }
@@ -502,79 +502,18 @@ function get_all_tnb_quotations(PDO $pdo, ?string $status = null, int $limit = 5
 
 function update_koch_quotation_status(PDO $pdo, int $id, string $status, ?float $price, int $adminId): array
 {
-    $stmt = $pdo->prepare('UPDATE koch_quotations SET status = :status, quoted_price = :price, quoted_by = :admin, quoted_at = NOW() WHERE id = :id');
-    $stmt->execute([':status' => $status, ':price' => $price, ':admin' => $adminId, ':id' => $id]);
+    $stmt = $pdo->prepare('UPDATE koch_quotations SET status = :status, quoted_by = :admin, quoted_at = NOW() WHERE id = :id');
+    $stmt->execute([':status' => $status, ':admin' => $adminId, ':id' => $id]);
     log_activity($pdo, $adminId, 'KOCH_QUOTATION_STATUS_CHANGED', 'koch_quotations', $id);
     return ['success' => true, 'message' => 'Quotation status updated.'];
 }
 
 function update_tnb_quotation_status(PDO $pdo, int $id, string $status, ?float $price, int $adminId): array
 {
-    $stmt = $pdo->prepare('UPDATE tnb_quotations SET status = :status, quoted_price = :price, quoted_by = :admin, quoted_at = NOW() WHERE id = :id');
-    $stmt->execute([':status' => $status, ':price' => $price, ':admin' => $adminId, ':id' => $id]);
+    $stmt = $pdo->prepare('UPDATE tnb_quotations SET status = :status, quoted_by = :admin, quoted_at = NOW() WHERE id = :id');
+    $stmt->execute([':status' => $status, ':admin' => $adminId, ':id' => $id]);
     log_activity($pdo, $adminId, 'TNB_QUOTATION_STATUS_CHANGED', 'tnb_quotations', $id);
     return ['success' => true, 'message' => 'Transport request status updated.'];
-}
-
-// =============================================
-// EMAIL RECIPIENTS CRUD
-// =============================================
-function get_all_email_recipients(PDO $pdo, ?int $companyId = null): array
-{
-    $sql = 'SELECT er.*, c.name AS company_name FROM email_recipients er LEFT JOIN companies c ON c.id = er.company_id WHERE 1=1';
-    $params = [];
-    if ($companyId !== null) {
-        $sql .= ' AND er.company_id = :cid';
-        $params[':cid'] = $companyId;
-    }
-    $sql .= ' ORDER BY er.event_type, er.recipient_name ASC';
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute($params);
-    return $stmt->fetchAll();
-}
-
-function create_email_recipient(PDO $pdo, array $data, int $adminId): array
-{
-    $stmt = $pdo->prepare(
-        'INSERT INTO email_recipients (company_id, event_type, recipient_email, recipient_name, is_active)
-         VALUES (:company_id, :event_type, :recipient_email, :recipient_name, :is_active)'
-    );
-    $stmt->execute([
-        ':company_id'       => !empty($data['company_id']) ? (int) $data['company_id'] : null,
-        ':event_type'       => sanitize_text((string) ($data['event_type'] ?? '')),
-        ':recipient_email'  => sanitize_text((string) ($data['recipient_email'] ?? '')),
-        ':recipient_name'   => sanitize_text((string) ($data['recipient_name'] ?? '')),
-        ':is_active'        => !empty($data['is_active']) ? 1 : 0,
-    ]);
-    $id = (int) $pdo->lastInsertId();
-    log_activity($pdo, $adminId, 'EMAIL_RECIPIENT_CREATED', 'email_recipients', $id);
-    return ['success' => true, 'message' => 'Email recipient added.', 'id' => $id];
-}
-
-function update_email_recipient(PDO $pdo, int $id, array $data, int $adminId): array
-{
-    $stmt = $pdo->prepare(
-        'UPDATE email_recipients SET company_id = :company_id, event_type = :event_type,
-         recipient_email = :recipient_email, recipient_name = :recipient_name, is_active = :is_active WHERE id = :id'
-    );
-    $stmt->execute([
-        ':company_id'       => !empty($data['company_id']) ? (int) $data['company_id'] : null,
-        ':event_type'       => sanitize_text((string) ($data['event_type'] ?? '')),
-        ':recipient_email'  => sanitize_text((string) ($data['recipient_email'] ?? '')),
-        ':recipient_name'   => sanitize_text((string) ($data['recipient_name'] ?? '')),
-        ':is_active'        => !empty($data['is_active']) ? 1 : 0,
-        ':id'               => $id,
-    ]);
-    log_activity($pdo, $adminId, 'EMAIL_RECIPIENT_UPDATED', 'email_recipients', $id);
-    return ['success' => true, 'message' => 'Email recipient updated.'];
-}
-
-function delete_email_recipient(PDO $pdo, int $id, int $adminId): array
-{
-    $stmt = $pdo->prepare('DELETE FROM email_recipients WHERE id = :id');
-    $stmt->execute([':id' => $id]);
-    log_activity($pdo, $adminId, 'EMAIL_RECIPIENT_DELETED', 'email_recipients', $id);
-    return ['success' => true, 'message' => 'Email recipient deleted.'];
 }
 
 // =============================================

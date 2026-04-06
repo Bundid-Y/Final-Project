@@ -82,27 +82,3 @@ function handle_uploaded_file(string $fieldName, string $context): ?array
     ];
 }
 
-function save_attachment_record(PDO $pdo, string $tableName, int $recordId, array $fileMeta, int $uploadedBy): int
-{
-    $stmt = $pdo->prepare(
-        'INSERT INTO file_attachments (
-            table_name, record_id, file_name, original_name, file_path, file_size, file_type, mime_type, uploaded_by, is_active
-         ) VALUES (
-            :table_name, :record_id, :file_name, :original_name, :file_path, :file_size, :file_type, :mime_type, :uploaded_by, 1
-         )'
-    );
-
-    $stmt->execute([
-        ':table_name' => $tableName,
-        ':record_id' => $recordId,
-        ':file_name' => $fileMeta['file_name'],
-        ':original_name' => $fileMeta['original_name'],
-        ':file_path' => $fileMeta['public_path'],
-        ':file_size' => $fileMeta['file_size'],
-        ':file_type' => $fileMeta['file_type'],
-        ':mime_type' => $fileMeta['mime_type'],
-        ':uploaded_by' => $uploadedBy,
-    ]);
-
-    return (int) $pdo->lastInsertId();
-}

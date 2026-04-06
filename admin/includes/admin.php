@@ -182,7 +182,7 @@ function admin_extended_stats(PDO $pdo, ?int $companyId = null): array
 
 function admin_recent_koch_quotations(PDO $pdo, ?int $companyId = null, int $limit = 5): array
 {
-    $sql = 'SELECT kq.quotation_number, kq.first_name, kq.last_name, kq.product_type, kq.status, kq.quoted_price, kq.created_at FROM koch_quotations kq';
+    $sql = 'SELECT kq.quotation_number, kq.first_name, kq.last_name, kq.product_type, kq.status, kq.created_at FROM koch_quotations kq';
     $params = [];
     if ($companyId !== null) {
         $sql .= ' WHERE kq.user_id IN (SELECT id FROM users WHERE company_id = :cid)';
@@ -196,7 +196,7 @@ function admin_recent_koch_quotations(PDO $pdo, ?int $companyId = null, int $lim
 
 function admin_recent_tnb_quotations(PDO $pdo, ?int $companyId = null, int $limit = 5): array
 {
-    $sql = 'SELECT tq.request_number, tq.first_name, tq.last_name, tq.service_type, tq.route, tq.status, tq.quoted_price, tq.created_at FROM tnb_quotations tq';
+    $sql = 'SELECT tq.request_number, tq.first_name, tq.last_name, tq.service_type, tq.route, tq.status, tq.created_at FROM tnb_quotations tq';
     $params = [];
     if ($companyId !== null) {
         $sql .= ' WHERE tq.user_id IN (SELECT id FROM users WHERE company_id = :cid)';

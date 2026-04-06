@@ -9,8 +9,8 @@ require_once __DIR__ . '/activity.php';
 function get_profile_summary(PDO $pdo, int $userId): ?array
 {
     $stmt = $pdo->prepare(
-        'SELECT u.id, u.username, u.email, u.first_name, u.last_name, u.nick_name, u.phone, u.role, u.department, u.position,
-                u.avatar_url, u.created_at, u.last_login, c.name AS company_name, c.code AS company_code
+        'SELECT u.id, u.username, u.email, u.first_name, u.last_name, u.nick_name, u.phone, u.role,
+                u.created_at, u.last_login, c.name AS company_name, c.code AS company_code
          FROM users u
          INNER JOIN companies c ON c.id = u.company_id
          WHERE u.id = :id
@@ -28,8 +28,6 @@ function update_profile_details(PDO $pdo, int $userId, array $payload): array
     $nickName = sanitize_text((string) ($payload['nick_name'] ?? ''));
     $email = strtolower(sanitize_text((string) ($payload['email'] ?? '')));
     $phone = sanitize_text((string) ($payload['phone'] ?? ''));
-    $department = sanitize_text((string) ($payload['department'] ?? ''));
-    $position = sanitize_text((string) ($payload['position'] ?? ''));
 
     $errors = merge_validation_errors(
         validate_required_fields([
@@ -70,8 +68,6 @@ function update_profile_details(PDO $pdo, int $userId, array $payload): array
              nick_name = :nick_name,
              email = :email,
              phone = :phone,
-             department = :department,
-             position = :position,
              updated_at = NOW()
          WHERE id = :id'
     );
@@ -82,8 +78,6 @@ function update_profile_details(PDO $pdo, int $userId, array $payload): array
         ':nick_name' => $nickName !== '' ? $nickName : null,
         ':email' => $email,
         ':phone' => $phone,
-        ':department' => $department !== '' ? $department : null,
-        ':position' => $position !== '' ? $position : null,
         ':id' => $userId,
     ]);
 
@@ -110,7 +104,7 @@ function get_recent_activity_logs(PDO $pdo, int $userId, int $limit = 10): array
 function get_koch_user_quotations(PDO $pdo, int $userId, int $limit = 10): array
 {
     $stmt = $pdo->prepare(
-        'SELECT quotation_number, product_type, quoted_price, status, created_at
+        'SELECT quotation_number, product_type, status, created_at
          FROM koch_quotations
          WHERE user_id = :user_id
          ORDER BY created_at DESC
@@ -124,7 +118,7 @@ function get_koch_user_quotations(PDO $pdo, int $userId, int $limit = 10): array
 function get_tnb_user_quotations(PDO $pdo, int $userId, int $limit = 10): array
 {
     $stmt = $pdo->prepare(
-        'SELECT request_number, service_type, route, quoted_price, status, tracking_number, created_at
+        'SELECT request_number, service_type, route, status, tracking_number, created_at
          FROM tnb_quotations
          WHERE user_id = :user_id
          ORDER BY created_at DESC
@@ -172,7 +166,7 @@ function get_unread_notification_count(PDO $pdo, int $userId): int
 
 function mark_notification_read(PDO $pdo, int $notificationId, int $userId): void
 {
-    $stmt = $pdo->prepare('UPDATE notifications SET is_read = 1, read_at = NOW() WHERE id = :id AND user_id = :user_id');
+    $stmt = $pdo->prepare('UPDATE notifications SET is_read = 1 WHERE id = :id AND user_id = :user_id');
     $stmt->execute([':id' => $notificationId, ':user_id' => $userId]);
 }
 

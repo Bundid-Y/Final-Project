@@ -30,7 +30,7 @@ function get_active_partners(PDO $pdo, int $companyId): array
 function get_active_products(PDO $pdo): array
 {
     $stmt = $pdo->prepare(
-        'SELECT id, name, description, category, image_url, price, display_order
+        'SELECT id, name, description, category, image_url, display_order
          FROM products
          WHERE is_active = 1
          ORDER BY display_order ASC'

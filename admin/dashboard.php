@@ -57,6 +57,14 @@ $modeColors = match($companyMode) {
     default => ['--primary:#4f46e5','--primary-dark:#4338ca','--primary-light:#eef2ff','--secondary:#0f172a'],
 };
 
+$expFilters = [
+    'users' => ['date_from'=>'','date_to'=>'','company_id'=>'','role'=>'','status'=>''],
+    'quotations' => ['date_from'=>'','date_to'=>'','company_id'=>'','user'=>'','status'=>'','product_type'=>''],
+    'transport' => ['date_from'=>'','date_to'=>'','company_id'=>'','user'=>'','status'=>'','service_type'=>''],
+    'activity' => ['date_from'=>'','date_to'=>'','company_id'=>'','user'=>'','action'=>''],
+    'contacts' => ['date_from'=>'','date_to'=>'','company_id'=>'','status'=>''],
+];
+
 function admin_status_badge(string $status): string {
     $m = ['pending'=>['#fff3e0','#e65100','Pending'],'processing'=>['#e3f2fd','#1565c0','Processing'],'quoted'=>['#f3e5f5','#7b1fa2','Quoted'],'approved'=>['#e8f5e9','#2e7d32','Approved'],'in_transit'=>['#e0f7fa','#00838f','In Transit'],'delivered'=>['#e8f5e9','#1b5e20','Delivered'],'completed'=>['#e0f2f1','#00695c','Completed'],'rejected'=>['#fbe9e7','#bf360c','Rejected'],'cancelled'=>['#efebe9','#4e342e','Cancelled'],'active'=>['#dcfce7','#166534','Active'],'inactive'=>['#f1f5f9','#64748b','Inactive'],'suspended'=>['#fee2e2','#991b1b','Suspended'],'deleted'=>['#fee2e2','#991b1b','Deleted']];
     $s = $m[$status] ?? ['#f5f5f5','#616161',$status];

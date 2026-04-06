@@ -214,9 +214,9 @@ body{font-family:'Sarabun','Inter',sans-serif;background:var(--bg);color:var(--t
     <?php endforeach; endif;?>
     </div></div>
 </div>
-<div class="tc"><div class="tc-h"><h2><i class="fas fa-file-invoice"></i> คำขอบริการล่าสุด</h2><a href="?section=quotations" class="btn o" style="padding:6px 14px;font-size:13px">ดูทั้งหมด</a></div><div class="tc-b" style="padding:0"><div class="tw"><table class="tt"><thead><tr><th>เลขที่</th><th>วันที่</th><th>ประเภท</th><th>เส้นทาง</th><th>ราคา</th><th>สถานะ</th></tr></thead><tbody>
-<?php if($quotations===[]):?><tr class="empty"><td colspan="6">ยังไม่มีคำขอบริการ — <a href="../main/quotation.php" style="color:var(--ta);font-weight:600">ขอบริการแรก</a></td></tr>
-<?php else: foreach(array_slice($quotations,0,5) as $q):?><tr><td style="font-weight:600"><?php echo h((string)$q['request_number']);?></td><td style="white-space:nowrap"><?php echo h(date('d/m/Y',strtotime((string)$q['created_at'])));?></td><td><?php echo h((string)$q['service_type']);?></td><td><?php echo h((string)($q['route']??'-'));?></td><td><?php echo $q['quoted_price']!==null?h(number_format((float)$q['quoted_price'],2)).' ฿':'<span style="color:var(--txm)">รอเสนอราคา</span>';?></td><td><?php echo tnb_status_badge((string)$q['status']);?></td></tr><?php endforeach; endif;?>
+<div class="tc"><div class="tc-h"><h2><i class="fas fa-file-invoice"></i> คำขอบริการล่าสุด</h2><a href="?section=quotations" class="btn o" style="padding:6px 14px;font-size:13px">ดูทั้งหมด</a></div><div class="tc-b" style="padding:0"><div class="tw"><table class="tt"><thead><tr><th>เลขที่</th><th>วันที่</th><th>ประเภท</th><th>เส้นทาง</th><th>สถานะ</th></tr></thead><tbody>
+<?php if($quotations===[]):?><tr class="empty"><td colspan="5">ยังไม่มีคำขอบริการ — <a href="../main/quotation.php" style="color:var(--ta);font-weight:600">ขอบริการแรก</a></td></tr>
+<?php else: foreach(array_slice($quotations,0,5) as $q):?><tr><td style="font-weight:600"><?php echo h((string)$q['request_number']);?></td><td style="white-space:nowrap"><?php echo h(date('d/m/Y',strtotime((string)$q['created_at'])));?></td><td><?php echo h((string)$q['service_type']);?></td><td><?php echo h((string)($q['route']??'-'));?></td><td><?php echo tnb_status_badge((string)$q['status']);?></td></tr><?php endforeach; endif;?>
 </tbody></table></div></div></div>
 
 <?php elseif($section==='profile'): ?>
@@ -250,9 +250,9 @@ body{font-family:'Sarabun','Inter',sans-serif;background:var(--bg);color:var(--t
     <div class="sc tl"><div class="si"><i class="fas fa-shipping-fast"></i></div><div class="sn"><?php echo (int)$qStats['in_transit'];?></div><div class="sl">กำลังขนส่ง</div></div>
     <div class="sc gn"><div class="si"><i class="fas fa-flag-checkered"></i></div><div class="sn"><?php echo (int)$qStats['completed'];?></div><div class="sl">เสร็จสิ้น</div></div>
 </div>
-<div class="tc"><div class="tc-h"><h2><i class="fas fa-file-invoice"></i> คำขอบริการทั้งหมด</h2><a href="../main/quotation.php" class="btn p" style="padding:8px 16px;font-size:13px"><i class="fas fa-plus"></i> ขอบริการใหม่</a></div><div class="tc-b" style="padding:0"><div class="tw"><table class="tt"><thead><tr><th>เลขที่</th><th>วันที่</th><th>ประเภท</th><th>เส้นทาง</th><th>ราคา</th><th>Tracking</th><th>สถานะ</th></tr></thead><tbody>
-<?php if($quotations===[]):?><tr class="empty"><td colspan="7">ยังไม่มีคำขอบริการ</td></tr>
-<?php else: foreach($quotations as $q):?><tr><td style="font-weight:600"><?php echo h((string)$q['request_number']);?></td><td style="white-space:nowrap"><?php echo h(date('d/m/Y H:i',strtotime((string)$q['created_at'])));?></td><td><?php echo h((string)$q['service_type']);?></td><td><?php echo h((string)($q['route']??'-'));?></td><td><?php echo $q['quoted_price']!==null?h(number_format((float)$q['quoted_price'],2)).' ฿':'<span style="color:var(--txm)">รอเสนอราคา</span>';?></td><td style="font-size:13px"><?php echo h((string)($q['tracking_number']??'-'));?></td><td><?php echo tnb_status_badge((string)$q['status']);?></td></tr><?php endforeach; endif;?>
+<div class="tc"><div class="tc-h"><h2><i class="fas fa-file-invoice"></i> คำขอบริการทั้งหมด</h2><a href="../main/quotation.php" class="btn p" style="padding:8px 16px;font-size:13px"><i class="fas fa-plus"></i> ขอบริการใหม่</a></div><div class="tc-b" style="padding:0"><div class="tw"><table class="tt"><thead><tr><th>เลขที่</th><th>วันที่</th><th>ประเภท</th><th>เส้นทาง</th><th>Tracking</th><th>สถานะ</th></tr></thead><tbody>
+<?php if($quotations===[]):?><tr class="empty"><td colspan="6">ยังไม่มีคำขอบริการ</td></tr>
+<?php else: foreach($quotations as $q):?><tr><td style="font-weight:600"><?php echo h((string)$q['request_number']);?></td><td style="white-space:nowrap"><?php echo h(date('d/m/Y H:i',strtotime((string)$q['created_at'])));?></td><td><?php echo h((string)$q['service_type']);?></td><td><?php echo h((string)($q['route']??'-'));?></td><td style="font-size:13px"><?php echo h((string)($q['tracking_number']??'-'));?></td><td><?php echo tnb_status_badge((string)$q['status']);?></td></tr><?php endforeach; endif;?>
 </tbody></table></div></div></div>
 
 <?php elseif($section==='tracking'): ?>
@@ -264,10 +264,10 @@ if($active===[]):?><tr class="empty"><td colspan="6">ไม่มีงานข
 <div style="display:flex;align-items:center;gap:8px"><div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;overflow:hidden"><div style="height:100%;width:<?php echo $p;?>%;background:var(--ta);border-radius:3px"></div></div><span style="font-size:12px;font-weight:600;color:var(--txm)"><?php echo $c;?>/<?php echo $t;?></span></div>
 </td></tr><?php endforeach; endif;?>
 </tbody></table></div></div></div>
-<div class="tc"><div class="tc-h"><h2><i class="fas fa-check-circle"></i> งานขนส่งที่เสร็จสิ้น</h2></div><div class="tc-b" style="padding:0"><div class="tw"><table class="tt"><thead><tr><th>เลขที่</th><th>ประเภท</th><th>เส้นทาง</th><th>ราคา</th><th>สถานะ</th></tr></thead><tbody>
+<div class="tc"><div class="tc-h"><h2><i class="fas fa-check-circle"></i> งานขนส่งที่เสร็จสิ้น</h2></div><div class="tc-b" style="padding:0"><div class="tw"><table class="tt"><thead><tr><th>เลขที่</th><th>ประเภท</th><th>เส้นทาง</th><th>สถานะ</th></tr></thead><tbody>
 <?php $done=array_filter($quotations,fn($q)=>in_array((string)$q['status'],['delivered','completed','rejected','cancelled']));
-if($done===[]):?><tr class="empty"><td colspan="5">ยังไม่มีงานที่เสร็จสิ้น</td></tr>
-<?php else: foreach($done as $q):?><tr><td style="font-weight:600"><?php echo h((string)$q['request_number']);?></td><td><?php echo h((string)$q['service_type']);?></td><td><?php echo h((string)($q['route']??'-'));?></td><td><?php echo $q['quoted_price']!==null?h(number_format((float)$q['quoted_price'],2)).' ฿':'-';?></td><td><?php echo tnb_status_badge((string)$q['status']);?></td></tr><?php endforeach; endif;?>
+if($done===[]):?><tr class="empty"><td colspan="4">ยังไม่มีงานที่เสร็จสิ้น</td></tr>
+<?php else: foreach($done as $q):?><tr><td style="font-weight:600"><?php echo h((string)$q['request_number']);?></td><td><?php echo h((string)$q['service_type']);?></td><td><?php echo h((string)($q['route']??'-'));?></td><td><?php echo tnb_status_badge((string)$q['status']);?></td></tr><?php endforeach; endif;?>
 </tbody></table></div></div></div>
 
 <?php elseif($section==='transport'): ?>
