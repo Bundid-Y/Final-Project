@@ -28,11 +28,10 @@ try {
         'status' => sanitize_text((string) ($_GET['filter_status'] ?? '')),
         'role' => sanitize_text((string) ($_GET['filter_role'] ?? '')),
         'product_type' => sanitize_text((string) ($_GET['filter_product_type'] ?? '')),
-        'service_type' => sanitize_text((string) ($_GET['filter_service_type'] ?? '')),
         'action' => sanitize_text((string) ($_GET['filter_action'] ?? '')),
     ];
     
-    $validTypes = ['users', 'quotations', 'transport', 'activity', 'contacts', 'reports'];
+    $validTypes = ['users', 'quotations', 'activity', 'reports'];
     $validFormats = ['csv', 'excel', 'pdf', 'word'];
     
     if (!in_array($type, $validTypes, true) || !in_array($format, $validFormats, true)) {
@@ -43,9 +42,7 @@ try {
     $data = [
         'users' => get_export_users($pdo, $filters),
         'quotations' => get_export_quotations($pdo, $filters),
-        'transport' => get_export_transport($pdo, $filters),
         'activity' => get_export_activity($pdo, $filters),
-        'contacts' => get_export_contacts($pdo, $filters),
         'reports' => get_export_reports($pdo, $filters)
     ];
     
@@ -62,9 +59,7 @@ try {
         $exportTypeLabels = [
             'users' => 'Users',
             'quotations' => 'KOCH Quotations',
-            'transport' => 'TNB Transport Requests',
             'activity' => 'Activity Logs',
-            'contacts' => 'Contact Messages',
             'reports' => 'Reports'
         ];
         $exportTypeLabel = $exportTypeLabels[$type] ?? ucfirst($type);
@@ -310,38 +305,6 @@ function get_export_activity(PDO $pdo, array $filters = []): array
     }
     
     $sql .= ' ORDER BY a.created_at DESC LIMIT 1000';
-    
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute($params);
-    return $stmt->fetchAll() ?: [];
-}
-
-function get_export_contacts(PDO $pdo, array $filters = []): array
-{
-    $sql = 'SELECT * FROM contact_messages WHERE 1=1';
-    $params = [];
-    
-    if (!empty($filters['status'])) {
-        $sql .= ' AND status = :status';
-        $params[':status'] = $filters['status'];
-    }
-    
-    if (!empty($filters['company_id'])) {
-        $sql .= ' AND company_id = :company_id';
-        $params[':company_id'] = $filters['company_id'];
-    }
-    
-    if (!empty($filters['date_from'])) {
-        $sql .= ' AND created_at >= :date_from';
-        $params[':date_from'] = $filters['date_from'] . ' 00:00:00';
-    }
-    
-    if (!empty($filters['date_to'])) {
-        $sql .= ' AND created_at <= :date_to';
-        $params[':date_to'] = $filters['date_to'] . ' 23:59:59';
-    }
-    
-    $sql .= ' ORDER BY created_at DESC';
     
     $stmt = $pdo->prepare($sql);
     $stmt->execute($params);

@@ -760,35 +760,6 @@ function delete_email_template(PDO $pdo, int $id, int $adminId): array
 }
 
 // =============================================
-// CONTACT MESSAGES
-// =============================================
-function get_all_contact_messages(PDO $pdo, ?int $companyId = null, ?string $status = null): array
-{
-    $sql = 'SELECT cm.*, c.name AS company_name FROM contact_messages cm LEFT JOIN companies c ON c.id = cm.company_id WHERE 1=1';
-    $params = [];
-    if ($companyId !== null) {
-        $sql .= ' AND cm.company_id = :cid';
-        $params[':cid'] = $companyId;
-    }
-    if ($status !== null && $status !== '') {
-        $sql .= ' AND cm.status = :status';
-        $params[':status'] = $status;
-    }
-    $sql .= ' ORDER BY cm.created_at DESC';
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute($params);
-    return $stmt->fetchAll();
-}
-
-function reply_contact_message(PDO $pdo, int $id, string $replyMessage, int $adminId): array
-{
-    $stmt = $pdo->prepare("UPDATE contact_messages SET status = 'replied', reply_message = :reply, replied_by = :admin, replied_at = NOW() WHERE id = :id");
-    $stmt->execute([':reply' => $replyMessage, ':admin' => $adminId, ':id' => $id]);
-    log_activity($pdo, $adminId, 'CONTACT_REPLIED', 'contact_messages', $id);
-    return ['success' => true, 'message' => 'Reply sent.'];
-}
-
-// =============================================
 // ACTIVITY LOGS WITH FILTERS
 // =============================================
 function get_activity_logs_filtered(PDO $pdo, array $filters = [], int $limit = 50, int $offset = 0): array

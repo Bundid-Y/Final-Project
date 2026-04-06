@@ -50,7 +50,6 @@ try {
         'email_template'  => handle_email_template($pdo, $action, $id, $_POST, $adminId),
         'email_recipient' => handle_email_recipient($pdo, $action, $id, $_POST, $adminId),
         'user'            => handle_user($pdo, $action, $id, $_POST, $adminId),
-        'contact_message' => handle_contact_message($pdo, $action, $id, $_POST, $adminId),
         'featured_product' => handle_featured_product($pdo, $action, $id, $_POST, $adminId),
         'system_settings' => handle_system_settings_emails($pdo, $action, $_POST, $adminId),
         'notification'    => handle_notification($pdo, $action, $id, $_POST, $adminId),
@@ -151,28 +150,6 @@ function handle_user(PDO $pdo, string $action, int $id, array $post, int $adminI
         'delete'        => delete_user_admin($pdo, $id, $adminId),
         default         => ['success' => false, 'message' => 'Invalid action.'],
     };
-}
-
-function handle_contact_message(PDO $pdo, string $action, int $id, array $post, int $adminId): array
-{
-    if ($action === 'update_status') {
-        $status = sanitize_text((string) ($post['status'] ?? ''));
-        $valid  = ['new', 'read', 'replied', 'archived'];
-        if (!in_array($status, $valid, true)) {
-            return ['success' => false, 'message' => 'Invalid status.'];
-        }
-        $stmt = $pdo->prepare('UPDATE contact_messages SET status = :status WHERE id = :id');
-        $stmt->execute([':status' => $status, ':id' => $id]);
-        log_activity($pdo, $adminId, 'CONTACT_STATUS_CHANGED', 'contact_messages', $id);
-        return ['success' => true, 'message' => 'Contact message status updated.'];
-    }
-    if ($action === 'delete') {
-        $stmt = $pdo->prepare('DELETE FROM contact_messages WHERE id = :id');
-        $stmt->execute([':id' => $id]);
-        log_activity($pdo, $adminId, 'CONTACT_DELETED', 'contact_messages', $id);
-        return ['success' => true, 'message' => 'Contact message deleted.'];
-    }
-    return ['success' => false, 'message' => 'Invalid action.'];
 }
 
 function handle_notification(PDO $pdo, string $action, int $id, array $post, int $adminId): array

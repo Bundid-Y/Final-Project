@@ -11,7 +11,7 @@ $user = require_admin_user();
 $isSuperAdmin = in_array((string) $user['role'], ['super_admin'], true);
 $companyId = $isSuperAdmin ? null : (int) $user['company_id'];
 $section = $_GET['section'] ?? 'overview';
-$validSections = ['overview','users','koch_quotations','tnb_quotations','notifications','activity','settings','sliders','partners','products','featured_products','truck_types','truck_types_index','truck_cards','email_templates','contact_messages','export_data'];
+$validSections = ['overview','users','koch_quotations','tnb_quotations','notifications','activity','settings','sliders','partners','products','featured_products','truck_types','truck_types_index','truck_cards','email_templates','export_data'];
 if (!in_array($section, $validSections, true)) $section = 'overview';
 
 // Company mode toggle
@@ -290,7 +290,6 @@ textarea.fm-input{resize:vertical;min-height:80px}
         <?php if ($companyMode !== 'koch'): ?>
         <a href="?section=tnb_quotations" class="<?php echo $section==='tnb_quotations'?'active':'';?>"><i class="fas fa-truck"></i> TNB Requests<?php if($ext['tnb_pending']>0):?><span class="badge warn"><?php echo $ext['tnb_pending'];?></span><?php endif;?></a>
         <?php endif; ?>
-        <a href="?section=contact_messages" class="<?php echo $section==='contact_messages'?'active':'';?>"><i class="fas fa-envelope-open-text"></i> Contact Messages</a>
         <div class="divider"></div>
         <?php if ($companyMode !== 'all'): ?>
         <div class="label">Content</div>
@@ -1090,29 +1089,6 @@ foreach($stmt->fetchAll() as $row) {
 
 </div>
 
-<?php elseif($section==='contact_messages'): ?>
-<!-- =================== CONTACT MESSAGES =================== -->
-<?php $allContacts = get_all_contact_messages($pdo, $filterCompanyId); ?>
-<div class="card">
-    <div class="card-h"><h2><i class="fas fa-envelope-open-text"></i> Contact Messages</h2><span style="font-size:12px;color:var(--muted)"><?php echo count($allContacts);?> messages</span></div>
-    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Name</th><th>Email</th><th>Subject</th><th>Message</th><th>Company</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead><tbody>
-    <?php if($allContacts===[]):?><tr class="empty"><td colspan="8">No contact messages found</td></tr>
-    <?php else: foreach($allContacts as $cm):?><tr>
-        <td style="font-size:12px;font-weight:600"><?php echo h((string)$cm['name']);?></td>
-        <td style="font-size:12px"><?php echo h((string)$cm['email']);?></td>
-        <td style="font-size:12px;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><?php echo h((string)($cm['subject']??'-'));?></td>
-        <td style="font-size:11px;color:var(--muted);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><?php echo h((string)($cm['message']??'-'));?></td>
-        <td style="font-size:12px"><?php echo h((string)($cm['company_name']??'-'));?></td>
-        <td><?php echo admin_status_badge((string)($cm['status']??'new'));?></td>
-        <td style="font-size:11px;white-space:nowrap"><?php echo h(date('d/m/Y H:i',strtotime((string)$cm['created_at'])));?></td>
-        <td><div class="act-btns">
-            <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>"><input type="hidden" name="entity" value="contact_message"><input type="hidden" name="action" value="update_status"><input type="hidden" name="id" value="<?php echo (int)$cm['id'];?>"><input type="hidden" name="status" value="read"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=contact_messages'));?>"><button type="submit" class="btn btn-xs btn-ghost" title="Mark Read"><i class="fas fa-eye"></i></button></form>
-            <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline" onsubmit="return confirm('Delete?')"><input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>"><input type="hidden" name="entity" value="contact_message"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?php echo (int)$cm['id'];?>"><input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=contact_messages'));?>"><button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></button></form>
-        </div></td>
-    </tr><?php endforeach; endif;?>
-    </tbody></table></div></div>
-</div>
-
 <?php elseif($section==='export_data'): ?>
 <!-- =================== EXPORT DATA =================== -->
 <?php
@@ -1137,26 +1113,12 @@ $expFilters = [
         'status' => $_GET['filter_status'] ?? '',
         'product_type' => $_GET['filter_product_type'] ?? '',
     ],
-    'transport' => [
-        'date_from' => $_GET['date_from'] ?? '',
-        'date_to' => $_GET['date_to'] ?? '',
-        'company_id' => $filterCompanyId ?? '',
-        'user' => $_GET['filter_user'] ?? '',
-        'status' => $_GET['filter_status'] ?? '',
-        'service_type' => $_GET['filter_service_type'] ?? '',
-    ],
     'activity' => [
         'date_from' => $_GET['date_from'] ?? '',
         'date_to' => $_GET['date_to'] ?? '',
         'company_id' => $filterCompanyId ?? '',
         'user' => $_GET['filter_user'] ?? '',
         'action' => $_GET['filter_action'] ?? '',
-    ],
-    'contacts' => [
-        'date_from' => $_GET['date_from'] ?? '',
-        'date_to' => $_GET['date_to'] ?? '',
-        'company_id' => $filterCompanyId ?? '',
-        'status' => $_GET['filter_status'] ?? '',
     ],
 ];
 ?>
@@ -1168,9 +1130,7 @@ $expFilters = [
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px">
             <button class="btn btn-primary" onclick="selectExportType('users')" id="btn-users" style="width:100%"><i class="fas fa-users"></i> Users</button>
             <button class="btn btn-primary" onclick="selectExportType('quotations')" id="btn-quotations" style="width:100%"><i class="fas fa-box"></i> Quotations</button>
-            <button class="btn btn-primary" onclick="selectExportType('transport')" id="btn-transport" style="width:100%"><i class="fas fa-truck"></i> Transport</button>
             <button class="btn btn-primary" onclick="selectExportType('activity')" id="btn-activity" style="width:100%"><i class="fas fa-history"></i> Activity Logs</button>
-            <button class="btn btn-primary" onclick="selectExportType('contacts')" id="btn-contacts" style="width:100%"><i class="fas fa-envelope"></i> Contact Messages</button>
         </div>
     </div>
 </div>
