@@ -127,3 +127,39 @@ function resolve_image_url(?string $dbPath): string
     // Convert relative DB path to full project URL
     return project_url($dbPath);
 }
+
+/**
+ * Generate a Thai localized title for CRUD notifications based on action and entity
+ */
+function crud_notification_title_th(string $action, string $entity): string
+{
+    $actionMap = [
+        'create' => 'สร้าง',
+        'update' => 'อัปเดต',
+        'delete' => 'ลบ',
+        'update_role' => 'เปลี่ยนสิทธิ์',
+        'update_status' => 'เปลี่ยนสถานะ',
+        'update_admin_emails' => 'อัปเดตอีเมลแจ้งเตือน',
+        'update_smtp_config' => 'อัปเดตการตั้งค่า SMTP'
+    ];
+    
+    $entityMap = [
+        'slider' => 'สไลเดอร์',
+        'partner' => 'พันธมิตร',
+        'product' => 'สินค้า',
+        'truck_card' => 'บริการขนส่ง',
+        'email_template' => 'เทมเพลตอีเมล',
+        'user' => 'ผู้ใช้งาน',
+        'featured_product' => 'สินค้าแนะนำ',
+        'system_settings' => 'การตั้งค่าระบบ'
+    ];
+    
+    $thAction = $actionMap[$action] ?? $action;
+    $thEntity = $entityMap[$entity] ?? ucfirst(str_replace('_', ' ', $entity));
+    
+    if ($entity === 'system_settings' && in_array($action, ['update_admin_emails', 'update_smtp_config'])) {
+        return $thAction . 'สำเร็จ';
+    }
+    
+    return $thAction . $thEntity . 'สำเร็จ';
+}

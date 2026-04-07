@@ -76,9 +76,17 @@ try {
         ], $user['company_id'] ?? null);
         
         // Try to create notifications
-        $notificationTitle = "Data Exported: {$exportTypeLabel}";
-        $notificationMessage = "Successfully exported {$recordCount} records from {$exportTypeLabel} in {$formatLabel} format" . 
-                               (!empty(array_filter($filters, function($v) { return !empty($v); })) ? " with filters applied." : ".");
+        $exportTypeLabelTh = match($type) {
+            'users' => 'ผู้ใช้งาน',
+            'quotations' => 'ใบเสนอราคา KOCH',
+            'activity' => 'บันทึกกิจกรรม',
+            'reports' => 'รายงาน',
+            default => $exportTypeLabel
+        };
+
+        $notificationTitle = "ส่งออกข้อมูลแล้ว: {$exportTypeLabelTh}";
+        $notificationMessage = "ทำการส่งออกข้อมูลจำนวน {$recordCount} รายการจากส่วน {$exportTypeLabelTh} ในรูปแบบ {$formatLabel} เป็นที่เรียบร้อยครับ" . 
+                               (!empty(array_filter($filters, function($v) { return !empty($v); })) ? " (มีการใช้ตัวกรอง)" : "");
         
         $adminStmt = $pdo->prepare("SELECT id FROM users WHERE role IN ('super_admin', 'admin') AND status = 'active' AND id != :current_user");
         $adminStmt->execute([':current_user' => $user['id']]);

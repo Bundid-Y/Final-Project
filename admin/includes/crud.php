@@ -59,8 +59,9 @@ function create_slider(PDO $pdo, array $data, int $adminId, array $files = []): 
         ':is_active'   => !empty($data['is_active']) ? 1 : 0,
     ]);
     $id = (int) $pdo->lastInsertId();
+    $id = (int) $pdo->lastInsertId();
     log_activity($pdo, $adminId, 'SLIDER_CREATED', 'slider_contents', $id);
-    return ['success' => true, 'message' => 'Slider created.', 'id' => $id];
+    return ['success' => true, 'message' => 'สร้างรูปภาพสไลด์สำเร็จ', 'id' => $id];
 }
 
 function update_slider(PDO $pdo, int $id, array $data, int $adminId, array $files = []): array
@@ -95,7 +96,7 @@ function update_slider(PDO $pdo, int $id, array $data, int $adminId, array $file
         ':id'          => $id,
     ]);
     log_activity($pdo, $adminId, 'SLIDER_UPDATED', 'slider_contents', $id);
-    return ['success' => true, 'message' => 'Slider updated.'];
+    return ['success' => true, 'message' => 'อัปเดตรูปภาพสไลด์สำเร็จ'];
 }
 
 function delete_slider(PDO $pdo, int $id, int $adminId): array
@@ -103,7 +104,7 @@ function delete_slider(PDO $pdo, int $id, int $adminId): array
     $stmt = $pdo->prepare('DELETE FROM slider_contents WHERE id = :id');
     $stmt->execute([':id' => $id]);
     log_activity($pdo, $adminId, 'SLIDER_DELETED', 'slider_contents', $id);
-    return ['success' => true, 'message' => 'Slider deleted.'];
+    return ['success' => true, 'message' => 'ลบรูปภาพสไลด์สำเร็จ'];
 }
 
 // =============================================
@@ -160,7 +161,7 @@ function create_partner(PDO $pdo, array $data, int $adminId, array $files = []):
     ]);
     $id = (int) $pdo->lastInsertId();
     log_activity($pdo, $adminId, 'PARTNER_CREATED', 'partners', $id);
-    return ['success' => true, 'message' => 'Partner created.', 'id' => $id];
+    return ['success' => true, 'message' => 'เพิ่มข้อมูลพันธมิตรสำเร็จ', 'id' => $id];
 }
 
 function update_partner(PDO $pdo, int $id, array $data, int $adminId, array $files = []): array
@@ -193,7 +194,7 @@ function update_partner(PDO $pdo, int $id, array $data, int $adminId, array $fil
         ':id'            => $id,
     ]);
     log_activity($pdo, $adminId, 'PARTNER_UPDATED', 'partners', $id);
-    return ['success' => true, 'message' => 'Partner updated.'];
+    return ['success' => true, 'message' => 'อัปเดตข้อมูลพันธมิตรสำเร็จ'];
 }
 
 function delete_partner(PDO $pdo, int $id, int $adminId): array
@@ -201,7 +202,7 @@ function delete_partner(PDO $pdo, int $id, int $adminId): array
     $stmt = $pdo->prepare('DELETE FROM partners WHERE id = :id');
     $stmt->execute([':id' => $id]);
     log_activity($pdo, $adminId, 'PARTNER_DELETED', 'partners', $id);
-    return ['success' => true, 'message' => 'Partner deleted.'];
+    return ['success' => true, 'message' => 'ลบข้อมูลพันธมิตรสำเร็จ'];
 }
 
 // =============================================
@@ -251,7 +252,7 @@ function create_product(PDO $pdo, array $data, int $adminId, array $files = []):
     ]);
     $id = (int) $pdo->lastInsertId();
     log_activity($pdo, $adminId, 'PRODUCT_CREATED', 'products', $id);
-    return ['success' => true, 'message' => 'Product created.', 'id' => $id];
+    return ['success' => true, 'message' => 'เพิ่มข้อมูลสินค้าสำเร็จ', 'id' => $id];
 }
 
 function update_product(PDO $pdo, int $id, array $data, int $adminId, array $files = []): array
@@ -284,7 +285,7 @@ function update_product(PDO $pdo, int $id, array $data, int $adminId, array $fil
         ':id'            => $id,
     ]);
     log_activity($pdo, $adminId, 'PRODUCT_UPDATED', 'products', $id);
-    return ['success' => true, 'message' => 'Product updated.'];
+    return ['success' => true, 'message' => 'อัปเดตข้อมูลสินค้าสำเร็จ'];
 }
 
 function delete_product(PDO $pdo, int $id, int $adminId): array
@@ -292,7 +293,7 @@ function delete_product(PDO $pdo, int $id, int $adminId): array
     $stmt = $pdo->prepare('DELETE FROM products WHERE id = :id');
     $stmt->execute([':id' => $id]);
     log_activity($pdo, $adminId, 'PRODUCT_DELETED', 'products', $id);
-    return ['success' => true, 'message' => 'Product deleted.'];
+    return ['success' => true, 'message' => 'ลบข้อมูลสินค้าสำเร็จ'];
 }
 
 // =============================================
@@ -342,7 +343,7 @@ function create_truck_card(PDO $pdo, array $data, int $adminId, array $files = [
     ]);
     $id = (int) $pdo->lastInsertId();
     log_activity($pdo, $adminId, 'TRUCK_CARD_CREATED', 'truck_cards', $id);
-    return ['success' => true, 'message' => 'Truck card created.', 'id' => $id];
+    return ['success' => true, 'message' => 'เพิ่มข้อมูลรถขนส่งสำเร็จ', 'id' => $id];
 }
 
 function update_truck_card(PDO $pdo, int $id, array $data, int $adminId, array $files = []): array
@@ -375,7 +376,7 @@ function update_truck_card(PDO $pdo, int $id, array $data, int $adminId, array $
         ':id'            => $id,
     ]);
     log_activity($pdo, $adminId, 'TRUCK_CARD_UPDATED', 'truck_cards', $id);
-    return ['success' => true, 'message' => 'Truck card updated.'];
+    return ['success' => true, 'message' => 'อัปเดตข้อมูลรถขนส่งสำเร็จ'];
 }
 
 function delete_truck_card(PDO $pdo, int $id, int $adminId): array
@@ -383,7 +384,7 @@ function delete_truck_card(PDO $pdo, int $id, int $adminId): array
     $stmt = $pdo->prepare('DELETE FROM truck_cards WHERE id = :id');
     $stmt->execute([':id' => $id]);
     log_activity($pdo, $adminId, 'TRUCK_CARD_DELETED', 'truck_cards', $id);
-    return ['success' => true, 'message' => 'Truck card deleted.'];
+    return ['success' => true, 'message' => 'ลบข้อมูลรถขนส่งสำเร็จ'];
 }
 
 // =============================================
@@ -434,7 +435,7 @@ function update_user_role(PDO $pdo, int $userId, string $newRole, int $adminId):
     $stmt = $pdo->prepare('UPDATE users SET role = :role WHERE id = :id');
     $stmt->execute([':role' => $newRole, ':id' => $userId]);
     log_activity($pdo, $adminId, 'USER_ROLE_CHANGED', 'users', $userId);
-    return ['success' => true, 'message' => 'User role updated to ' . $newRole . '.'];
+    return ['success' => true, 'message' => 'อัปเดตสิทธิ์ผู้ใช้งานสำเร็จ (' . $newRole . ')'];
 }
 
 function update_user_status(PDO $pdo, int $userId, string $newStatus, int $adminId): array
@@ -452,7 +453,7 @@ function update_user_status(PDO $pdo, int $userId, string $newStatus, int $admin
     $stmt = $pdo->prepare('UPDATE users SET status = :status WHERE id = :id');
     $stmt->execute([':status' => $newStatus, ':id' => $userId]);
     log_activity($pdo, $adminId, 'USER_STATUS_CHANGED', 'users', $userId);
-    return ['success' => true, 'message' => 'User status updated to ' . $newStatus . '.'];
+    return ['success' => true, 'message' => 'อัปเดตสถานะผู้ใช้งานสำเร็จ (' . $newStatus . ')'];
 }
 
 function delete_user_admin(PDO $pdo, int $userId, int $adminId): array
@@ -466,7 +467,7 @@ function delete_user_admin(PDO $pdo, int $userId, int $adminId): array
     $stmt->execute([':id' => $userId, ':status' => 'inactive']);
     
     log_activity($pdo, $adminId, 'USER_DELETED', 'users', $userId);
-    return ['success' => true, 'message' => 'User deleted successfully.'];
+    return ['success' => true, 'message' => 'ลบผู้ใช้งานสำเร็จ'];
 }
 
 // =============================================
@@ -505,7 +506,7 @@ function update_koch_quotation_status(PDO $pdo, int $id, string $status, ?float 
     $stmt = $pdo->prepare('UPDATE koch_quotations SET status = :status, quoted_by = :admin, quoted_at = NOW() WHERE id = :id');
     $stmt->execute([':status' => $status, ':admin' => $adminId, ':id' => $id]);
     log_activity($pdo, $adminId, 'KOCH_QUOTATION_STATUS_CHANGED', 'koch_quotations', $id);
-    return ['success' => true, 'message' => 'Quotation status updated.'];
+    return ['success' => true, 'message' => 'อัปเดตสถานะใบเสนอราคาสำเร็จ'];
 }
 
 function update_tnb_quotation_status(PDO $pdo, int $id, string $status, ?float $price, int $adminId): array
@@ -513,7 +514,7 @@ function update_tnb_quotation_status(PDO $pdo, int $id, string $status, ?float $
     $stmt = $pdo->prepare('UPDATE tnb_quotations SET status = :status, quoted_by = :admin, quoted_at = NOW() WHERE id = :id');
     $stmt->execute([':status' => $status, ':admin' => $adminId, ':id' => $id]);
     log_activity($pdo, $adminId, 'TNB_QUOTATION_STATUS_CHANGED', 'tnb_quotations', $id);
-    return ['success' => true, 'message' => 'Transport request status updated.'];
+    return ['success' => true, 'message' => 'อัปเดตสถานะคำขอบริการขนส่งสำเร็จ'];
 }
 
 // =============================================
@@ -550,7 +551,7 @@ function create_email_template(PDO $pdo, array $data, int $adminId): array
     ]);
     $id = (int) $pdo->lastInsertId();
     log_activity($pdo, $adminId, 'EMAIL_TEMPLATE_CREATED', 'email_templates', $id);
-    return ['success' => true, 'message' => 'Email template created.', 'id' => $id];
+    return ['success' => true, 'message' => 'เพิ่มเทมเพลตอีเมลสำเร็จ', 'id' => $id];
 }
 
 function update_email_template(PDO $pdo, int $id, array $data, int $adminId): array
@@ -570,7 +571,7 @@ function update_email_template(PDO $pdo, int $id, array $data, int $adminId): ar
         ':id'           => $id,
     ]);
     log_activity($pdo, $adminId, 'EMAIL_TEMPLATE_UPDATED', 'email_templates', $id);
-    return ['success' => true, 'message' => 'Email template updated.'];
+    return ['success' => true, 'message' => 'อัปเดตเทมเพลตอีเมลสำเร็จ'];
 }
 
 function delete_email_template(PDO $pdo, int $id, int $adminId): array
@@ -578,7 +579,7 @@ function delete_email_template(PDO $pdo, int $id, int $adminId): array
     $stmt = $pdo->prepare('DELETE FROM email_templates WHERE id = :id');
     $stmt->execute([':id' => $id]);
     log_activity($pdo, $adminId, 'EMAIL_TEMPLATE_DELETED', 'email_templates', $id);
-    return ['success' => true, 'message' => 'Email template deleted.'];
+    return ['success' => true, 'message' => 'ลบเทมเพลตอีเมลสำเร็จ'];
 }
 
 // =============================================
@@ -677,8 +678,8 @@ function notify_admins_login_failed(PDO $pdo, string $username, string $ipAddres
         create_admin_notification(
             $pdo,
             (int) $adminId,
-            'Security Alert: Multiple Failed Logins',
-            "User '{$username}' failed login {$attemptCount} times from IP: {$ipAddress}",
+            'การแจ้งเตือนความปลอดภัย: ล็อกอินล้มเหลวหลายครั้ง',
+            "ผู้ใช้งาน '{$username}' ล็อกอินล้มเหลว {$attemptCount} ครั้ง จาก IP: {$ipAddress}",
             'warning',
             'high',
             'users',
@@ -692,7 +693,7 @@ function notify_admins_new_quotation(PDO $pdo, string $type, string $quotationNu
     $admins = $pdo->prepare("SELECT id FROM users WHERE role IN ('super_admin', 'admin') AND status = 'active'");
     $admins->execute();
     $adminIds = $admins->fetchAll(PDO::FETCH_COLUMN);
-    $label = $type === 'koch' ? 'KOCH Quotation' : 'TNB Transport Request';
+    $label = $type === 'koch' ? 'ใบเสนอราคา KOCH' : 'คำขอบริการขนส่ง TNB';
     // Resolve the company_id for the notification
     $companyCode = $type === 'koch' ? 'KOCH' : 'TNB';
     $notifCompanyId = get_company_id_by_code($pdo, $companyCode);
@@ -700,8 +701,8 @@ function notify_admins_new_quotation(PDO $pdo, string $type, string $quotationNu
         create_admin_notification(
             $pdo,
             (int) $adminId,
-            "New {$label}: {$quotationNumber}",
-            "Customer: {$customerName} submitted a new {$label}.",
+            "{$label} ล่าสุด: {$quotationNumber}",
+            "ลูกค้า: {$customerName} ได้ส่ง{$label}เข้ามาใหม่",
             'info',
             'normal',
             $type === 'koch' ? 'koch_quotations' : 'tnb_quotations',
@@ -739,7 +740,7 @@ function update_system_setting(PDO $pdo, string $key, string $value, int $adminI
     $stmt = $pdo->prepare('UPDATE system_settings SET setting_value = :val WHERE setting_key = :key AND is_editable = 1');
     $stmt->execute([':val' => $value, ':key' => $key]);
     log_activity($pdo, $adminId, 'SETTING_UPDATED', 'system_settings', 0);
-    return ['success' => true, 'message' => "Setting '{$key}' updated."];
+    return ['success' => true, 'message' => "อัปเดตการตั้งค่า '{$key}' สำเร็จ"];
 }
 
 // =============================================
@@ -843,7 +844,7 @@ function create_featured_product(PDO $pdo, array $data, int $adminId, array $fil
     ]);
     $id = (int) $pdo->lastInsertId();
     log_activity($pdo, $adminId, 'FEATURED_PRODUCT_CREATED', 'featured_products', $id);
-    return ['success' => true, 'message' => 'Featured product created.', 'id' => $id];
+    return ['success' => true, 'message' => 'เพิ่มสินค้าแนะนำสำเร็จ', 'id' => $id];
 }
 
 function update_featured_product(PDO $pdo, int $id, array $data, int $adminId, array $files = []): array
@@ -877,7 +878,7 @@ function update_featured_product(PDO $pdo, int $id, array $data, int $adminId, a
         ':id'            => $id,
     ]);
     log_activity($pdo, $adminId, 'FEATURED_PRODUCT_UPDATED', 'featured_products', $id);
-    return ['success' => true, 'message' => 'Featured product updated.'];
+    return ['success' => true, 'message' => 'อัปเดตสินค้าแนะนำสำเร็จ'];
 }
 
 function delete_featured_product(PDO $pdo, int $id, int $adminId): array
@@ -885,7 +886,7 @@ function delete_featured_product(PDO $pdo, int $id, int $adminId): array
     $stmt = $pdo->prepare('DELETE FROM featured_products WHERE id = :id');
     $stmt->execute([':id' => $id]);
     log_activity($pdo, $adminId, 'FEATURED_PRODUCT_DELETED', 'featured_products', $id);
-    return ['success' => true, 'message' => 'Featured product deleted.'];
+    return ['success' => true, 'message' => 'ลบสินค้าแนะนำสำเร็จ'];
 }
 
 // =============================================
@@ -908,7 +909,7 @@ function handle_system_settings_emails(PDO $pdo, string $action, array $post, in
         }
         
         log_activity($pdo, $adminId, 'SETTINGS_UPDATED', 'system_settings', 0, [], ['emails_updated' => true]);
-        return ['success' => true, 'message' => 'Notification emails saved successfully.'];
+        return ['success' => true, 'message' => 'บันทึกอีเมลแจ้งเตือนสำเร็จ'];
     }
 
     if ($action === 'update_smtp_config') {
@@ -928,7 +929,7 @@ function handle_system_settings_emails(PDO $pdo, string $action, array $post, in
         }
         
         log_activity($pdo, $adminId, 'SETTINGS_UPDATED', 'system_settings', 0, [], ['smtp_updated' => true]);
-        return ['success' => true, 'message' => 'SMTP Configuration saved successfully.'];
+        return ['success' => true, 'message' => 'บันทึกการตั้งค่า SMTP สำเร็จ'];
     }
 
     return ['success' => false, 'message' => 'Invalid action for settings.'];

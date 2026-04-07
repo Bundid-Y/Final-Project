@@ -57,7 +57,8 @@ try {
     if ($result['success']) {
         // Don't create a notification for notification-related actions (prevents paradox of creating unread while marking all read)
         if ($entity !== 'notification') {
-            create_notification($pdo, $adminId, 'CRUD: ' . ucfirst($action) . ' ' . ucfirst(str_replace('_', ' ', $entity)), $result['message'], 'success', null, null, 'normal', $crudCompanyId);
+            $thaiTitle = crud_notification_title_th($action, $entity);
+            create_notification($pdo, $adminId, $thaiTitle, $result['message'], 'success', null, null, 'normal', $crudCompanyId);
         }
     }
 

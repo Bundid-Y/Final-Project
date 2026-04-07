@@ -159,8 +159,8 @@ function apply_login_failure(PDO $pdo, int $userId): void
         foreach ($admins->fetchAll(PDO::FETCH_COLUMN) as $adminId) {
             create_notification(
                 $pdo, (int) $adminId,
-                'Security Alert: Failed Login (' . $nextAttempts . 'x)',
-                "User '{$username}' failed login {$nextAttempts} times from IP: {$ip}",
+                'การแจ้งเตือนความปลอดภัย: ล็อกอินล้มเหลว (' . $nextAttempts . ' ครั้ง)',
+                "ผู้ใช้งาน '{$username}' ล็อกอินล้มเหลว {$nextAttempts} ครั้ง จาก IP: {$ip}",
                 'warning', 'users', $userId, 'high'
             );
         }

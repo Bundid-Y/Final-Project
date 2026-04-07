@@ -145,8 +145,8 @@ function create_koch_quotation(PDO $pdo, array $payload, array $files = []): arr
             create_notification(
                 $pdo,
                 (int) $staff['id'],
-                'New KOCH quotation request',
-                'Quotation ' . $quotationNumber . ' has been submitted by ' . sanitize_text((string) $payload['first_name']) . ' ' . sanitize_text((string) $payload['last_name']),
+                'ใบเสนอราคา KOCH ล่าสุด',
+                'ใบเสนอราคาเลขที่ ' . $quotationNumber . ' ถูกส่งเข้ามาโดย ' . sanitize_text((string) $payload['first_name']) . ' ' . sanitize_text((string) $payload['last_name']),
                 'info',
                 'koch_quotations',
                 $quotationId,
@@ -317,8 +317,8 @@ function create_tnb_quotation(PDO $pdo, array $payload, array $files = []): arra
             create_notification(
                 $pdo,
                 (int) $staff['id'],
-                'New TNB quotation request',
-                'Request ' . $requestNumber . ' has been submitted by ' . sanitize_text((string) $payload['first_name']) . ' ' . sanitize_text((string) $payload['last_name']),
+                'คำขอบริการขนส่ง TNB ล่าสุด',
+                'คำขอบริการเลขที่ ' . $requestNumber . ' ถูกส่งเข้ามาโดย ' . sanitize_text((string) $payload['first_name']) . ' ' . sanitize_text((string) $payload['last_name']),
                 'info',
                 'tnb_quotations',
                 $quotationId,
