@@ -25,8 +25,8 @@ function log_activity(PDO $pdo, ?int $userId, string $action, ?string $tableName
         $companyName = $companyStmt->fetchColumn();
     }
     
-    // Prepend company name to action for clarity
-    $actionWithCompany = $companyName ? "[{$companyName}] {$action}" : $action;
+    // We no longer prepend the company name so that translation mappings match the exact action string.
+    $actionWithCompany = $action;
     
     $stmt = $pdo->prepare(
         'INSERT INTO activity_logs (user_id, company_id, company_name, action, table_name, record_id, old_values, new_values, ip_address, user_agent)

@@ -66,54 +66,55 @@ $expFilters = [
 ];
 
 function admin_status_badge(string $status): string {
-    $m = ['pending'=>['#fff3e0','#e65100','Pending'],'processing'=>['#e3f2fd','#1565c0','Processing'],'quoted'=>['#f3e5f5','#7b1fa2','Quoted'],'approved'=>['#e8f5e9','#2e7d32','Approved'],'in_transit'=>['#e0f7fa','#00838f','In Transit'],'delivered'=>['#e8f5e9','#1b5e20','Delivered'],'completed'=>['#e0f2f1','#00695c','Completed'],'rejected'=>['#fbe9e7','#bf360c','Rejected'],'cancelled'=>['#efebe9','#4e342e','Cancelled'],'active'=>['#dcfce7','#166534','Active'],'inactive'=>['#f1f5f9','#64748b','Inactive'],'suspended'=>['#fee2e2','#991b1b','Suspended'],'deleted'=>['#fee2e2','#991b1b','Deleted']];
+    $m = ['pending'=>['#fff3e0','#e65100','รอดำเนินการ'],'processing'=>['#e3f2fd','#1565c0','กำลังดำเนินการ'],'quoted'=>['#f3e5f5','#7b1fa2','เสนอราคาแล้ว'],'approved'=>['#e8f5e9','#2e7d32','อนุมัติแล้ว'],'in_transit'=>['#e0f7fa','#00838f','กำลังขนส่ง'],'delivered'=>['#e8f5e9','#1b5e20','จัดส่งแล้ว'],'completed'=>['#e0f2f1','#00695c','เสร็จสิ้น'],'rejected'=>['#fbe9e7','#bf360c','ปฏิเสธ'],'cancelled'=>['#efebe9','#4e342e','ยกเลิก'],'active'=>['#dcfce7','#166534','ใช้งาน'],'inactive'=>['#f1f5f9','#64748b','ปิดใช้งาน'],'suspended'=>['#fee2e2','#991b1b','ระงับ'],'deleted'=>['#fee2e2','#991b1b','ลบแล้ว']];
     $s = $m[$status] ?? ['#f5f5f5','#616161',$status];
     return '<span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background:'.$s[0].';color:'.$s[1].'">'.h($s[2]).'</span>';
 }
 function admin_action_label(string $a): string {
+    $a = preg_replace('/^\[.*?\]\s*/', '', $a);
     $m = [
-        'LOGIN_SUCCESS'=>'Login',
-        'LOGIN_FAILED'=>'Login Failed',
-        'REGISTER_SUCCESS'=>'Register',
-        'AUTO_REGISTER_FROM_QUOTATION'=>'Auto Register',
-        'PROFILE_UPDATED'=>'Profile Update',
-        'PASSWORD_CHANGED'=>'Password Change',
-        'LOGOUT'=>'Logout',
-        'KOCH_QUOTATION_CREATED'=>'KOCH Quotation',
-        'TNB_QUOTATION_CREATED'=>'TNB Request',
-        'CONTACT_MESSAGE_SENT'=>'Contact Message',
-        'CONTACT_STATUS_CHANGED'=>'Contact Status Changed',
-        'CONTACT_DELETED'=>'Contact Deleted',
-        'SLIDER_CREATED'=>'Slider Created',
-        'SLIDER_UPDATED'=>'Slider Updated',
-        'SLIDER_DELETED'=>'Slider Deleted',
-        'PARTNER_CREATED'=>'Partner Created',
-        'PARTNER_UPDATED'=>'Partner Updated',
-        'PARTNER_DELETED'=>'Partner Deleted',
-        'PRODUCT_CREATED'=>'Product Created',
-        'PRODUCT_UPDATED'=>'Product Updated',
-        'PRODUCT_DELETED'=>'Product Deleted',
-        'TRUCK_TYPE_CREATED'=>'Truck Type Created',
-        'TRUCK_TYPE_UPDATED'=>'Truck Type Updated',
-        'TRUCK_TYPE_DELETED'=>'Truck Type Deleted',
-        'BRANCH_CREATED'=>'Branch Created',
-        'BRANCH_UPDATED'=>'Branch Updated',
-        'BRANCH_DELETED'=>'Branch Deleted',
-        'USER_ROLE_CHANGED'=>'User Role Changed',
-        'USER_STATUS_CHANGED'=>'User Status Changed',
-        'FEATURED_PRODUCT_CREATED'=>'Featured Product Created',
-        'FEATURED_PRODUCT_UPDATED'=>'Featured Product Updated',
-        'FEATURED_PRODUCT_DELETED'=>'Featured Product Deleted',
-        'TRUCK_CARD_CREATED'=>'Truck Card Created',
-        'TRUCK_CARD_UPDATED'=>'Truck Card Updated',
-        'TRUCK_CARD_DELETED'=>'Truck Card Deleted',
-        'DATA_EXPORTED'=>'Data Exported',
-        'DATA_EXPORT_FAILED'=>'Export Failed',
+        'LOGIN_SUCCESS'=>'เข้าสู่ระบบสำเร็จ',
+        'LOGIN_FAILED'=>'เข้าสู่ระบบไม่สำเร็จ',
+        'REGISTER_SUCCESS'=>'สมัครสมาชิก',
+        'AUTO_REGISTER_FROM_QUOTATION'=>'สมัครอัตโนมัติ',
+        'PROFILE_UPDATED'=>'แก้ไขโปรไฟล์',
+        'PASSWORD_CHANGED'=>'เปลี่ยนรหัสผ่าน',
+        'LOGOUT'=>'ออกจากระบบ',
+        'KOCH_QUOTATION_CREATED'=>'ส่งใบเสนอราคา KOCH',
+        'TNB_QUOTATION_CREATED'=>'ส่งคำขอบริการ TNB',
+        'CONTACT_MESSAGE_SENT'=>'ส่งข้อความติดต่อ',
+        'CONTACT_STATUS_CHANGED'=>'เปลี่ยนสถานะข้อความ',
+        'CONTACT_DELETED'=>'ลบข้อความติดต่อ',
+        'SLIDER_CREATED'=>'สร้างสไลเดอร์',
+        'SLIDER_UPDATED'=>'แก้ไขสไลเดอร์',
+        'SLIDER_DELETED'=>'ลบสไลเดอร์',
+        'PARTNER_CREATED'=>'เพิ่มพันธมิตร',
+        'PARTNER_UPDATED'=>'แก้ไขพันธมิตร',
+        'PARTNER_DELETED'=>'ลบพันธมิตร',
+        'PRODUCT_CREATED'=>'เพิ่มสินค้า',
+        'PRODUCT_UPDATED'=>'แก้ไขสินค้า',
+        'PRODUCT_DELETED'=>'ลบสินค้า',
+        'TRUCK_TYPE_CREATED'=>'เพิ่มประเภทรถ',
+        'TRUCK_TYPE_UPDATED'=>'แก้ไขประเภทรถ',
+        'TRUCK_TYPE_DELETED'=>'ลบประเภทรถ',
+        'BRANCH_CREATED'=>'เพิ่มสาขา',
+        'BRANCH_UPDATED'=>'แก้ไขสาขา',
+        'BRANCH_DELETED'=>'ลบสาขา',
+        'USER_ROLE_CHANGED'=>'เปลี่ยนบทบาทผู้ใช้',
+        'USER_STATUS_CHANGED'=>'เปลี่ยนสถานะผู้ใช้',
+        'FEATURED_PRODUCT_CREATED'=>'เพิ่มสินค้าแนะนำ',
+        'FEATURED_PRODUCT_UPDATED'=>'แก้ไขสินค้าแนะนำ',
+        'FEATURED_PRODUCT_DELETED'=>'ลบสินค้าแนะนำ',
+        'TRUCK_CARD_CREATED'=>'เพิ่มการ์ดรถ',
+        'TRUCK_CARD_UPDATED'=>'แก้ไขการ์ดรถ',
+        'TRUCK_CARD_DELETED'=>'ลบการ์ดรถ',
+        'DATA_EXPORTED'=>'ส่งออกข้อมูล',
+        'DATA_EXPORT_FAILED'=>'ส่งออกข้อมูลล้มเหลว',
     ];
     return $m[$a] ?? $a;
 }
 
-$sectionTitles = ['overview'=>'Dashboard Overview','users'=>'User Management','koch_quotations'=>'KOCH Quotations','tnb_quotations'=>'TNB Requests','notifications'=>'Notifications','activity'=>'Activity Logs','settings'=>'System Settings','sliders'=>'Slider Management','partners'=>'Partner Management','products'=>'Product Management','featured_products'=>'Featured Products','truck_cards'=>'Truck Cards','email_templates'=>'Notification Emails'];
+$sectionTitles = ['overview'=>'ภาพรวม','users'=>'จัดการผู้ใช้','koch_quotations'=>'ใบเสนอราคา KOCH','tnb_quotations'=>'คำขอบริการ TNB','notifications'=>'การแจ้งเตือน','activity'=>'ประวัติการใช้งาน','settings'=>'ตั้งค่าระบบ','sliders'=>'จัดการสไลเดอร์','partners'=>'จัดการพันธมิตร','products'=>'จัดการสินค้า','featured_products'=>'สินค้าแนะนำ','truck_cards'=>'การ์ดประเภทรถ','email_templates'=>'ตั้งค่าอีเมลแจ้งเตือน','export_data'=>'ส่งออกข้อมูล'];
 ?>
 <!DOCTYPE html>
 <html lang="th">
@@ -285,7 +286,7 @@ textarea.fm-input{resize:vertical;min-height:80px}
 <aside class="sidebar" id="sidebar">
     <div class="sb-brand">
         <div class="logo">K&T</div>
-        <h2>Admin Panel<small>KOCH & TNB System</small></h2>
+        <h2>ระบบจัดการ<small>KOCH & TNB</small></h2>
     </div>
     <div class="sb-user">
         <div class="avatar"><i class="fas fa-user-shield"></i></div>
@@ -296,46 +297,46 @@ textarea.fm-input{resize:vertical;min-height:80px}
     </div>
     <div style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.08)">
         <div style="display:flex;gap:4px;background:rgba(255,255,255,.08);border-radius:8px;padding:3px">
-            <a href="?section=<?php echo h($section);?>&company_mode=all" style="flex:1;text-align:center;padding:5px 8px;border-radius:6px;font-size:11px;font-weight:600;text-decoration:none;transition:all .2s;<?php echo $companyMode==='all'?'background:var(--primary);color:#fff':'color:rgba(255,255,255,.5)';?>">All</a>
+            <a href="?section=<?php echo h($section);?>&company_mode=all" style="flex:1;text-align:center;padding:5px 8px;border-radius:6px;font-size:11px;font-weight:600;text-decoration:none;transition:all .2s;<?php echo $companyMode==='all'?'background:var(--primary);color:#fff':'color:rgba(255,255,255,.5)';?>">ทั้งหมด</a>
             <a href="?section=<?php echo h($section);?>&company_mode=koch" style="flex:1;text-align:center;padding:5px 8px;border-radius:6px;font-size:11px;font-weight:600;text-decoration:none;transition:all .2s;<?php echo $companyMode==='koch'?'background:#ED2A2A;color:#fff':'color:rgba(255,255,255,.5)';?>">KOCH</a>
             <a href="?section=<?php echo h($section);?>&company_mode=tnb" style="flex:1;text-align:center;padding:5px 8px;border-radius:6px;font-size:11px;font-weight:600;text-decoration:none;transition:all .2s;<?php echo $companyMode==='tnb'?'background:#0d2d6b;color:#fff':'color:rgba(255,255,255,.5)';?>">TNB</a>
         </div>
     </div>
     <nav class="sb-nav">
-        <div class="label">Main</div>
-        <a href="?section=notifications" class="<?php echo $section==='notifications'?'active':'';?>"><i class="fas fa-bell"></i> Notifications<?php if((int)$stats['unread_notifications']>0):?><span class="badge"><?php echo (int)$stats['unread_notifications'];?></span><?php endif;?></a>
-        <a href="?section=overview" class="<?php echo $section==='overview'?'active':'';?>"><i class="fas fa-chart-pie"></i> Dashboard<?php if($totalPending>0):?><span class="badge warn"><?php echo $totalPending;?></span><?php endif;?></a>
+        <div class="label">หลัก</div>
+        <a href="?section=notifications" class="<?php echo $section==='notifications'?'active':'';?>"><i class="fas fa-bell"></i> การแจ้งเตือน<?php if((int)$stats['unread_notifications']>0):?><span class="badge"><?php echo (int)$stats['unread_notifications'];?></span><?php endif;?></a>
+        <a href="?section=overview" class="<?php echo $section==='overview'?'active':'';?>"><i class="fas fa-chart-pie"></i> ภาพรวม<?php if($totalPending>0):?><span class="badge warn"><?php echo $totalPending;?></span><?php endif;?></a>
         <div class="divider"></div>
-        <div class="label">Business</div>
-        <a href="?section=users" class="<?php echo $section==='users'?'active':'';?>"><i class="fas fa-users"></i> Users</a>
+        <div class="label">ธุรกิจ</div>
+        <a href="?section=users" class="<?php echo $section==='users'?'active':'';?>"><i class="fas fa-users"></i> ผู้ใช้งาน</a>
         <?php if ($companyMode !== 'tnb'): ?>
-        <a href="?section=koch_quotations" class="<?php echo $section==='koch_quotations'?'active':'';?>"><i class="fas fa-box"></i> KOCH Quotations<?php if($ext['koch_pending']>0):?><span class="badge warn"><?php echo $ext['koch_pending'];?></span><?php endif;?></a>
+        <a href="?section=koch_quotations" class="<?php echo $section==='koch_quotations'?'active':'';?>"><i class="fas fa-box"></i> ใบเสนอราคา KOCH<?php if($ext['koch_pending']>0):?><span class="badge warn"><?php echo $ext['koch_pending'];?></span><?php endif;?></a>
         <?php endif; ?>
         <?php if ($companyMode !== 'koch'): ?>
-        <a href="?section=tnb_quotations" class="<?php echo $section==='tnb_quotations'?'active':'';?>"><i class="fas fa-truck"></i> TNB Requests<?php if($ext['tnb_pending']>0):?><span class="badge warn"><?php echo $ext['tnb_pending'];?></span><?php endif;?></a>
+        <a href="?section=tnb_quotations" class="<?php echo $section==='tnb_quotations'?'active':'';?>"><i class="fas fa-truck"></i> คำขอบริการ TNB<?php if($ext['tnb_pending']>0):?><span class="badge warn"><?php echo $ext['tnb_pending'];?></span><?php endif;?></a>
         <?php endif; ?>
         <div class="divider"></div>
         <?php if ($companyMode !== 'all'): ?>
-        <div class="label">Content</div>
-        <a href="?section=sliders" class="<?php echo $section==='sliders'?'active':'';?>"><i class="fas fa-images"></i> Sliders</a>
-        <a href="?section=partners" class="<?php echo $section==='partners'?'active':'';?>"><i class="fas fa-handshake"></i> Partners</a>
+        <div class="label">เนื้อหา</div>
+        <a href="?section=sliders" class="<?php echo $section==='sliders'?'active':'';?>"><i class="fas fa-images"></i> สไลเดอร์</a>
+        <a href="?section=partners" class="<?php echo $section==='partners'?'active':'';?>"><i class="fas fa-handshake"></i> พันธมิตร</a>
         <?php if ($companyMode === 'koch'): ?>
-        <a href="?section=products" class="<?php echo $section==='products'?'active':'';?>"><i class="fas fa-boxes-stacked"></i> Products</a>
-        <a href="?section=featured_products" class="<?php echo $section==='featured_products'?'active':'';?>"><i class="fas fa-star"></i> Featured Products</a>
+        <a href="?section=products" class="<?php echo $section==='products'?'active':'';?>"><i class="fas fa-boxes-stacked"></i> สินค้า</a>
+        <a href="?section=featured_products" class="<?php echo $section==='featured_products'?'active':'';?>"><i class="fas fa-star"></i> สินค้าแนะนำ</a>
         <?php elseif ($companyMode === 'tnb'): ?>
-        <a href="?section=truck_cards" class="<?php echo $section==='truck_cards'?'active':'';?>"><i class="fas fa-id-card"></i> Truck Cards</a>
+        <a href="?section=truck_cards" class="<?php echo $section==='truck_cards'?'active':'';?>"><i class="fas fa-id-card"></i> การ์ดประเภทรถ</a>
         <?php endif; ?>
         <?php endif; ?>
         <div class="divider"></div>
-        <div class="label">Communications</div>
-        <a href="?section=email_templates" class="<?php echo $section==='email_templates'?'active':'';?>"><i class="fas fa-envelope"></i> Notification Emails</a>
-        <a href="?section=activity" class="<?php echo $section==='activity'?'active':'';?>"><i class="fas fa-history"></i> Activity Logs</a>
+        <div class="label">สื่อสาร</div>
+        <a href="?section=email_templates" class="<?php echo $section==='email_templates'?'active':'';?>"><i class="fas fa-envelope"></i> ตั้งค่าอีเมล</a>
+        <a href="?section=activity" class="<?php echo $section==='activity'?'active':'';?>"><i class="fas fa-history"></i> ประวัติการใช้งาน</a>
         <div class="divider"></div>
-        <div class="label">Export</div>
-        <a href="?section=export_data" class="<?php echo $section==='export_data'?'active':'';?>"><i class="fas fa-file-export"></i> Export Data</a>
+        <div class="label">ส่งออก</div>
+        <a href="?section=export_data" class="<?php echo $section==='export_data'?'active':'';?>"><i class="fas fa-file-export"></i> ส่งออกข้อมูล</a>
         <div class="divider"></div>
-        <div class="label">System</div>
-        <a href="?section=settings" class="<?php echo $section==='settings'?'active':'';?>"><i class="fas fa-cog"></i> Settings</a>
+        <div class="label">ระบบ</div>
+        <a href="?section=settings" class="<?php echo $section==='settings'?'active':'';?>"><i class="fas fa-cog"></i> ตั้งค่า</a>
     </nav>
     <div class="sb-foot">
         <?php
@@ -351,10 +352,10 @@ textarea.fm-input{resize:vertical;min-height:80px}
         }
         $userPageUrl = user_page_by_company(company_code_from_slug($userPageCompany));
         ?>
-        <a href="<?php echo h($userPageUrl);?>"><i class="fas fa-external-link-alt"></i> Front User Page</a>
-        <a href="<?php echo h(project_url('koch/main/index.php'));?>"><i class="fas fa-globe"></i> KOCH Website</a>
-        <a href="<?php echo h(project_url('tnb/main/index.php'));?>"><i class="fas fa-globe"></i> TNB Website</a>
-        <a href="<?php echo h(project_url('admin/api/auth/logout.php'));?>?company=<?php echo h($userPageCompany);?>"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        <a href="<?php echo h($userPageUrl);?>"><i class="fas fa-external-link-alt"></i> ไปหน้าผู้ใช้</a>
+        <a href="<?php echo h(project_url('koch/main/index.php'));?>"><i class="fas fa-globe"></i> เว็บ KOCH</a>
+        <a href="<?php echo h(project_url('tnb/main/index.php'));?>"><i class="fas fa-globe"></i> เว็บ TNB</a>
+        <a href="<?php echo h(project_url('admin/api/auth/logout.php'));?>?company=<?php echo h($userPageCompany);?>"><i class="fas fa-sign-out-alt"></i> ออกจากระบบ</a>
     </div>
 </aside>
 
@@ -364,15 +365,15 @@ textarea.fm-input{resize:vertical;min-height:80px}
             <button class="mob-toggle" onclick="toggleSB()"><i class="fas fa-bars"></i></button>
             <div>
                 <h1><?php echo $sectionTitles[$section] ?? 'Dashboard';?></h1>
-                <div class="bc">Admin Panel &rsaquo; <?php echo $sectionTitles[$section] ?? 'Dashboard';?></div>
+                <div class="bc">ระบบจัดการ &rsaquo; <?php echo $sectionTitles[$section] ?? 'ภาพรวม';?></div>
             </div>
         </div>
         <div class="topbar-right">
             <?php if ($companyMode !== 'tnb'): ?>
-            <a href="<?php echo h(project_url('koch/main/quotation.php'));?>" class="tb-btn ghost"><i class="fas fa-plus"></i> KOCH Quote</a>
+            <a href="<?php echo h(project_url('koch/main/quotation.php'));?>" class="tb-btn ghost"><i class="fas fa-plus"></i> ขอใบเสนอราคา KOCH</a>
             <?php endif; ?>
             <?php if ($companyMode !== 'koch'): ?>
-            <a href="<?php echo h(project_url('tnb/main/quotation.php'));?>" class="tb-btn ghost"><i class="fas fa-plus"></i> TNB Request</a>
+            <a href="<?php echo h(project_url('tnb/main/quotation.php'));?>" class="tb-btn ghost"><i class="fas fa-plus"></i> ขอบริการ TNB</a>
             <?php endif; ?>
         </div>
     </div>
@@ -388,24 +389,24 @@ textarea.fm-input{resize:vertical;min-height:80px}
 <!-- ALL MODE: Summary only -->
 <div class="stats-row">
     <div class="stat-card purple">
-        <div class="sc-top"><div class="sc-icon"><i class="fas fa-users"></i></div><?php if($ext['new_users_month']>0):?><span class="sc-change up">+<?php echo $ext['new_users_month'];?> this month</span><?php endif;?></div>
+        <div class="sc-top"><div class="sc-icon"><i class="fas fa-users"></i></div><?php if($ext['new_users_month']>0):?><span class="sc-change up">+<?php echo $ext['new_users_month'];?> เดือนนี้</span><?php endif;?></div>
         <div class="sc-num"><?php echo number_format((int)$stats['users']);?></div>
-        <div class="sc-label">Total Users (All)</div>
+        <div class="sc-label">ผู้ใช้ทั้งหมด</div>
     </div>
     <div class="stat-card blue">
-        <div class="sc-top"><div class="sc-icon"><i class="fas fa-box"></i></div><?php if($ext['koch_month']>0):?><span class="sc-change up">+<?php echo $ext['koch_month'];?> this month</span><?php endif;?></div>
+        <div class="sc-top"><div class="sc-icon"><i class="fas fa-box"></i></div><?php if($ext['koch_month']>0):?><span class="sc-change up">+<?php echo $ext['koch_month'];?> เดือนนี้</span><?php endif;?></div>
         <div class="sc-num"><?php echo number_format((int)$stats['koch_quotations']);?></div>
-        <div class="sc-label">KOCH Quotations (Total)</div>
+        <div class="sc-label">ใบเสนอราคา KOCH (ทั้งหมด)</div>
     </div>
     <div class="stat-card teal">
-        <div class="sc-top"><div class="sc-icon"><i class="fas fa-truck"></i></div><?php if($ext['tnb_month']>0):?><span class="sc-change up">+<?php echo $ext['tnb_month'];?> this month</span><?php endif;?></div>
+        <div class="sc-top"><div class="sc-icon"><i class="fas fa-truck"></i></div><?php if($ext['tnb_month']>0):?><span class="sc-change up">+<?php echo $ext['tnb_month'];?> เดือนนี้</span><?php endif;?></div>
         <div class="sc-num"><?php echo number_format((int)$stats['tnb_quotations']);?></div>
-        <div class="sc-label">TNB Requests (Total)</div>
+        <div class="sc-label">คำขอบริการ TNB (ทั้งหมด)</div>
     </div>
     <div class="stat-card orange">
         <div class="sc-top"><div class="sc-icon"><i class="fas fa-clock"></i></div></div>
         <div class="sc-num"><?php echo $totalPending;?></div>
-        <div class="sc-label">Pending Approval (All)</div>
+        <div class="sc-label">รอดำเนินการ (ทั้งหมด)</div>
     </div>
 </div>
 
@@ -419,21 +420,21 @@ textarea.fm-input{resize:vertical;min-height:80px}
 
 <div class="grid-2">
     <div class="card">
-        <div class="card-h"><h2><i class="fas fa-box" style="color:#ED2A2A"></i> KOCH Summary</h2></div>
+        <div class="card-h"><h2><i class="fas fa-box" style="color:#ED2A2A"></i> สรุป KOCH</h2></div>
         <div class="card-b">
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-                <div style="padding:12px;background:var(--bg);border-radius:10px;text-align:center"><div style="font-size:22px;font-weight:800"><?php echo number_format((int)$stats['koch_quotations']);?></div><div style="font-size:11px;color:var(--muted)">Quotations</div></div>
-                <div style="padding:12px;background:var(--bg);border-radius:10px;text-align:center"><div style="font-size:22px;font-weight:800"><?php echo $ext['koch_pending'];?></div><div style="font-size:11px;color:var(--muted)">Pending</div></div>
+                <div style="padding:12px;background:var(--bg);border-radius:10px;text-align:center"><div style="font-size:22px;font-weight:800"><?php echo number_format((int)$stats['koch_quotations']);?></div><div style="font-size:11px;color:var(--muted)">ใบเสนอราคา</div></div>
+                <div style="padding:12px;background:var(--bg);border-radius:10px;text-align:center"><div style="font-size:22px;font-weight:800"><?php echo $ext['koch_pending'];?></div><div style="font-size:11px;color:var(--muted)">รอดำเนินการ</div></div>
             </div>
         </div>
     </div>
     <div class="card">
-        <div class="card-h"><h2><i class="fas fa-truck" style="color:#0d2d6b"></i> TNB Summary</h2></div>
+        <div class="card-h"><h2><i class="fas fa-truck" style="color:#0d2d6b"></i> สรุป TNB</h2></div>
         <div class="card-b">
             <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
-                <div style="padding:12px;background:var(--bg);border-radius:10px;text-align:center"><div style="font-size:22px;font-weight:800"><?php echo number_format((int)$stats['tnb_quotations']);?></div><div style="font-size:11px;color:var(--muted)">Requests</div></div>
-                <div style="padding:12px;background:var(--bg);border-radius:10px;text-align:center"><div style="font-size:22px;font-weight:800"><?php echo $ext['tnb_pending'];?></div><div style="font-size:11px;color:var(--muted)">Pending</div></div>
-                <div style="padding:12px;background:var(--bg);border-radius:10px;text-align:center"><div style="font-size:22px;font-weight:800"><?php echo $ext['tnb_in_transit'];?></div><div style="font-size:11px;color:var(--muted)">In Transit</div></div>
+                <div style="padding:12px;background:var(--bg);border-radius:10px;text-align:center"><div style="font-size:22px;font-weight:800"><?php echo number_format((int)$stats['tnb_quotations']);?></div><div style="font-size:11px;color:var(--muted)">คำขอบริการ</div></div>
+                <div style="padding:12px;background:var(--bg);border-radius:10px;text-align:center"><div style="font-size:22px;font-weight:800"><?php echo $ext['tnb_pending'];?></div><div style="font-size:11px;color:var(--muted)">รอดำเนินการ</div></div>
+                <div style="padding:12px;background:var(--bg);border-radius:10px;text-align:center"><div style="font-size:22px;font-weight:800"><?php echo $ext['tnb_in_transit'];?></div><div style="font-size:11px;color:var(--muted)">กำลังขนส่ง</div></div>
             </div>
         </div>
     </div>
@@ -443,40 +444,40 @@ textarea.fm-input{resize:vertical;min-height:80px}
 <!-- KOCH MODE -->
 <div class="stats-row">
     <div class="stat-card purple">
-        <div class="sc-top"><div class="sc-icon"><i class="fas fa-users"></i></div><?php if($ext['new_users_month']>0):?><span class="sc-change up">+<?php echo $ext['new_users_month'];?> this month</span><?php endif;?></div>
+        <div class="sc-top"><div class="sc-icon"><i class="fas fa-users"></i></div><?php if($ext['new_users_month']>0):?><span class="sc-change up">+<?php echo $ext['new_users_month'];?> เดือนนี้</span><?php endif;?></div>
         <div class="sc-num"><?php echo number_format((int)$stats['users']);?></div>
-        <div class="sc-label">KOCH Users</div>
+        <div class="sc-label">ผู้ใช้ KOCH</div>
     </div>
     <div class="stat-card blue">
-        <div class="sc-top"><div class="sc-icon"><i class="fas fa-box"></i></div><?php if($ext['koch_month']>0):?><span class="sc-change up">+<?php echo $ext['koch_month'];?> this month</span><?php endif;?></div>
+        <div class="sc-top"><div class="sc-icon"><i class="fas fa-box"></i></div><?php if($ext['koch_month']>0):?><span class="sc-change up">+<?php echo $ext['koch_month'];?> เดือนนี้</span><?php endif;?></div>
         <div class="sc-num"><?php echo number_format((int)$stats['koch_quotations']);?></div>
-        <div class="sc-label">KOCH Quotations</div>
+        <div class="sc-label">ใบเสนอราคา KOCH</div>
     </div>
     <div class="stat-card orange">
         <div class="sc-top"><div class="sc-icon"><i class="fas fa-clock"></i></div></div>
         <div class="sc-num"><?php echo $ext['koch_pending'];?></div>
-        <div class="sc-label">Pending</div>
+        <div class="sc-label">รอดำเนินการ</div>
     </div>
     <div class="stat-card green">
         <div class="sc-top"><div class="sc-icon"><i class="fas fa-bell"></i></div></div>
         <div class="sc-num"><?php echo number_format((int)$stats['unread_notifications']);?></div>
-        <div class="sc-label">Notifications</div>
+        <div class="sc-label">การแจ้งเตือน</div>
     </div>
 </div>
 
 <div class="qa-grid">
-    <a href="<?php echo h(project_url('koch/main/quotation.php'));?>" class="qa-item koch"><i class="fas fa-box-open"></i><span>New Quotation</span></a>
-    <a href="?section=koch_quotations" class="qa-item all"><i class="fas fa-clipboard-list"></i><span>New (<?php echo $ext['koch_pending'];?>)</span></a>
-    <a href="?section=products" class="qa-item koch"><i class="fas fa-boxes-stacked"></i><span>Products</span></a>
-    <a href="?section=notifications" class="qa-item notif"><i class="fas fa-bell"></i><span>Notifications (<?php echo (int)$stats['unread_notifications'];?>)</span></a>
+    <a href="<?php echo h(project_url('koch/main/quotation.php'));?>" class="qa-item koch"><i class="fas fa-box-open"></i><span>ขอใบเสนอราคาใหม่</span></a>
+    <a href="?section=koch_quotations" class="qa-item all"><i class="fas fa-clipboard-list"></i><span>รอดำเนินการ (<?php echo $ext['koch_pending'];?>)</span></a>
+    <a href="?section=products" class="qa-item koch"><i class="fas fa-boxes-stacked"></i><span>สินค้า</span></a>
+    <a href="?section=notifications" class="qa-item notif"><i class="fas fa-bell"></i><span>แจ้งเตือน (<?php echo (int)$stats['unread_notifications'];?>)</span></a>
 </div>
 
 <div class="grid-3">
     <div>
         <div class="card">
-            <div class="card-h"><h2><i class="fas fa-box"></i> Recent KOCH Quotations</h2><a href="?section=koch_quotations" class="link">View All &rarr;</a></div>
-            <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Number</th><th>Customer</th><th>Product</th><th>Status</th></tr></thead><tbody>
-            <?php if($recentKoch===[]):?><tr class="empty"><td colspan="4">No quotations yet</td></tr>
+            <div class="card-h"><h2><i class="fas fa-box"></i> ใบเสนอราคา KOCH ล่าสุด</h2><a href="?section=koch_quotations" class="link">ดูทั้งหมด &rarr;</a></div>
+            <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>เลขที่</th><th>ลูกค้า</th><th>สินค้า</th><th>สถานะ</th></tr></thead><tbody>
+            <?php if($recentKoch===[]):?><tr class="empty"><td colspan="4">ยังไม่มีใบเสนอราคา</td></tr>
             <?php else: foreach($recentKoch as $q):?><tr>
                 <td style="font-weight:600;font-size:12px"><?php echo h((string)$q['quotation_number']);?></td>
                 <td style="font-size:12px"><?php echo h($q['first_name'].' '.$q['last_name']);?></td>
@@ -488,9 +489,9 @@ textarea.fm-input{resize:vertical;min-height:80px}
     </div>
     <div>
         <div class="card">
-            <div class="card-h"><h2><i class="fas fa-user-plus"></i> Recent Users</h2><a href="?section=users" class="link">View All &rarr;</a></div>
+            <div class="card-h"><h2><i class="fas fa-user-plus"></i> ผู้ใช้ล่าสุด</h2><a href="?section=users" class="link">ดูทั้งหมด &rarr;</a></div>
             <div class="card-b">
-            <?php if($recentUsers===[]):?><p style="text-align:center;color:var(--muted);padding:20px 0;font-size:13px">No users yet</p>
+            <?php if($recentUsers===[]):?><p style="text-align:center;color:var(--muted);padding:20px 0;font-size:13px">ยังไม่มีผู้ใช้</p>
             <?php else: foreach($recentUsers as $u):?>
                 <div class="user-row" style="padding:8px 0;border-bottom:1px solid var(--border);<?php echo end($recentUsers)===$u?'border:none':'';?>">
                     <div class="u-avatar"><?php echo strtoupper(substr((string)($u['first_name']??$u['username']),0,1));?></div>
@@ -504,9 +505,9 @@ textarea.fm-input{resize:vertical;min-height:80px}
             </div>
         </div>
         <div class="card">
-            <div class="card-h"><h2><i class="fas fa-history"></i> Recent Activity</h2><a href="?section=activity" class="link">View All &rarr;</a></div>
+            <div class="card-h"><h2><i class="fas fa-history"></i> กิจกรรมล่าสุด</h2><a href="?section=activity" class="link">ดูทั้งหมด &rarr;</a></div>
             <div class="card-b" style="padding:12px 20px">
-            <?php if($activities===[]):?><p style="text-align:center;color:var(--muted);padding:20px 0;font-size:13px">No activity yet</p>
+            <?php if($activities===[]):?><p style="text-align:center;color:var(--muted);padding:20px 0;font-size:13px">ยังไม่มีกิจกรรม</p>
             <?php else: foreach(array_slice($activities,0,6) as $a):?>
                 <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px">
                     <div style="width:6px;height:6px;border-radius:50%;background:var(--primary);flex-shrink:0"></div>
@@ -523,40 +524,40 @@ textarea.fm-input{resize:vertical;min-height:80px}
 <!-- TNB MODE -->
 <div class="stats-row">
     <div class="stat-card purple">
-        <div class="sc-top"><div class="sc-icon"><i class="fas fa-users"></i></div><?php if($ext['new_users_month']>0):?><span class="sc-change up">+<?php echo $ext['new_users_month'];?> this month</span><?php endif;?></div>
+        <div class="sc-top"><div class="sc-icon"><i class="fas fa-users"></i></div><?php if($ext['new_users_month']>0):?><span class="sc-change up">+<?php echo $ext['new_users_month'];?> เดือนนี้</span><?php endif;?></div>
         <div class="sc-num"><?php echo number_format((int)$stats['users']);?></div>
-        <div class="sc-label">TNB Users</div>
+        <div class="sc-label">ผู้ใช้ TNB</div>
     </div>
     <div class="stat-card teal">
-        <div class="sc-top"><div class="sc-icon"><i class="fas fa-truck"></i></div><?php if($ext['tnb_month']>0):?><span class="sc-change up">+<?php echo $ext['tnb_month'];?> this month</span><?php endif;?></div>
+        <div class="sc-top"><div class="sc-icon"><i class="fas fa-truck"></i></div><?php if($ext['tnb_month']>0):?><span class="sc-change up">+<?php echo $ext['tnb_month'];?> เดือนนี้</span><?php endif;?></div>
         <div class="sc-num"><?php echo number_format((int)$stats['tnb_quotations']);?></div>
-        <div class="sc-label">TNB Requests</div>
+        <div class="sc-label">คำขอบริการ TNB</div>
     </div>
     <div class="stat-card orange">
         <div class="sc-top"><div class="sc-icon"><i class="fas fa-clock"></i></div></div>
         <div class="sc-num"><?php echo $ext['tnb_pending'];?></div>
-        <div class="sc-label">Pending</div>
+        <div class="sc-label">รอดำเนินการ</div>
     </div>
     <div class="stat-card blue">
         <div class="sc-top"><div class="sc-icon"><i class="fas fa-shipping-fast"></i></div></div>
         <div class="sc-num"><?php echo $ext['tnb_in_transit'];?></div>
-        <div class="sc-label">In Transit</div>
+        <div class="sc-label">กำลังขนส่ง</div>
     </div>
 </div>
 
 <div class="qa-grid">
-    <a href="<?php echo h(project_url('tnb/main/quotation.php'));?>" class="qa-item tnb"><i class="fas fa-shipping-fast"></i><span>New TNB Request</span></a>
-    <a href="?section=tnb_quotations" class="qa-item all"><i class="fas fa-clipboard-list"></i><span>New (<?php echo $ext['tnb_pending'];?>)</span></a>
-    <a href="?section=truck_cards" class="qa-item tnb"><i class="fas fa-id-card"></i><span>Truck Cards</span></a>
-    <a href="?section=notifications" class="qa-item notif"><i class="fas fa-bell"></i><span>Notifications (<?php echo (int)$stats['unread_notifications'];?>)</span></a>
+    <a href="<?php echo h(project_url('tnb/main/quotation.php'));?>" class="qa-item tnb"><i class="fas fa-shipping-fast"></i><span>ขอบริการ TNB ใหม่</span></a>
+    <a href="?section=tnb_quotations" class="qa-item all"><i class="fas fa-clipboard-list"></i><span>รอดำเนินการ (<?php echo $ext['tnb_pending'];?>)</span></a>
+    <a href="?section=truck_cards" class="qa-item tnb"><i class="fas fa-id-card"></i><span>การ์ดประเภทรถ</span></a>
+    <a href="?section=notifications" class="qa-item notif"><i class="fas fa-bell"></i><span>แจ้งเตือน (<?php echo (int)$stats['unread_notifications'];?>)</span></a>
 </div>
 
 <div class="grid-3">
     <div>
         <div class="card">
-            <div class="card-h"><h2><i class="fas fa-truck"></i> Recent TNB Requests</h2><a href="?section=tnb_quotations" class="link">View All &rarr;</a></div>
-            <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Number</th><th>Customer</th><th>Service</th><th>Route</th><th>Status</th></tr></thead><tbody>
-            <?php if($recentTnb===[]):?><tr class="empty"><td colspan="5">No requests yet</td></tr>
+            <div class="card-h"><h2><i class="fas fa-truck"></i> คำขอบริการ TNB ล่าสุด</h2><a href="?section=tnb_quotations" class="link">ดูทั้งหมด &rarr;</a></div>
+            <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>เลขที่</th><th>ลูกค้า</th><th>บริการ</th><th>เส้นทาง</th><th>สถานะ</th></tr></thead><tbody>
+            <?php if($recentTnb===[]):?><tr class="empty"><td colspan="5">ยังไม่มีคำขอ</td></tr>
             <?php else: foreach($recentTnb as $q):?><tr>
                 <td style="font-weight:600;font-size:12px"><?php echo h((string)$q['request_number']);?></td>
                 <td style="font-size:12px"><?php echo h($q['first_name'].' '.$q['last_name']);?></td>
@@ -569,9 +570,9 @@ textarea.fm-input{resize:vertical;min-height:80px}
     </div>
     <div>
         <div class="card">
-            <div class="card-h"><h2><i class="fas fa-user-plus"></i> Recent Users</h2><a href="?section=users" class="link">View All &rarr;</a></div>
+            <div class="card-h"><h2><i class="fas fa-user-plus"></i> ผู้ใช้ล่าสุด</h2><a href="?section=users" class="link">ดูทั้งหมด &rarr;</a></div>
             <div class="card-b">
-            <?php if($recentUsers===[]):?><p style="text-align:center;color:var(--muted);padding:20px 0;font-size:13px">No users yet</p>
+            <?php if($recentUsers===[]):?><p style="text-align:center;color:var(--muted);padding:20px 0;font-size:13px">ยังไม่มีผู้ใช้</p>
             <?php else: foreach($recentUsers as $u):?>
                 <div class="user-row" style="padding:8px 0;border-bottom:1px solid var(--border);<?php echo end($recentUsers)===$u?'border:none':'';?>">
                     <div class="u-avatar"><?php echo strtoupper(substr((string)($u['first_name']??$u['username']),0,1));?></div>
@@ -585,9 +586,9 @@ textarea.fm-input{resize:vertical;min-height:80px}
             </div>
         </div>
         <div class="card">
-            <div class="card-h"><h2><i class="fas fa-history"></i> Recent Activity</h2><a href="?section=activity" class="link">View All &rarr;</a></div>
+            <div class="card-h"><h2><i class="fas fa-history"></i> กิจกรรมล่าสุด</h2><a href="?section=activity" class="link">ดูทั้งหมด &rarr;</a></div>
             <div class="card-b" style="padding:12px 20px">
-            <?php if($activities===[]):?><p style="text-align:center;color:var(--muted);padding:20px 0;font-size:13px">No activity yet</p>
+            <?php if($activities===[]):?><p style="text-align:center;color:var(--muted);padding:20px 0;font-size:13px">ยังไม่มีกิจกรรม</p>
             <?php else: foreach(array_slice($activities,0,6) as $a):?>
                 <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px">
                     <div style="width:6px;height:6px;border-radius:50%;background:var(--primary);flex-shrink:0"></div>
@@ -604,40 +605,40 @@ textarea.fm-input{resize:vertical;min-height:80px}
 <?php elseif($section==='users'): ?>
 <!-- =================== USERS =================== -->
 <div class="stats-row">
-    <div class="stat-card purple"><div class="sc-top"><div class="sc-icon"><i class="fas fa-users"></i></div></div><div class="sc-num"><?php echo number_format((int)$stats['users']);?></div><div class="sc-label">Total Users</div></div>
-    <div class="stat-card green"><div class="sc-top"><div class="sc-icon"><i class="fas fa-user-check"></i></div></div><div class="sc-num"><?php echo number_format($ext['active_users']);?></div><div class="sc-label">Active Users</div></div>
-    <div class="stat-card blue"><div class="sc-top"><div class="sc-icon"><i class="fas fa-user-plus"></i></div></div><div class="sc-num"><?php echo number_format($ext['new_users_month']);?></div><div class="sc-label">New This Month</div></div>
-    <div class="stat-card orange"><div class="sc-top"><div class="sc-icon"><i class="fas fa-bell"></i></div></div><div class="sc-num"><?php echo number_format((int)$stats['unread_notifications']);?></div><div class="sc-label">Unread Notifications</div></div>
+    <div class="stat-card purple"><div class="sc-top"><div class="sc-icon"><i class="fas fa-users"></i></div></div><div class="sc-num"><?php echo number_format((int)$stats['users']);?></div><div class="sc-label">ผู้ใช้ทั้งหมด</div></div>
+    <div class="stat-card green"><div class="sc-top"><div class="sc-icon"><i class="fas fa-user-check"></i></div></div><div class="sc-num"><?php echo number_format($ext['active_users']);?></div><div class="sc-label">ใช้งานอยู่</div></div>
+    <div class="stat-card blue"><div class="sc-top"><div class="sc-icon"><i class="fas fa-user-plus"></i></div></div><div class="sc-num"><?php echo number_format($ext['new_users_month']);?></div><div class="sc-label">ใหม่เดือนนี้</div></div>
+    <div class="stat-card orange"><div class="sc-top"><div class="sc-icon"><i class="fas fa-bell"></i></div></div><div class="sc-num"><?php echo number_format((int)$stats['unread_notifications']);?></div><div class="sc-label">แจ้งเตือนยังไม่อ่าน</div></div>
 </div>
 
 <!-- RBAC Permission Reference -->
 <div class="card" style="margin-bottom:20px">
-    <div class="card-h"><h2><i class="fas fa-shield-alt"></i> Role Permissions Reference</h2></div>
+    <div class="card-h"><h2><i class="fas fa-shield-alt"></i> ตารางสิทธิ์ตามบทบาท</h2></div>
     <div class="card-b" style="padding:12px 20px">
         <table class="perm-table">
-            <thead><tr><th>Permission</th><th>Super Admin</th><th>Admin</th><th>Manager</th><th>User</th></tr></thead>
+            <thead><tr><th>สิทธิ์การใช้งาน</th><th>Super Admin</th><th>Admin</th><th>Manager</th><th>User</th></tr></thead>
             <tbody>
-                <tr><td>View all companies data</td><td class="perm-yes"><i class="fas fa-check"></i> Yes</td><td class="perm-no"><i class="fas fa-times"></i> Own company</td><td class="perm-no"><i class="fas fa-times"></i> Own team</td><td class="perm-no"><i class="fas fa-times"></i> Own data</td></tr>
-                <tr><td>Manage users</td><td class="perm-yes"><i class="fas fa-check"></i> All</td><td class="perm-yes"><i class="fas fa-check"></i> Own company</td><td class="perm-no"><i class="fas fa-times"></i> Own team</td><td class="perm-no"><i class="fas fa-times"></i> No</td></tr>
-                <tr><td>Change user roles</td><td class="perm-yes"><i class="fas fa-check"></i> All roles</td><td class="perm-yes"><i class="fas fa-check"></i> Manager/User</td><td class="perm-no"><i class="fas fa-times"></i> No</td><td class="perm-no"><i class="fas fa-times"></i> No</td></tr>
-                <tr><td>Content Management (CRUD)</td><td class="perm-yes"><i class="fas fa-check"></i> All</td><td class="perm-yes"><i class="fas fa-check"></i> Own company</td><td class="perm-yes"><i class="fas fa-check"></i> View only</td><td class="perm-no"><i class="fas fa-times"></i> No</td></tr>
-                <tr><td>View quotations</td><td class="perm-yes"><i class="fas fa-check"></i> All</td><td class="perm-yes"><i class="fas fa-check"></i> Own company</td><td class="perm-yes"><i class="fas fa-check"></i> Own team</td><td class="perm-yes"><i class="fas fa-check"></i> Own only</td></tr>
-                <tr><td>Activity logs</td><td class="perm-yes"><i class="fas fa-check"></i> All</td><td class="perm-yes"><i class="fas fa-check"></i> Own company</td><td class="perm-no"><i class="fas fa-times"></i> No</td><td class="perm-no"><i class="fas fa-times"></i> No</td></tr>
-                <tr><td>System settings</td><td class="perm-yes"><i class="fas fa-check"></i> Full</td><td class="perm-no"><i class="fas fa-times"></i> View only</td><td class="perm-no"><i class="fas fa-times"></i> No</td><td class="perm-no"><i class="fas fa-times"></i> No</td></tr>
-                <tr><td>Email config</td><td class="perm-yes"><i class="fas fa-check"></i> Full</td><td class="perm-yes"><i class="fas fa-check"></i> Own company</td><td class="perm-no"><i class="fas fa-times"></i> No</td><td class="perm-no"><i class="fas fa-times"></i> No</td></tr>
+                <tr><td>ดูข้อมูลทุกบริษัท</td><td class="perm-yes"><i class="fas fa-check"></i> ได้</td><td class="perm-no"><i class="fas fa-times"></i> เฉพาะบริษัทตัวเอง</td><td class="perm-no"><i class="fas fa-times"></i> เฉพาะทีม</td><td class="perm-no"><i class="fas fa-times"></i> เฉพาะของตัวเอง</td></tr>
+                <tr><td>จัดการผู้ใช้</td><td class="perm-yes"><i class="fas fa-check"></i> ทั้งหมด</td><td class="perm-yes"><i class="fas fa-check"></i> บริษัทตัวเอง</td><td class="perm-no"><i class="fas fa-times"></i> เฉพาะทีม</td><td class="perm-no"><i class="fas fa-times"></i> ไม่ได้</td></tr>
+                <tr><td>เปลี่ยนบทบาทผู้ใช้</td><td class="perm-yes"><i class="fas fa-check"></i> ทุกบทบาท</td><td class="perm-yes"><i class="fas fa-check"></i> Manager/User</td><td class="perm-no"><i class="fas fa-times"></i> ไม่ได้</td><td class="perm-no"><i class="fas fa-times"></i> ไม่ได้</td></tr>
+                <tr><td>จัดการเนื้อหา (CRUD)</td><td class="perm-yes"><i class="fas fa-check"></i> ทั้งหมด</td><td class="perm-yes"><i class="fas fa-check"></i> บริษัทตัวเอง</td><td class="perm-yes"><i class="fas fa-check"></i> ดูได้อย่างเดียว</td><td class="perm-no"><i class="fas fa-times"></i> ไม่ได้</td></tr>
+                <tr><td>ดูใบเสนอราคา</td><td class="perm-yes"><i class="fas fa-check"></i> ทั้งหมด</td><td class="perm-yes"><i class="fas fa-check"></i> บริษัทตัวเอง</td><td class="perm-yes"><i class="fas fa-check"></i> ทีมตัวเอง</td><td class="perm-yes"><i class="fas fa-check"></i> เฉพาะของตัวเอง</td></tr>
+                <tr><td>ประวัติการใช้งาน</td><td class="perm-yes"><i class="fas fa-check"></i> ทั้งหมด</td><td class="perm-yes"><i class="fas fa-check"></i> บริษัทตัวเอง</td><td class="perm-no"><i class="fas fa-times"></i> ไม่ได้</td><td class="perm-no"><i class="fas fa-times"></i> ไม่ได้</td></tr>
+                <tr><td>ตั้งค่าระบบ</td><td class="perm-yes"><i class="fas fa-check"></i> เต็มที่</td><td class="perm-no"><i class="fas fa-times"></i> ดูได้อย่างเดียว</td><td class="perm-no"><i class="fas fa-times"></i> ไม่ได้</td><td class="perm-no"><i class="fas fa-times"></i> ไม่ได้</td></tr>
+                <tr><td>ตั้งค่าอีเมล</td><td class="perm-yes"><i class="fas fa-check"></i> เต็มที่</td><td class="perm-yes"><i class="fas fa-check"></i> บริษัทตัวเอง</td><td class="perm-no"><i class="fas fa-times"></i> ไม่ได้</td><td class="perm-no"><i class="fas fa-times"></i> ไม่ได้</td></tr>
             </tbody>
         </table>
     </div>
 </div>
 
 <div class="card">
-    <div class="card-h"><h2><i class="fas fa-users"></i> All Users</h2></div>
-    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>User</th><th>Email</th><th>Company</th><th>Role</th><th>Status</th><th>Joined</th><th>Actions</th></tr></thead><tbody>
+    <div class="card-h"><h2><i class="fas fa-users"></i> ผู้ใช้ทั้งหมด</h2></div>
+    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>ผู้ใช้</th><th>อีเมล</th><th>บริษัท</th><th>บทบาท</th><th>สถานะ</th><th>วันที่สมัคร</th><th>จัดการ</th></tr></thead><tbody>
     <?php
     $allUsers = $pdo->prepare('SELECT u.*, c.name AS company_name FROM users u LEFT JOIN companies c ON c.id = u.company_id' . ($filterCompanyId !== null ? ' WHERE u.company_id = :cid AND u.status != \'inactive\'' : ' WHERE u.status != \'inactive\'') . ' ORDER BY u.created_at DESC LIMIT 50');
     $allUsers->execute($filterCompanyId !== null ? [':cid' => $filterCompanyId] : []);
     $allUsersList = $allUsers->fetchAll();
-    if($allUsersList===[]):?><tr class="empty"><td colspan="7">No users found</td></tr>
+    if($allUsersList===[]):?><tr class="empty"><td colspan="7">ไม่พบผู้ใช้</td></tr>
     <?php else: foreach($allUsersList as $u):?><tr>
         <td><div class="user-row"><div class="u-avatar"><?php echo strtoupper(substr((string)($u['first_name']??$u['username']),0,1));?></div><div class="u-info"><h4><?php echo h(trim(($u['first_name']??'').' '.($u['last_name']??''))?:$u['username']);?></h4><span>@<?php echo h((string)$u['username']);?></span></div></div></td>
         <td style="font-size:12px"><?php echo h((string)$u['email']);?></td>
@@ -676,19 +677,19 @@ if ($ext['koch_pending'] > 0) {
 }
 ?>
 <div class="stats-row">
-    <div class="stat-card blue"><div class="sc-top"><div class="sc-icon"><i class="fas fa-file-alt"></i></div></div><div class="sc-num"><?php echo number_format((int)$stats['koch_quotations']);?></div><div class="sc-label">Total KOCH Quotations</div></div>
-    <div class="stat-card orange"><div class="sc-top"><div class="sc-icon"><i class="fas fa-clock"></i></div></div><div class="sc-num"><?php echo $ext['koch_pending'];?></div><div class="sc-label">New / Unread</div></div>
-    <div class="stat-card purple"><div class="sc-top"><div class="sc-icon"><i class="fas fa-calendar"></i></div></div><div class="sc-num"><?php echo $ext['koch_month'];?></div><div class="sc-label">This Month</div></div>
-    <div class="stat-card green"><div class="sc-top"><div class="sc-icon"><i class="fas fa-check-circle"></i></div></div><div class="sc-num">-</div><div class="sc-label">Completed</div></div>
+    <div class="stat-card blue"><div class="sc-top"><div class="sc-icon"><i class="fas fa-file-alt"></i></div></div><div class="sc-num"><?php echo number_format((int)$stats['koch_quotations']);?></div><div class="sc-label">ใบเสนอราคา KOCH ทั้งหมด</div></div>
+    <div class="stat-card orange"><div class="sc-top"><div class="sc-icon"><i class="fas fa-clock"></i></div></div><div class="sc-num"><?php echo $ext['koch_pending'];?></div><div class="sc-label">ใหม่ / ยังไม่อ่าน</div></div>
+    <div class="stat-card purple"><div class="sc-top"><div class="sc-icon"><i class="fas fa-calendar"></i></div></div><div class="sc-num"><?php echo $ext['koch_month'];?></div><div class="sc-label">เดือนนี้</div></div>
+    <div class="stat-card green"><div class="sc-top"><div class="sc-icon"><i class="fas fa-check-circle"></i></div></div><div class="sc-num">-</div><div class="sc-label">เสร็จสิ้น</div></div>
 </div>
 <div class="card">
-    <div class="card-h"><h2><i class="fas fa-box"></i> All KOCH Quotations</h2><a href="<?php echo h(project_url('koch/main/quotation.php'));?>" class="tb-btn primary" style="font-size:11px;padding:6px 12px"><i class="fas fa-plus"></i> New</a></div>
-    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Number</th><th>Customer</th><th>Product</th><th>Quantity</th><th>Status</th><th>Date</th></tr></thead><tbody>
+    <div class="card-h"><h2><i class="fas fa-box"></i> ใบเสนอราคา KOCH ทั้งหมด</h2><a href="<?php echo h(project_url('koch/main/quotation.php'));?>" class="tb-btn primary" style="font-size:11px;padding:6px 12px"><i class="fas fa-plus"></i> สร้างใหม่</a></div>
+    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>เลขที่</th><th>ลูกค้า</th><th>สินค้า</th><th>จำนวน</th><th>สถานะ</th><th>วันที่</th></tr></thead><tbody>
     <?php
     $kAll = $pdo->prepare('SELECT * FROM koch_quotations ORDER BY created_at DESC LIMIT 50');
     $kAll->execute();
     $kList = $kAll->fetchAll();
-    if($kList===[]):?><tr class="empty"><td colspan="6">No KOCH quotations found</td></tr>
+    if($kList===[]):?><tr class="empty"><td colspan="6">ยังไม่มีใบเสนอราคา KOCH</td></tr>
     <?php else: foreach($kList as $q):?><tr>
         <td style="font-weight:600;font-size:12px"><?php echo h((string)$q['quotation_number']);?></td>
         <td style="font-size:12px"><?php echo h($q['first_name'].' '.$q['last_name']);?></td>
@@ -714,19 +715,19 @@ if ($ext['tnb_pending'] > 0) {
 }
 ?>
 <div class="stats-row">
-    <div class="stat-card teal"><div class="sc-top"><div class="sc-icon"><i class="fas fa-file-alt"></i></div></div><div class="sc-num"><?php echo number_format((int)$stats['tnb_quotations']);?></div><div class="sc-label">Total TNB Requests</div></div>
-    <div class="stat-card orange"><div class="sc-top"><div class="sc-icon"><i class="fas fa-clock"></i></div></div><div class="sc-num"><?php echo $ext['tnb_pending'];?></div><div class="sc-label">New / Unread</div></div>
-    <div class="stat-card blue"><div class="sc-top"><div class="sc-icon"><i class="fas fa-shipping-fast"></i></div></div><div class="sc-num"><?php echo $ext['tnb_in_transit'];?></div><div class="sc-label">In Transit</div></div>
-    <div class="stat-card purple"><div class="sc-top"><div class="sc-icon"><i class="fas fa-calendar"></i></div></div><div class="sc-num"><?php echo $ext['tnb_month'];?></div><div class="sc-label">This Month</div></div>
+    <div class="stat-card teal"><div class="sc-top"><div class="sc-icon"><i class="fas fa-file-alt"></i></div></div><div class="sc-num"><?php echo number_format((int)$stats['tnb_quotations']);?></div><div class="sc-label">คำขอบริการ TNB ทั้งหมด</div></div>
+    <div class="stat-card orange"><div class="sc-top"><div class="sc-icon"><i class="fas fa-clock"></i></div></div><div class="sc-num"><?php echo $ext['tnb_pending'];?></div><div class="sc-label">ใหม่ / ยังไม่อ่าน</div></div>
+    <div class="stat-card blue"><div class="sc-top"><div class="sc-icon"><i class="fas fa-shipping-fast"></i></div></div><div class="sc-num"><?php echo $ext['tnb_in_transit'];?></div><div class="sc-label">กำลังขนส่ง</div></div>
+    <div class="stat-card purple"><div class="sc-top"><div class="sc-icon"><i class="fas fa-calendar"></i></div></div><div class="sc-num"><?php echo $ext['tnb_month'];?></div><div class="sc-label">เดือนนี้</div></div>
 </div>
 <div class="card">
-    <div class="card-h"><h2><i class="fas fa-truck"></i> All TNB Requests</h2><a href="<?php echo h(project_url('tnb/main/quotation.php'));?>" class="tb-btn primary" style="font-size:11px;padding:6px 12px"><i class="fas fa-plus"></i> New</a></div>
-    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Number</th><th>Customer</th><th>Service</th><th>Route</th><th>Status</th><th>Date</th></tr></thead><tbody>
+    <div class="card-h"><h2><i class="fas fa-truck"></i> คำขอบริการ TNB ทั้งหมด</h2><a href="<?php echo h(project_url('tnb/main/quotation.php'));?>" class="tb-btn primary" style="font-size:11px;padding:6px 12px"><i class="fas fa-plus"></i> สร้างใหม่</a></div>
+    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>เลขที่</th><th>ลูกค้า</th><th>บริการ</th><th>เส้นทาง</th><th>สถานะ</th><th>วันที่</th></tr></thead><tbody>
     <?php
     $tAll = $pdo->prepare('SELECT * FROM tnb_quotations ORDER BY created_at DESC LIMIT 50');
     $tAll->execute();
     $tList = $tAll->fetchAll();
-    if($tList===[]):?><tr class="empty"><td colspan="6">No TNB requests found</td></tr>
+    if($tList===[]):?><tr class="empty"><td colspan="6">ยังไม่มีคำขอบริการ TNB</td></tr>
     <?php else: foreach($tList as $q):?><tr>
         <td style="font-weight:600;font-size:12px"><?php echo h((string)$q['request_number']);?></td>
         <td style="font-size:12px"><?php echo h($q['first_name'].' '.$q['last_name']);?></td>
@@ -752,7 +753,7 @@ $actResult = get_activity_logs_filtered($pdo, $actFilters, 50, 0);
 $distinctActions = get_distinct_actions($pdo);
 ?>
 <div class="card" style="margin-bottom:16px">
-    <div class="card-h"><h2><i class="fas fa-filter"></i> Filters</h2></div>
+    <div class="card-h"><h2><i class="fas fa-filter"></i> ตัวกรอง</h2></div>
     <div class="card-b">
         <form method="GET" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;align-items:end">
             <input type="hidden" name="section" value="activity">
@@ -765,9 +766,9 @@ $distinctActions = get_distinct_actions($pdo);
     </div>
 </div>
 <div class="card">
-    <div class="card-h"><h2><i class="fas fa-history"></i> Activity Logs</h2><span style="font-size:12px;color:var(--muted)"><?php echo number_format($actResult['total']);?> records</span></div>
-    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Date</th><th>User</th><th>Company</th><th>Details</th></tr></thead><tbody>
-    <?php if($actResult['data']===[]):?><tr class="empty"><td colspan="4">No activity logs found</td></tr>
+    <div class="card-h"><h2><i class="fas fa-history"></i> ประวัติการใช้งาน</h2><span style="font-size:12px;color:var(--muted)"><?php echo number_format($actResult['total']);?> รายการ</span></div>
+    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>วันที่</th><th>ผู้ใช้</th><th>บริษัท</th><th>รายละเอียด</th></tr></thead><tbody>
+    <?php if($actResult['data']===[]):?><tr class="empty"><td colspan="4">ไม่พบประวัติการใช้งาน</td></tr>
     <?php else: foreach($actResult['data'] as $a):?><tr>
         <td style="font-size:12px;white-space:nowrap"><?php echo h(date('d/m/Y H:i',strtotime((string)$a['created_at'])));?></td>
         <td style="font-size:12px;font-weight:600"><?php echo h((string)($a['username']??'System'));?></td>
@@ -781,33 +782,33 @@ $distinctActions = get_distinct_actions($pdo);
 <!-- =================== NOTIFICATIONS =================== -->
 <div class="card">
     <div class="card-h">
-        <h2><i class="fas fa-bell"></i> System Notifications</h2>
+        <h2><i class="fas fa-bell"></i> การแจ้งเตือนระบบ</h2>
         <div style="display:flex;gap:8px;align-items:center">
-            <?php if((int)$stats['unread_notifications']>0):?><span style="background:var(--primary);color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:10px"><?php echo (int)$stats['unread_notifications'];?> unread</span>
+            <?php if((int)$stats['unread_notifications']>0):?><span style="background:var(--primary);color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:10px"><?php echo (int)$stats['unread_notifications'];?> ยังไม่อ่าน</span>
             <form method="POST" action="<?php echo h(project_url('admin/api/crud/handler.php'));?>" style="display:inline">
                 <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>">
                 <input type="hidden" name="entity" value="notification">
                 <input type="hidden" name="action" value="mark_all_read">
                 <input type="hidden" name="id" value="0">
                 <input type="hidden" name="redirect_back" value="<?php echo h(project_url('admin/dashboard.php?section=notifications'));?>">
-                <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-check-double"></i> Mark All Read</button>
+                <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-check-double"></i> อ่านทั้งหมดแล้ว</button>
             </form>
             <?php endif;?>
         </div>
     </div>
-    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Title</th><th>Message</th><th>User</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>หัวข้อ</th><th>ข้อความ</th><th>ผู้ใช้</th><th>วันที่</th><th>สถานะ</th><th>จัดการ</th></tr></thead><tbody>
     <?php
     $nSql = 'SELECT n.*, u.username FROM notifications n LEFT JOIN users u ON u.id = n.user_id' . ($filterCompanyId !== null ? ' WHERE n.company_id = :cid' : '') . ' ORDER BY n.created_at DESC LIMIT 50';
     $nStmt = $pdo->prepare($nSql);
     $nStmt->execute($filterCompanyId !== null ? [':cid' => $filterCompanyId] : []);
     $nList = $nStmt->fetchAll();
-    if($nList===[]):?><tr class="empty"><td colspan="6">No notifications found</td></tr>
+    if($nList===[]):?><tr class="empty"><td colspan="6">ไม่พบการแจ้งเตือน</td></tr>
     <?php else: foreach($nList as $n):?><tr style="<?php echo !$n['is_read']?'background:#f0f9ff':'';?>">
         <td style="font-size:12px;font-weight:600"><?php echo h((string)$n['title']);?></td>
         <td style="font-size:12px;color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><?php echo h((string)$n['message']);?></td>
         <td style="font-size:12px"><?php echo h((string)($n['username']??'-'));?></td>
         <td style="font-size:12px;white-space:nowrap"><?php echo h(date('d/m/Y H:i',strtotime((string)$n['created_at'])));?></td>
-        <td><?php echo !$n['is_read']?'<span style="font-size:11px;font-weight:600;padding:2px 8px;border-radius:6px;background:#dbeafe;color:var(--info)">Unread</span>':'<span style="font-size:11px;color:var(--muted)">Read</span>';?></td>
+        <td><?php echo !$n['is_read']?'<span style="font-size:11px;font-weight:600;padding:2px 8px;border-radius:6px;background:#dbeafe;color:var(--info)">ยังไม่อ่าน</span>':'<span style="font-size:11px;color:var(--muted)">อ่านแล้ว</span>';?></td>
         <td>
             <div class="act-btns">
                 <?php if(!$n['is_read']):?>
@@ -838,12 +839,12 @@ $distinctActions = get_distinct_actions($pdo);
 <!-- =================== SLIDERS =================== -->
 <?php $allSliders = get_all_sliders($pdo, $filterCompanyId); ?>
 <div class="card">
-    <div class="card-h"><h2><i class="fas fa-images"></i> Slider Contents</h2><div style="display:flex;gap:8px;align-items:center"><span style="font-size:12px;color:var(--muted)"><?php echo count($allSliders);?> items</span><button class="btn btn-sm btn-primary" onclick="openModal('sliderModal')"><i class="fas fa-plus"></i> Add Slider</button></div></div>
-    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>ID</th><th>Image</th><th>Title</th><th>Subtitle</th><th>Company</th><th>Status</th><th>Actions</th></tr></thead><tbody>
-    <?php if($allSliders===[]):?><tr class="empty"><td colspan="7">No sliders found</td></tr>
+    <div class="card-h"><h2><i class="fas fa-images"></i> เนื้อหาสไลเดอร์</h2><div style="display:flex;gap:8px;align-items:center"><span style="font-size:12px;color:var(--muted)"><?php echo count($allSliders);?> รายการ</span><button class="btn btn-sm btn-primary" onclick="openModal('sliderModal')"><i class="fas fa-plus"></i> เพิ่มสไลเดอร์</button></div></div>
+    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>ID</th><th>รูปภาพ</th><th>หัวข้อ</th><th>คำอธิบาย</th><th>บริษัท</th><th>สถานะ</th><th>จัดการ</th></tr></thead><tbody>
+    <?php if($allSliders===[]):?><tr class="empty"><td colspan="7">ไม่พบสไลเดอร์</td></tr>
     <?php else: foreach($allSliders as $s):?><tr>
         <td style="font-size:12px;font-weight:600">#<?php echo (int)$s['id'];?></td>
-        <td><?php if($s['image_url']):?><img src="<?php echo h(resolve_image_url((string)$s['image_url']));?>" style="width:60px;height:35px;object-fit:cover;border-radius:6px" alt=""><?php else:?><span style="color:var(--muted);font-size:11px">No image</span><?php endif;?></td>
+        <td><?php if($s['image_url']):?><img src="<?php echo h(resolve_image_url((string)$s['image_url']));?>" style="width:60px;height:35px;object-fit:cover;border-radius:6px" alt=""><?php else:?><span style="color:var(--muted);font-size:11px">ไม่มีรูปภาพ</span><?php endif;?></td>
         <td style="font-size:12px;font-weight:600"><?php echo h((string)$s['title']);?></td>
         <td style="font-size:12px;color:var(--muted);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><?php echo h((string)($s['subtitle']??''));?></td>
         <td style="font-size:12px"><?php echo h((string)($s['company_name']??'-'));?></td>
@@ -860,9 +861,9 @@ $distinctActions = get_distinct_actions($pdo);
 <!-- =================== PARTNERS =================== -->
 <?php $allPartners = get_all_partners($pdo, $filterCompanyId); ?>
 <div class="card">
-    <div class="card-h"><h2><i class="fas fa-handshake"></i> Partners</h2><div style="display:flex;gap:8px;align-items:center"><span style="font-size:12px;color:var(--muted)"><?php echo count($allPartners);?> partners</span><button class="btn btn-sm btn-primary" onclick="openModal('partnerModal')"><i class="fas fa-plus"></i> Add Partner</button></div></div>
-    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Logo</th><th>Name</th><th>Company</th><th>Status</th><th>Actions</th></tr></thead><tbody>
-    <?php if($allPartners===[]):?><tr class="empty"><td colspan="5">No partners found</td></tr>
+    <div class="card-h"><h2><i class="fas fa-handshake"></i> พันธมิตร</h2><div style="display:flex;gap:8px;align-items:center"><span style="font-size:12px;color:var(--muted)"><?php echo count($allPartners);?> รายการ</span><button class="btn btn-sm btn-primary" onclick="openModal('partnerModal')"><i class="fas fa-plus"></i> เพิ่มพันธมิตร</button></div></div>
+    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>โลโก้</th><th>ชื่อ</th><th>บริษัท</th><th>สถานะ</th><th>จัดการ</th></tr></thead><tbody>
+    <?php if($allPartners===[]):?><tr class="empty"><td colspan="5">ไม่พบพันธมิตร</td></tr>
     <?php else: foreach($allPartners as $p):?><tr>
         <td><?php if($p['logo_url']):?><img src="<?php echo h(resolve_image_url((string)$p['logo_url']));?>" style="width:40px;height:40px;object-fit:contain;border-radius:6px;background:#f8fafc;padding:4px" alt=""><?php else:?><span style="color:var(--muted);font-size:11px">-</span><?php endif;?></td>
         <td style="font-size:12px;font-weight:600"><?php echo h((string)$p['name']);?></td>
@@ -880,9 +881,9 @@ $distinctActions = get_distinct_actions($pdo);
 <!-- =================== PRODUCTS =================== -->
 <?php $allProducts = get_all_products_admin($pdo, $filterCompanyId); ?>
 <div class="card">
-    <div class="card-h"><h2><i class="fas fa-boxes-stacked"></i> Products (KOCH)</h2><div style="display:flex;gap:8px;align-items:center"><span style="font-size:12px;color:var(--muted)"><?php echo count($allProducts);?> products</span><button class="btn btn-sm btn-primary" onclick="openModal('productModal')"><i class="fas fa-plus"></i> Add Product</button></div></div>
-    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Image</th><th>Name</th><th>Category</th><th>Status</th><th>Actions</th></tr></thead><tbody>
-    <?php if($allProducts===[]):?><tr class="empty"><td colspan="5">No products found</td></tr>
+    <div class="card-h"><h2><i class="fas fa-boxes-stacked"></i> สินค้า (KOCH)</h2><div style="display:flex;gap:8px;align-items:center"><span style="font-size:12px;color:var(--muted)"><?php echo count($allProducts);?> รายการ</span><button class="btn btn-sm btn-primary" onclick="openModal('productModal')"><i class="fas fa-plus"></i> เพิ่มสินค้า</button></div></div>
+    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>รูปภาพ</th><th>ชื่อ</th><th>หมวดหมู่</th><th>สถานะ</th><th>จัดการ</th></tr></thead><tbody>
+    <?php if($allProducts===[]):?><tr class="empty"><td colspan="5">ไม่พบสินค้า</td></tr>
     <?php else: foreach($allProducts as $p):?><tr>
         <td><?php if($p['image_url']):?><img src="<?php echo h(resolve_image_url((string)$p['image_url']));?>" style="width:40px;height:40px;object-fit:cover;border-radius:6px" alt=""><?php else:?><span style="color:var(--muted);font-size:11px">-</span><?php endif;?></td>
         <td style="font-size:12px;font-weight:600"><?php echo h((string)$p['name']);?></td>
@@ -900,9 +901,9 @@ $distinctActions = get_distinct_actions($pdo);
 <!-- =================== FEATURED PRODUCTS =================== -->
 <?php $allFeaturedProducts = get_all_featured_products_admin($pdo, $filterCompanyId); ?>
 <div class="card">
-    <div class="card-h"><h2><i class="fas fa-star"></i> Featured Products</h2><div style="display:flex;gap:8px;align-items:center"><span style="font-size:12px;color:var(--muted)"><?php echo count($allFeaturedProducts);?> items</span><button class="btn btn-sm btn-primary" onclick="openModal('featuredProductModal')"><i class="fas fa-plus"></i> Add Featured Product</button></div></div>
-    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Image</th><th>Name</th><th>Status</th><th>Actions</th></tr></thead><tbody>
-    <?php if($allFeaturedProducts===[]):?><tr class="empty"><td colspan="4">No featured products found</td></tr>
+    <div class="card-h"><h2><i class="fas fa-star"></i> สินค้าแนะนำ</h2><div style="display:flex;gap:8px;align-items:center"><span style="font-size:12px;color:var(--muted)"><?php echo count($allFeaturedProducts);?> รายการ</span><button class="btn btn-sm btn-primary" onclick="openModal('featuredProductModal')"><i class="fas fa-plus"></i> เพิ่มสินค้าแนะนำ</button></div></div>
+    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>รูปภาพ</th><th>ชื่อ</th><th>สถานะ</th><th>จัดการ</th></tr></thead><tbody>
+    <?php if($allFeaturedProducts===[]):?><tr class="empty"><td colspan="4">ไม่พบสินค้าแนะนำ</td></tr>
     <?php else: foreach($allFeaturedProducts as $fp):?><tr>
         <td><?php if($fp['image_url']):?><img src="<?php echo h(resolve_image_url((string)$fp['image_url']));?>" style="width:40px;height:40px;object-fit:cover;border-radius:6px" alt=""><?php else:?><span style="color:var(--muted);font-size:11px">-</span><?php endif;?></td>
         <td style="font-size:12px;font-weight:600"><?php echo h((string)$fp['name']);?></td>
@@ -926,14 +927,14 @@ if ($user['company_id'] == get_company_id_by_code($pdo, 'KOCH') && $user['role']
 $allTruckCards = get_all_truck_cards_admin($pdo, $filterCompanyId); 
 ?>
 <div class="card">
-    <div class="card-h"><h2><i class="fas fa-id-card"></i> Truck Cards (TNB)</h2><div style="display:flex;gap:8px;align-items:center"><span style="font-size:12px;color:var(--muted)"><?php echo count($allTruckCards);?> cards</span><button class="btn btn-sm btn-primary" onclick="openModal('truckModal')"><i class="fas fa-plus"></i> Add Truck Card</button></div></div>
+    <div class="card-h"><h2><i class="fas fa-id-card"></i> การ์ดประเภทรถ (TNB)</h2><div style="display:flex;gap:8px;align-items:center"><span style="font-size:12px;color:var(--muted)"><?php echo count($allTruckCards);?> รายการ</span><button class="btn btn-sm btn-primary" onclick="openModal('truckModal')"><i class="fas fa-plus"></i> เพิ่มการ์ดรถ</button></div></div>
     <div class="card-b" style="padding:12px 20px;background:#eff6ff;border-bottom:1px solid var(--border)">
-        <p style="font-size:12px;color:#1e40af;margin:0"><i class="fas fa-info-circle"></i> <strong>Truck Cards</strong> จะแสดงที่หน้าเว็บ TNB ในส่วน "ประเภทรถ" — ข้อมูลที่เพิ่ม/แก้ไขที่นี่จะปรากฏบน TNB website โดยตรง</p>
+        <p style="font-size:12px;color:#1e40af;margin:0"><i class="fas fa-info-circle"></i> <strong>การ์ดประเภทรถ</strong> จะแสดงที่หน้าเว็บ TNB ในส่วน "ประเภทรถ" — ข้อมูลที่เพิ่ม/แก้ไขที่นี่จะปรากฏบนเว็บ TNB โดยตรง</p>
     </div>
     <div class="card-b" style="padding:20px">
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px">
         <?php if($allTruckCards===[]): ?>
-            <p style="text-align:center;color:var(--muted);padding:40px 0;font-size:13px;grid-column:1/-1">No truck cards found. Click "Add Truck Card" to create one.</p>
+            <p style="text-align:center;color:var(--muted);padding:40px 0;font-size:13px;grid-column:1/-1">ยังไม่มีการ์ดรถ กด "เพิ่มการ์ดรถ" เพื่อสร้างรายการแรก</p>
         <?php else: foreach($allTruckCards as $tc): ?>
             <div style="background:var(--bg);border-radius:12px;overflow:hidden;transition:transform .2s,box-shadow .2s;border:1.5px solid var(--border)" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 16px rgba(0,0,0,.1)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
                 <?php if($tc['image_url']):?><img src="<?php echo h(resolve_image_url((string)$tc['image_url']));?>" style="width:100%;height:130px;object-fit:cover" alt=""><?php else:?><div style="width:100%;height:130px;background:#e2e8f0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:12px">No Image</div><?php endif;?>
@@ -974,7 +975,7 @@ foreach($stmt->fetchAll() as $row) {
 <div style="display:flex; flex-direction:column; gap:20px; align-items:center;">
 
 <div class="card" style="width: 100%; max-width: 600px; margin: 0;">
-    <div class="card-h"><h2><i class="fas fa-envelope"></i> Notification Emails</h2></div>
+    <div class="card-h"><h2><i class="fas fa-envelope"></i> ตั้งค่าอีเมลแจ้งเตือน</h2></div>
     <div class="card-b" style="padding: 20px;">
         <p style="font-size: 13px; color: var(--muted); margin-bottom: 20px;">
             กรอกอีเมลที่แอดมินต้องการให้ระบบแจ้งเตือนเมื่อมีลูกค้าขอใบเสนอราคา (สามารถใส่ได้หลายอีเมลโดยคั่นด้วย ,)
@@ -1001,7 +1002,7 @@ foreach($stmt->fetchAll() as $row) {
             <?php endif; ?>
 
             <div style="margin-top: 30px;">
-                <button type="submit" class="btn btn-primary" style="width: 100%;"><i class="fas fa-save"></i> Save Emails</button>
+                <button type="submit" class="btn btn-primary" style="width: 100%;"><i class="fas fa-save"></i> บันทึกอีเมล</button>
             </div>
         </form>
     </div>
@@ -1009,7 +1010,7 @@ foreach($stmt->fetchAll() as $row) {
 
 <?php if ($companyMode === 'all'): ?>
 <div class="card" style="width: 100%; max-width: 600px; margin: 0;">
-    <div class="card-h"><h2><i class="fas fa-server"></i> SMTP Configuration</h2></div>
+    <div class="card-h"><h2><i class="fas fa-server"></i> ตั้งค่า SMTP Configuration</h2></div>
     <div class="card-b" style="padding: 20px; background:#f8fafc;">
         <p style="font-size: 13px; color: var(--muted); margin-bottom: 20px;">
             ตั้งค่าระบบส่งอีเมลกลาง (เช่น ผู้ส่งอีเมล noreply) แนะนำให้ใช้รหัสผ่านแบบ <strong>App Password</strong> ของ Gmail เพื่อความปลอดภัย
@@ -1044,7 +1045,7 @@ foreach($stmt->fetchAll() as $row) {
             </div>
 
             <div style="margin-top: 30px;">
-                <button type="submit" class="btn btn-secondary" style="width: 100%; background:var(--secondary); color:#fff;"><i class="fas fa-save"></i> Save SMTP Config</button>
+                <button type="submit" class="btn btn-secondary" style="width: 100%; background:var(--secondary); color:#fff;"><i class="fas fa-save"></i> บันทึกการตั้งค่า SMTP</button>
             </div>
         </form>
     </div>
@@ -1103,12 +1104,12 @@ $expFilters = [
 
 <!-- Export Type Selection -->
 <div class="card" style="margin-bottom:16px">
-    <div class="card-h"><h2><i class="fas fa-file-export"></i> Select Export Type</h2></div>
+    <div class="card-h"><h2><i class="fas fa-file-export"></i> เลือกข้อมูลที่ต้องการส่งออก</h2></div>
     <div class="card-b">
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px">
-            <button class="btn btn-primary" onclick="selectExportType('users')" id="btn-users" style="width:100%"><i class="fas fa-users"></i> Users</button>
-            <button class="btn btn-primary" onclick="selectExportType('quotations')" id="btn-quotations" style="width:100%"><i class="fas fa-box"></i> Quotations</button>
-            <button class="btn btn-primary" onclick="selectExportType('activity')" id="btn-activity" style="width:100%"><i class="fas fa-history"></i> Activity Logs</button>
+            <button class="btn btn-primary" onclick="selectExportType('users')" id="btn-users" style="width:100%"><i class="fas fa-users"></i> ผู้ใช้</button>
+            <button class="btn btn-primary" onclick="selectExportType('quotations')" id="btn-quotations" style="width:100%"><i class="fas fa-box"></i> ใบเสนอราคา</button>
+            <button class="btn btn-primary" onclick="selectExportType('activity')" id="btn-activity" style="width:100%"><i class="fas fa-history"></i> ประวัติการใช้งาน</button>
         </div>
     </div>
 </div>
@@ -1116,16 +1117,16 @@ $expFilters = [
 <!-- Filter Section -->
 <div id="filterSection" style="display:none">
     <div class="card" style="margin-bottom:16px">
-        <div class="card-h"><h2><i class="fas fa-filter"></i> Export Filters</h2></div>
+        <div class="card-h"><h2><i class="fas fa-filter"></i> ตัวกรองการส่งออก</h2></div>
         <div class="card-b">
             <div style="display:flex;gap:10px;margin-bottom:15px">
                 <label style="display:flex;align-items:center;gap:5px;cursor:pointer">
                     <input type="radio" name="export_mode" value="all" <?php echo $filterMode==='all'?'checked':'';?> onchange="toggleFilterMode('all')">
-                    <span style="font-size:13px">Export All Data</span>
+                    <span style="font-size:13px">ส่งออกข้อมูลทั้งหมด</span>
                 </label>
                 <label style="display:flex;align-items:center;gap:5px;cursor:pointer">
                     <input type="radio" name="export_mode" value="filter" <?php echo $filterMode==='filter'?'checked':'';?> onchange="toggleFilterMode('filter')">
-                    <span style="font-size:13px">Apply Filters</span>
+                    <span style="font-size:13px">ใช้ตัวกรอง</span>
                 </label>
             </div>
             
@@ -1139,7 +1140,7 @@ $expFilters = [
 <!-- Export Options -->
 <div id="exportOptions" style="display:none">
     <div class="card">
-        <div class="card-h"><h2><i class="fas fa-download"></i> Export Format</h2></div>
+        <div class="card-h"><h2><i class="fas fa-download"></i> รูปแบบไฟล์</h2></div>
         <div class="card-b">
             <div style="display:flex;gap:10px;flex-wrap:wrap">
                 <button class="btn btn-success" onclick="exportWithFilters('csv')"><i class="fas fa-file-csv"></i> CSV</button>
@@ -1155,7 +1156,7 @@ $expFilters = [
 <!-- =================== SETTINGS =================== -->
 <div class="grid-2">
     <div class="card">
-        <div class="card-h"><h2><i class="fas fa-database"></i> System Information</h2></div>
+        <div class="card-h"><h2><i class="fas fa-database"></i> ข้อมูลระบบ</h2></div>
         <div class="card-b">
             <div style="display:grid;gap:12px">
                 <div style="display:flex;justify-content:space-between;padding:12px;background:var(--bg);border-radius:10px"><span style="font-size:13px;color:var(--muted)">Database</span><strong style="font-size:13px"><?php echo h(DB_NAME);?></strong></div>
@@ -1178,7 +1179,7 @@ $expFilters = [
 <!-- User Edit Modal -->
 <div class="modal-overlay" id="userModal" onclick="if(event.target===this)closeModal('userModal')">
 <div class="modal">
-    <div class="modal-head"><h3><i class="fas fa-user-edit"></i> Edit User</h3><button class="modal-close" onclick="closeModal('userModal')">&times;</button></div>
+    <div class="modal-head"><h3><i class="fas fa-user-edit"></i> แก้ไขผู้ใช้</h3><button class="modal-close" onclick="closeModal('userModal')">&times;</button></div>
     <form method="POST" action="<?php echo h($crudUrl);?>" enctype="multipart/form-data">
         <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>">
         <input type="hidden" name="entity" value="user">
@@ -1191,12 +1192,12 @@ $expFilters = [
                 <div class="fm-group"><label>Status<span>*</span></label><select name="status" id="um_status" class="fm-input" required><option value="active">Active</option><option value="inactive">Inactive</option><option value="suspended">Suspended</option></select></div>
             </div>
             <div style="background:var(--bg);border-radius:10px;padding:14px;margin-top:8px">
-                <p style="font-size:11px;font-weight:600;color:var(--muted);margin:0 0 8px;text-transform:uppercase;letter-spacing:.5px">Role Description</p>
+                <p style="font-size:11px;font-weight:600;color:var(--muted);margin:0 0 8px;text-transform:uppercase;letter-spacing:.5px">คำอธิบายบทบาท</p>
                 <div style="font-size:12px;line-height:1.7;color:var(--text)">
-                    <div><strong style="color:#92400e">Super Admin</strong> — Full access to all companies, users, settings, and system configuration</div>
-                    <div><strong style="color:#1e40af">Admin</strong> — Manage own company's users, content, quotations, and emails</div>
-                    <div><strong style="color:#3730a3">Manager</strong> — View own team's data, limited content access</div>
-                    <div><strong style="color:#475569">User</strong> — View own data only, submit quotations</div>
+                    <div><strong style="color:#92400e">Super Admin</strong> — เข้าถึงการจัดการบริษัท ผู้ใช้ การตั้งค่า และระบบทั้งหมดได้อย่างเต็บรูปแบบ</div>
+                    <div><strong style="color:#1e40af">Admin</strong> — จัดการผู้ใช้ ข้อมูล ใบเสนอราคา และอีเมลเฉพาะบริษัทตนเอง</div>
+                    <div><strong style="color:#3730a3">Manager</strong> — ดูข้อมูลของทีมตนเองได้ จัดการเนื้อหาได้บางส่วน</div>
+                    <div><strong style="color:#475569">User</strong> — ดูข้อมูลของตนเองเท่านั้น และเสนอราคา/ขอบริการ</div>
                 </div>
             </div>
         </div>
@@ -1211,7 +1212,7 @@ $expFilters = [
 <!-- Slider Modal -->
 <div class="modal-overlay" id="sliderModal" onclick="if(event.target===this)closeModal('sliderModal')">
 <div class="modal">
-    <div class="modal-head"><h3><i class="fas fa-images"></i> <span id="sm_title">Add Slider</span></h3><button class="modal-close" onclick="closeModal('sliderModal')">&times;</button></div>
+    <div class="modal-head"><h3><i class="fas fa-images"></i> <span id="sm_title">เพิ่มสไลเดอร์</span></h3><button class="modal-close" onclick="closeModal('sliderModal')">&times;</button></div>
     <form method="POST" action="<?php echo h($crudUrl);?>" enctype="multipart/form-data">
         <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>">
         <input type="hidden" name="entity" value="slider">
@@ -1234,7 +1235,7 @@ $expFilters = [
 <!-- Partner Modal -->
 <div class="modal-overlay" id="partnerModal" onclick="if(event.target===this)closeModal('partnerModal')">
 <div class="modal">
-    <div class="modal-head"><h3><i class="fas fa-handshake"></i> <span id="pm_title">Add Partner</span></h3><button class="modal-close" onclick="closeModal('partnerModal')">&times;</button></div>
+    <div class="modal-head"><h3><i class="fas fa-handshake"></i> <span id="pm_title">เพิ่มพันธมิตร</span></h3><button class="modal-close" onclick="closeModal('partnerModal')">&times;</button></div>
     <form method="POST" action="<?php echo h($crudUrl);?>" enctype="multipart/form-data">
         <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>">
         <input type="hidden" name="entity" value="partner">
@@ -1256,7 +1257,7 @@ $expFilters = [
 <!-- Product Modal -->
 <div class="modal-overlay" id="productModal" onclick="if(event.target===this)closeModal('productModal')">
 <div class="modal">
-    <div class="modal-head"><h3><i class="fas fa-boxes-stacked"></i> <span id="prd_title">Add Product</span></h3><button class="modal-close" onclick="closeModal('productModal')">&times;</button></div>
+    <div class="modal-head"><h3><i class="fas fa-boxes-stacked"></i> <span id="prd_title">เพิ่มสินค้า</span></h3><button class="modal-close" onclick="closeModal('productModal')">&times;</button></div>
     <form method="POST" action="<?php echo h($crudUrl);?>" enctype="multipart/form-data">
         <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>">
         <input type="hidden" name="entity" value="product">
@@ -1277,7 +1278,7 @@ $expFilters = [
 <!-- Truck Card Modal -->
 <div class="modal-overlay" id="truckModal" onclick="if(event.target===this)closeModal('truckModal')">
 <div class="modal">
-    <div class="modal-head"><h3><i class="fas fa-id-card"></i> <span id="tt_title">Add Truck Card</span></h3><button class="modal-close" onclick="closeModal('truckModal')">&times;</button></div>
+    <div class="modal-head"><h3><i class="fas fa-id-card"></i> <span id="tt_title">เพิ่มการ์ดรถ</span></h3><button class="modal-close" onclick="closeModal('truckModal')">&times;</button></div>
     <form method="POST" action="<?php echo h($crudUrl);?>" enctype="multipart/form-data">
         <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>">
         <input type="hidden" name="entity" value="truck_card">
@@ -1300,7 +1301,7 @@ $expFilters = [
 <!-- Featured Product Modal -->
 <div class="modal-overlay" id="featuredProductModal" onclick="if(event.target===this)closeModal('featuredProductModal')">
 <div class="modal">
-    <div class="modal-head"><h3><i class="fas fa-star"></i> <span id="fp_title">Add Featured Product</span></h3><button class="modal-close" onclick="closeModal('featuredProductModal')">&times;</button></div>
+    <div class="modal-head"><h3><i class="fas fa-star"></i> <span id="fp_title">เพิ่มสินค้าแนะนำ</span></h3><button class="modal-close" onclick="closeModal('featuredProductModal')">&times;</button></div>
     <form method="POST" action="<?php echo h($crudUrl);?>" enctype="multipart/form-data">
         <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>">
         <input type="hidden" name="entity" value="featured_product">
@@ -1321,7 +1322,7 @@ $expFilters = [
 <!-- Email Template Modal -->
 <div class="modal-overlay" id="emailTplModal" onclick="if(event.target===this)closeModal('emailTplModal')">
 <div class="modal">
-    <div class="modal-head"><h3><i class="fas fa-file-alt"></i> <span id="etm_title">Add Email Template</span></h3><button class="modal-close" onclick="closeModal('emailTplModal')">&times;</button></div>
+    <div class="modal-head"><h3><i class="fas fa-file-alt"></i> <span id="etm_title">เพิ่มเทมเพลตอีเมล</span></h3><button class="modal-close" onclick="closeModal('emailTplModal')">&times;</button></div>
     <form method="POST" action="<?php echo h($crudUrl);?>" enctype="multipart/form-data">
         <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>">
         <input type="hidden" name="entity" value="email_template">
@@ -1345,7 +1346,7 @@ $expFilters = [
 <!-- Email Recipient Modal -->
 <div class="modal-overlay" id="emailRecModal" onclick="if(event.target===this)closeModal('emailRecModal')">
 <div class="modal">
-    <div class="modal-head"><h3><i class="fas fa-at"></i> <span id="erm_title">Add Email Recipient</span></h3><button class="modal-close" onclick="closeModal('emailRecModal')">&times;</button></div>
+    <div class="modal-head"><h3><i class="fas fa-at"></i> <span id="erm_title">เพิ่มอีเมลผู้รับ</span></h3><button class="modal-close" onclick="closeModal('emailRecModal')">&times;</button></div>
     <form method="POST" action="<?php echo h($crudUrl);?>" enctype="multipart/form-data">
         <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>">
         <input type="hidden" name="entity" value="email_recipient">

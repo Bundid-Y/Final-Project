@@ -80,6 +80,7 @@ function koch_status_badge(string $status): string {
 }
 
 function koch_action_label(string $action): string {
+    $action = preg_replace('/^\[.*?\]\s*/', '', $action);
     $map = [
         'LOGIN_SUCCESS' => 'เข้าสู่ระบบสำเร็จ',
         'LOGIN_FAILED' => 'เข้าสู่ระบบไม่สำเร็จ',

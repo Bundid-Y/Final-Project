@@ -62,6 +62,7 @@ function tnb_status_badge(string $status): string {
     return '<span style="display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;background:'.$s[0].';color:'.$s[1].'">'.htmlspecialchars($s[2],ENT_QUOTES,'UTF-8').'</span>';
 }
 function tnb_action_label(string $a): string {
+    $a = preg_replace('/^\[.*?\]\s*/', '', $a);
     $m = ['LOGIN_SUCCESS'=>'เข้าสู่ระบบสำเร็จ','LOGIN_FAILED'=>'เข้าสู่ระบบไม่สำเร็จ','REGISTER_SUCCESS'=>'ลงทะเบียนสำเร็จ','PROFILE_UPDATED'=>'แก้ไขโปรไฟล์','PASSWORD_CHANGED'=>'เปลี่ยนรหัสผ่าน','TNB_QUOTATION_CREATED'=>'ส่งใบขอบริการขนส่ง','KOCH_QUOTATION_CREATED'=>'ส่งใบเสนอราคา KOCH','AUTO_REGISTER_FROM_QUOTATION'=>'ลงทะเบียนอัตโนมัติ'];
     return $m[$a] ?? $a;
 }
