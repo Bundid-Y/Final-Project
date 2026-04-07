@@ -126,7 +126,7 @@ function koch_action_label(string $action): string {
             --sidebar-width: 272px;
         }
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html { scroll-behavior: smooth; }
+        html { scroll-behavior: auto; }
         body { font-family: 'Inter', 'Sarabun', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--koch-bg); color: var(--koch-text); line-height: 1.6; -webkit-font-smoothing: antialiased; }
         ::selection { background: var(--koch-primary); color: #fff; }
 
@@ -1056,6 +1056,19 @@ function koch_action_label(string $action): string {
                 }, 5000);
             }
         });
+    
+    // Save scroll position before navigating
+        document.querySelectorAll('.sidebar-nav a[href^="?section"]').forEach(function(link) {
+            link.addEventListener('click', function() {
+                sessionStorage.setItem('sidebarScroll', document.querySelector('.sidebar-nav').scrollTop);
+                sessionStorage.setItem('mainScroll', window.scrollY);
+            });
+        });
+        // Restore scroll position after page load
+        var savedSidebar = sessionStorage.getItem('sidebarScroll');
+        var savedMain = sessionStorage.getItem('mainScroll');
+        if (savedSidebar) { document.querySelector('.sidebar-nav').scrollTop = parseInt(savedSidebar); }
+        if (savedMain) { window.scrollTo(0, parseInt(savedMain)); }
     </script>
     <?php clear_old_input(); ?>
 </body>
