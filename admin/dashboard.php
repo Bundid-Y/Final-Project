@@ -1149,30 +1149,171 @@ $expFilters = [
                 <button class="btn btn-success" onclick="exportWithFilters('word')"><i class="fas fa-file-word"></i> Word</button>
             </div>
         </div>
+<?php elseif($section==='settings'): ?>
+<!-- =================== SETTINGS =================== -->
+<div class="stats-row" style="margin-bottom:20px">
+    <div class="stat-card blue">
+        <div class="sc-top"><div class="sc-icon"><i class="fas fa-server"></i></div></div>
+        <div class="sc-num"><?php echo h((string)($_SERVER['SERVER_SOFTWARE']??'Unknown'));?></div>
+        <div class="sc-label">Server Software</div>
+    </div>
+    <div class="stat-card green">
+        <div class="sc-top"><div class="sc-icon"><i class="fas fa-code"></i></div></div>
+        <div class="sc-num"><?php echo h(PHP_VERSION);?></div>
+        <div class="sc-label">PHP Version</div>
+    </div>
+    <div class="stat-card orange">
+        <div class="sc-top"><div class="sc-icon"><i class="fas fa-database"></i></div></div>
+        <div class="sc-num"><?php echo h(DB_NAME);?></div>
+        <div class="sc-label">Database</div>
+    </div>
+    <div class="stat-card purple">
+        <div class="sc-top"><div class="sc-icon"><i class="fas fa-microchip"></i></div></div>
+        <div class="sc-num"><?php echo h((string)($_SERVER['SERVER_NAME']??'Localhost'));?></div>
+        <div class="sc-label">Server Name</div>
     </div>
 </div>
 
-<?php elseif($section==='settings'): ?>
-<!-- =================== SETTINGS =================== -->
-<div class="grid-2">
+<div class="grid-3">
     <div class="card">
-        <div class="card-h"><h2><i class="fas fa-database"></i> ข้อมูลระบบ</h2></div>
+        <div class="card-h"><h2><i class="fas fa-cog" style="color:var(--primary)"></i>  System Configuration</h2></div>
         <div class="card-b">
-            <div style="display:grid;gap:12px">
-                <div style="display:flex;justify-content:space-between;padding:12px;background:var(--bg);border-radius:10px"><span style="font-size:13px;color:var(--muted)">Database</span><strong style="font-size:13px"><?php echo h(DB_NAME);?></strong></div>
-                <div style="display:flex;justify-content:space-between;padding:12px;background:var(--bg);border-radius:10px"><span style="font-size:13px;color:var(--muted)">PHP Version</span><strong style="font-size:13px"><?php echo h(PHP_VERSION);?></strong></div>
-                <div style="display:flex;justify-content:space-between;padding:12px;background:var(--bg);border-radius:10px"><span style="font-size:13px;color:var(--muted)">Server</span><strong style="font-size:13px"><?php echo h((string)($_SERVER['SERVER_SOFTWARE']??'Unknown'));?></strong></div>
-                <div style="display:flex;justify-content:space-between;padding:12px;background:var(--bg);border-radius:10px"><span style="font-size:13px;color:var(--muted)">Session Lifetime</span><strong style="font-size:13px"><?php echo number_format(SESSION_LIFETIME/3600,1);?>h</strong></div>
-                <div style="display:flex;justify-content:space-between;padding:12px;background:var(--bg);border-radius:10px"><span style="font-size:13px;color:var(--muted)">Max Upload</span><strong style="font-size:13px"><?php echo number_format(UPLOAD_MAX_SIZE/1048576,0);?>MB</strong></div>
-                <div style="display:flex;justify-content:space-between;padding:12px;background:var(--bg);border-radius:10px"><span style="font-size:13px;color:var(--muted)">Debug Mode</span><strong style="font-size:13px"><?php echo APP_DEBUG?'ON':'OFF';?></strong></div>
+            <div style="display:grid;gap:10px">
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:linear-gradient(135deg,var(--primary-light),transparent);border-radius:8px;border-left:3px solid var(--primary)">
+                    <span style="font-size:12px;color:var(--muted);font-weight:500">Debug Mode</span>
+                    <span class="badge" style="background:<?php echo APP_DEBUG?'var(--success)':'var(--danger)';?>;color:#fff;font-size:10px"><?php echo APP_DEBUG?'ENABLED':'DISABLED';?></span>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--bg);border-radius:8px">
+                    <span style="font-size:12px;color:var(--muted);font-weight:500">Session Lifetime</span>
+                    <strong style="font-size:12px;color:var(--text)"><?php echo number_format(SESSION_LIFETIME/3600,1);?> hours</strong>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--bg);border-radius:8px">
+                    <span style="font-size:12px;color:var(--muted);font-weight:500">Max Upload Size</span>
+                    <strong style="font-size:12px;color:var(--text)"><?php echo number_format(UPLOAD_MAX_SIZE/1048576,0);?> MB</strong>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--bg);border-radius:8px">
+                    <span style="font-size:12px;color:var(--muted);font-weight:500">Timezone</span>
+                    <strong style="font-size:12px;color:var(--text)"><?php echo h(date_default_timezone_get());?></strong>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--bg);border-radius:8px">
+                    <span style="font-size:12px;color:var(--muted);font-weight:500">Current Time</span>
+                    <strong style="font-size:12px;color:var(--text)"><?php echo h(date('Y-m-d H:i:s'));?></strong>
+                </div>
             </div>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-h"><h2><i class="fas fa-chart-bar" style="color:var(--info)"></i>  System Resources</h2></div>
+        <div class="card-b">
+            <div style="display:grid;gap:10px">
+                <div style="padding:10px;background:var(--bg);border-radius:8px">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+                        <span style="font-size:12px;color:var(--muted);font-weight:500">Memory Usage</span>
+                        <strong style="font-size:11px;color:var(--text)"><?php echo number_format(memory_get_usage()/1024/1024,2);?> MB</strong>
+                    </div>
+                    <div style="height:6px;background:var(--border);border-radius:3px;overflow:hidden">
+                        <div style="height:100%;width:<?php echo min(100,(memory_get_usage()/1024/1024)/256*100);?>%;background:linear-gradient(90deg,var(--info),var(--primary));border-radius:3px"></div>
+                    </div>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--bg);border-radius:8px">
+                    <span style="font-size:12px;color:var(--muted);font-weight:500">Memory Limit</span>
+                    <strong style="font-size:12px;color:var(--text)"><?php echo h(ini_get('memory_limit'));?></strong>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--bg);border-radius:8px">
+                    <span style="font-size:12px;color:var(--muted);font-weight:500">Max Execution Time</span>
+                    <strong style="font-size:12px;color:var(--text)"><?php echo h(ini_get('max_execution_time'));?>s</strong>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--bg);border-radius:8px">
+                    <span style="font-size:12px;color:var(--muted);font-weight:500">Post Max Size</span>
+                    <strong style="font-size:12px;color:var(--text)"><?php echo h(ini_get('post_max_size'));?></strong>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--bg);border-radius:8px">
+                    <span style="font-size:12px;color:var(--muted);font-weight:500">File Uploads</span>
+                    <span class="badge" style="background:<?php echo ini_get('file_uploads')?'var(--success)':'var(--danger)';?>;color:#fff;font-size:10px"><?php echo ini_get('file_uploads')?'ON':'OFF';?></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-h"><h2><i class="fas fa-shield-alt" style="color:var(--success)"></i>  Security Settings</h2></div>
+        <div class="card-b">
+            <div style="display:grid;gap:10px">
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--bg);border-radius:8px">
+                    <span style="font-size:12px;color:var(--muted);font-weight:500">HTTPS</span>
+                    <span class="badge" style="background:<?php echo (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS']!=='off')?'var(--success)':'var(--warning)';?>;color:#fff;font-size:10px"><?php echo (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS']!=='off')?'SECURE':'INSECURE';?></span>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--bg);border-radius:8px">
+                    <span style="font-size:12px;color:var(--muted);font-weight:500">CSRF Protection</span>
+                    <span class="badge" style="background:var(--success);color:#fff;font-size:10px">ENABLED</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--bg);border-radius:8px">
+                    <span style="font-size:12px;color:var(--muted);font-weight:500">Session Security</span>
+                    <span class="badge" style="background:var(--success);color:#fff;font-size:10px">HTTPONLY</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--bg);border-radius:8px">
+                    <span style="font-size:12px;color:var(--muted);font-weight:500">XSS Protection</span>
+                    <span class="badge" style="background:var(--success);color:#fff;font-size:10px">ENABLED</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--bg);border-radius:8px">
+                    <span style="font-size:12px;color:var(--muted);font-weight:500">SQL Injection</span>
+                    <span class="badge" style="background:var(--success);color:#fff;font-size:10px">PROTECTED</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card" style="margin-top:18px">
+    <div class="card-h"><h2><i class="fas fa-info-circle" style="color:var(--primary)"></i>  System Information</h2></div>
+    <div class="card-b">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px">
+            <div style="padding:12px;background:var(--bg);border-radius:8px;text-align:center">
+                <i class="fas fa-users" style="font-size:20px;color:var(--primary);margin-bottom:6px;display:block"></i>
+                <div style="font-size:18px;font-weight:700;color:var(--text)"><?php echo number_format((int)$stats['users']);?></div>
+                <div style="font-size:11px;color:var(--muted)">Total Users</div>
+            </div>
+            <div style="padding:12px;background:var(--bg);border-radius:8px;text-align:center">
+                <i class="fas fa-box" style="font-size:20px;color:#ED2A2A;margin-bottom:6px;display:block"></i>
+                <div style="font-size:18px;font-weight:700;color:var(--text)"><?php echo number_format((int)$stats['koch_quotations']);?></div>
+                <div style="font-size:11px;color:var(--muted)">KOCH Quotations</div>
+            </div>
+            <div style="padding:12px;background:var(--bg);border-radius:8px;text-align:center">
+                <i class="fas fa-truck" style="font-size:20px;color:#0d2d6b;margin-bottom:6px;display:block"></i>
+                <div style="font-size:18px;font-weight:700;color:var(--text)"><?php echo number_format((int)$stats['tnb_quotations']);?></div>
+                <div style="font-size:11px;color:var(--muted)">TNB Requests</div>
+            </div>
+            <div style="padding:12px;background:var(--bg);border-radius:8px;text-align:center">
+                <i class="fas fa-bell" style="font-size:20px;color:var(--warning);margin-bottom:6px;display:block"></i>
+                <div style="font-size:18px;font-weight:700;color:var(--text)"><?php echo number_format((int)$stats['unread_notifications']);?></div>
+                <div style="font-size:11px;color:var(--muted)">Unread Notifications</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card" style="margin-top:18px">
+    <div class="card-h"><h2><i class="fas fa-tools" style="color:var(--warning)"></i>  Quick Actions</h2></div>
+    <div class="card-b">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px">
+            <button onclick="window.open('?section=export_data','_blank')" class="btn btn-ghost" style="width:100%;justify-content:center">
+                <i class="fas fa-download"></i> Export Data
+            </button>
+            <button onclick="window.open('?section=activity','_blank')" class="btn btn-ghost" style="width:100%;justify-content:center">
+                <i class="fas fa-history"></i> View Activity Logs
+            </button>
+            <button onclick="window.open('?section=users','_blank')" class="btn btn-ghost" style="width:100%;justify-content:center">
+                <i class="fas fa-users-cog"></i> Manage Users
+            </button>
+            <button onclick="location.reload()" class="btn btn-ghost" style="width:100%;justify-content:center">
+                <i class="fas fa-sync-alt"></i> Refresh System
+            </button>
         </div>
     </div>
 </div>
 <?php endif; ?>
 
-    </div>
-</div>
 <!-- =================== MODAL FORMS =================== -->
 <?php $crudUrl = project_url('admin/api/crud/handler.php'); ?>
 
