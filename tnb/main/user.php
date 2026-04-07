@@ -376,14 +376,10 @@ $os='Unknown';if(str_contains($ua,'Windows'))$os='Windows';elseif(str_contains($
     <div class="ff"><label for="new_password">รหัสผ่านใหม่</label><input type="password" id="new_password" name="new_password" required></div>
     <div class="ff"><label for="confirm_new_password">ยืนยันรหัสผ่านใหม่</label><input type="password" id="confirm_new_password" name="confirm_new_password" required></div>
 </div>
-<p style="font-size:12px;color:var(--txm);margin-top:12px">รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร ประกอบด้วยตัวพิมพ์ใหญ่ ตัวพิมพ์เล็ก และตัวเลข</p>
+<p style="font-size:12px;color:var(--txm);margin-top:12px">โปรดใช้รหัสผ่านที่มีความปลอดภัยสูง</p>
 <div class="ba"><button type="submit" class="btn p"><i class="fas fa-key"></i> เปลี่ยนรหัสผ่าน</button></div>
 </form></div></div>
-<div class="tc"><div class="tc-h"><h2><i class="fas fa-palette"></i> การตั้งค่าบัญชี</h2></div><div class="tc-b"><div style="display:grid;gap:20px">
-<div style="display:flex;align-items:center;justify-content:space-between;padding:16px;background:var(--bg);border-radius:12px"><div><div style="font-weight:600;margin-bottom:2px">การแจ้งเตือนทางอีเมล</div><div style="font-size:13px;color:var(--txm)">รับอีเมลเมื่อมีอัปเดตสถานะการขนส่ง</div></div><label style="position:relative;width:48px;height:26px;display:inline-block"><input type="checkbox" checked style="opacity:0;width:0;height:0"><span style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:var(--ok);border-radius:26px;transition:.3s"></span></label></div>
-<div style="display:flex;align-items:center;justify-content:space-between;padding:16px;background:var(--bg);border-radius:12px"><div><div style="font-weight:600;margin-bottom:2px">ภาษาที่แสดง</div><div style="font-size:13px;color:var(--txm)">เลือกภาษาสำหรับการแสดงผล</div></div><select style="padding:8px 12px;border:1.5px solid var(--bd);border-radius:8px;font-size:14px;font-family:inherit"><option value="th">ไทย</option><option value="en">English</option><option value="zh">中文</option><option value="jp">日本語</option></select></div>
-</div></div></div>
-<div class="tc" style="border:1.5px solid #fee2e2"><div class="tc-h"><h2 style="color:#dc2626"><i class="fas fa-exclamation-triangle"></i> โซนอันตราย</h2></div><div class="tc-b"><p style="font-size:14px;color:var(--txm);margin-bottom:16px">การลบบัญชีจะไม่สามารถกู้คืนได้ ข้อมูลทั้งหมดจะถูกลบอย่างถาวร</p><button class="btn" style="background:#fee2e2;color:#dc2626" disabled><i class="fas fa-trash"></i> ขอลบบัญชี (กรุณาติดต่อแอดมิน)</button></div></div>
+
 <?php endif; ?>
 
     </div>
