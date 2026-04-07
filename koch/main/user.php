@@ -573,7 +573,6 @@ function koch_action_label(string $action): string {
                 <div class="breadcrumb">KOCH Packaging &rsaquo; <?php echo $titles[$section] ?? 'แดชบอร์ด'; ?></div>
             </div>
             <div class="topbar-right">
-                <a href="../main/quotation.php" class="topbar-btn primary"><i class="fas fa-plus"></i> ขอใบเสนอราคา</a>
             </div>
         </div>
 
@@ -676,7 +675,7 @@ function koch_action_label(string $action): string {
                             </thead>
                             <tbody>
                             <?php if ($quotations === []): ?>
-                                <tr class="empty-row"><td colspan="4">ยังไม่มีใบเสนอราคา — <a href="../main/quotation.php" style="color:var(--koch-primary);font-weight:600;">ขอใบเสนอราคาแรก</a></td></tr>
+                                <tr class="empty-row"><td colspan="4">ยังไม่มีใบเสนอราคา</td></tr>
                             <?php else: ?>
                                 <?php foreach (array_slice($quotations, 0, 5) as $q): ?>
                                 <tr>
@@ -798,7 +797,6 @@ function koch_action_label(string $action): string {
             <div class="k-card">
                 <div class="k-card-header">
                     <h2><i class="fas fa-file-invoice"></i> รายการใบเสนอราคาทั้งหมด</h2>
-                    <a href="../main/quotation.php" class="k-btn primary" style="padding:8px 16px;font-size:13px;"><i class="fas fa-plus"></i> ขอใบเสนอราคาใหม่</a>
                 </div>
                 <div class="k-card-body" style="padding:0;">
                     <div class="k-table-wrap">

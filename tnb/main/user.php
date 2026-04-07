@@ -63,10 +63,10 @@ function tnb_status_badge(string $status): string {
 }
 function tnb_action_label(string $a): string {
     $a = preg_replace('/^\[.*?\]\s*/', '', $a);
-    $m = ['LOGIN_SUCCESS'=>'เข้าสู่ระบบสำเร็จ','LOGIN_FAILED'=>'เข้าสู่ระบบไม่สำเร็จ','REGISTER_SUCCESS'=>'ลงทะเบียนสำเร็จ','PROFILE_UPDATED'=>'แก้ไขโปรไฟล์','PASSWORD_CHANGED'=>'เปลี่ยนรหัสผ่าน','TNB_QUOTATION_CREATED'=>'ส่งใบขอบริการขนส่ง','KOCH_QUOTATION_CREATED'=>'ส่งใบเสนอราคา KOCH','AUTO_REGISTER_FROM_QUOTATION'=>'ลงทะเบียนอัตโนมัติ'];
+    $m = ['LOGIN_SUCCESS'=>'เข้าสู่ระบบสำเร็จ','LOGIN_FAILED'=>'เข้าสู่ระบบไม่สำเร็จ','REGISTER_SUCCESS'=>'ลงทะเบียนสำเร็จ','PROFILE_UPDATED'=>'แก้ไขโปรไฟล์','PASSWORD_CHANGED'=>'เปลี่ยนรหัสผ่าน','TNB_QUOTATION_CREATED'=>'ส่งใบเสนอราคาขนส่ง','KOCH_QUOTATION_CREATED'=>'ส่งใบเสนอราคา KOCH','AUTO_REGISTER_FROM_QUOTATION'=>'ลงทะเบียนอัตโนมัติ'];
     return $m[$a] ?? $a;
 }
-$titles = ['dashboard'=>'แดชบอร์ด','profile'=>'โปรไฟล์ของฉัน','quotations'=>'ใบขอบริการขนส่ง','tracking'=>'ติดตามการขนส่ง','transport'=>'ข้อมูลรถและเส้นทาง','notifications'=>'การแจ้งเตือน','sessions'=>'ประวัติเข้าใช้ระบบ','settings'=>'ตั้งค่าบัญชี'];
+$titles = ['dashboard'=>'แดชบอร์ด','profile'=>'โปรไฟล์ของฉัน','quotations'=>'ใบเสนอราคา','tracking'=>'ติดตามการขนส่ง','transport'=>'ข้อมูลรถและเส้นทาง','notifications'=>'การแจ้งเตือน','sessions'=>'ประวัติเข้าใช้ระบบ','settings'=>'ตั้งค่าบัญชี'];
 ?>
 <!DOCTYPE html>
 <html lang="th">
@@ -215,7 +215,7 @@ body{font-family:'Inter','Sarabun',-apple-system,BlinkMacSystemFont,sans-serif;b
         <div class="lb">เมนูหลัก</div>
         <a href="?section=dashboard" class="<?php echo $section==='dashboard'?'active':''; ?>"><i class="fas fa-chart-pie"></i> แดชบอร์ด</a>
         <a href="?section=profile" class="<?php echo $section==='profile'?'active':''; ?>"><i class="fas fa-user-circle"></i> โปรไฟล์ของฉัน</a>
-        <a href="?section=quotations" class="<?php echo $section==='quotations'?'active':''; ?>"><i class="fas fa-file-invoice"></i> ใบขอบริการ<?php if($newQuotations>0):?><span class="nb"><?php echo $newQuotations;?></span><?php endif;?></a>
+        <a href="?section=quotations" class="<?php echo $section==='quotations'?'active':''; ?>"><i class="fas fa-file-invoice"></i> ใบเสนอราคา<?php if($newQuotations>0):?><span class="nb"><?php echo $newQuotations;?></span><?php endif;?></a>
         <a href="?section=tracking" class="<?php echo $section==='tracking'?'active':''; ?>"><i class="fas fa-shipping-fast"></i> ติดตามการขนส่ง</a>
         <a href="?section=transport" class="<?php echo $section==='transport'?'active':''; ?>"><i class="fas fa-truck"></i> ข้อมูลรถและเส้นทาง</a>
         <div class="dv"></div>
@@ -236,7 +236,7 @@ body{font-family:'Inter','Sarabun',-apple-system,BlinkMacSystemFont,sans-serif;b
 <div class="user-main">
     <div class="topbar">
         <div><button class="mob-tog" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><h1><?php echo $titles[$section]??'แดชบอร์ด';?></h1><div class="bc">TNB Logistics &rsaquo; <?php echo $titles[$section]??'แดชบอร์ด';?></div></div>
-        <div><a href="../main/quotation.php" class="topbar-btn"><i class="fas fa-plus"></i> ขอบริการขนส่ง</a></div>
+        <div></div>
     </div>
     <div class="mc">
         <?php if($successMessage):?><div class="ta ok" id="flashAlert"><i class="fas fa-check-circle"></i> <?php echo h((string)$successMessage);?></div><?php endif;?>
@@ -262,7 +262,7 @@ body{font-family:'Inter','Sarabun',-apple-system,BlinkMacSystemFont,sans-serif;b
     </div></div>
 </div>
 <div class="tc"><div class="tc-h"><h2><i class="fas fa-file-invoice"></i> คำขอบริการล่าสุด</h2><a href="?section=quotations" class="btn o" style="padding:6px 14px;font-size:13px">ดูทั้งหมด</a></div><div class="tc-b" style="padding:0"><div class="tw"><table class="tt"><thead><tr><th>เลขที่</th><th>วันที่</th><th>ประเภท</th><th>เส้นทาง</th><th>สถานะ</th></tr></thead><tbody>
-<?php if($quotations===[]):?><tr class="empty"><td colspan="5">ยังไม่มีคำขอบริการ — <a href="../main/quotation.php" style="color:var(--ta);font-weight:600">ขอบริการแรก</a></td></tr>
+<?php if($quotations===[]):?><tr class="empty"><td colspan="5">ยังไม่มีคำขอบริการ</td></tr>
 <?php else: foreach(array_slice($quotations,0,5) as $q):?><tr><td style="font-weight:600"><?php echo h((string)$q['request_number']);?></td><td style="white-space:nowrap"><?php echo h(date('d/m/Y',strtotime((string)$q['created_at'])));?></td><td><?php echo h((string)$q['service_type']);?></td><td><?php echo h((string)($q['route']??'-'));?></td><td><?php echo tnb_status_badge((string)$q['status']);?></td></tr><?php endforeach; endif;?>
 </tbody></table></div></div></div>
 
@@ -297,7 +297,7 @@ body{font-family:'Inter','Sarabun',-apple-system,BlinkMacSystemFont,sans-serif;b
     <div class="sc tl"><div class="si"><i class="fas fa-shipping-fast"></i></div><div class="sn"><?php echo (int)$qStats['in_transit'];?></div><div class="sl">กำลังขนส่ง</div></div>
     <div class="sc gn"><div class="si"><i class="fas fa-flag-checkered"></i></div><div class="sn"><?php echo (int)$qStats['completed'];?></div><div class="sl">เสร็จสิ้น</div></div>
 </div>
-<div class="tc"><div class="tc-h"><h2><i class="fas fa-file-invoice"></i> คำขอบริการทั้งหมด</h2><a href="../main/quotation.php" class="btn p" style="padding:8px 16px;font-size:13px"><i class="fas fa-plus"></i> ขอบริการใหม่</a></div><div class="tc-b" style="padding:0"><div class="tw"><table class="tt"><thead><tr><th>เลขที่</th><th>วันที่</th><th>ประเภท</th><th>เส้นทาง</th><th>Tracking</th><th>สถานะ</th></tr></thead><tbody>
+<div class="tc"><div class="tc-h"><h2><i class="fas fa-file-invoice"></i> คำขอบริการทั้งหมด</h2><a href="../main/quotation.php" class="btn p" style="padding:8px 16px;font-size:13px"><i class="fas fa-plus"></i> ขอใบเสนอราคา</a></div><div class="tc-b" style="padding:0"><div class="tw"><table class="tt"><thead><tr><th>เลขที่</th><th>วันที่</th><th>ประเภท</th><th>เส้นทาง</th><th>Tracking</th><th>สถานะ</th></tr></thead><tbody>
 <?php if($quotations===[]):?><tr class="empty"><td colspan="6">ยังไม่มีคำขอบริการ</td></tr>
 <?php else: foreach($quotations as $q):?><tr><td style="font-weight:600"><?php echo h((string)$q['request_number']);?></td><td style="white-space:nowrap"><?php echo h(date('d/m/Y H:i',strtotime((string)$q['created_at'])));?></td><td><?php echo h((string)$q['service_type']);?></td><td><?php echo h((string)($q['route']??'-'));?></td><td style="font-size:13px"><?php echo h((string)($q['tracking_number']??'-'));?></td><td><?php echo tnb_status_badge((string)$q['status']);?></td></tr><?php endforeach; endif;?>
 </tbody></table></div></div></div>
