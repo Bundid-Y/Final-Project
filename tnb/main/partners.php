@@ -78,8 +78,8 @@ $dbPartners = get_active_partners($pdo, $companyId);
                             <div class="red-block">
                                 <!-- Logo Loop Inside Red Block -->
                                 <section class="loop-images-quotation vertical" style="background-color: transparent !important; --bg: transparent; height: 100%; min-height: 500px; padding: 20px 0; width: 100%;">
-                                    <?php if (!empty($dbPartners)): $pCount = count($dbPartners); $totalItems = $pCount * 2; ?>
-                                    <div class="login-track vertical" style="--time: <?php echo max(30, $pCount * 4); ?>s; --total: <?php echo $totalItems; ?>; --top: -300rem;">
+                                    <?php if (!empty($dbPartners)): $pCount = count($dbPartners); $totalItems = $pCount * 2; $topRem = max(40, $totalItems * 16 - 56); $animTime = max(9, $pCount * 3); ?>
+                                    <div class="login-track vertical" style="--time: <?php echo $animTime; ?>s; --total: <?php echo $totalItems; ?>; --top: -<?php echo $topRem; ?>rem;">
                                         <?php $idx = 1; foreach ($dbPartners as $p): ?>
                                         <div class="login-item" style="--i: <?php echo $idx++; ?>;"><img src="<?php echo htmlspecialchars(resolve_image_url((string)$p['logo_url'])); ?>" alt="<?php echo htmlspecialchars((string)$p['name']); ?>"></div>
                                         <?php endforeach; ?>

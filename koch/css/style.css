@@ -592,19 +592,17 @@ section.loop-images-quotation {
 	position: relative;
 	height: 60vh;
 	width: 100%;
-	background-color: #fff;
-	overflow: hidden;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	flex-direction: column;
-	/* perspective removed — 3D context causes heavy GPU repaints and stutter */
+	overflow: hidden;
+	background: var(--bg);
 	contain: layout style;
 }
 
 .login-track {
 	--left: -150rem;
-	min-width: calc(5rem * var(--total));
+	min-width: calc(1rem * var(--total));
 	height: 10rem;
 	/* transform-style: preserve-3d removed — 2D is smoother */
 }
@@ -614,15 +612,12 @@ section.loop-images-quotation {
 	width: 10rem;
 	height: 10rem;
 	left: 0;
-	transform: translateX(100vw);
+	translate: 100vw 0;
 	animation: scroll-left var(--time) linear infinite;
 	animation-delay: calc(var(--time) / var(--total) * (var(--i) - 1) - var(--time));
-	will-change: transform;
+	will-change: translate;
 	cursor: pointer;
-	transition: box-shadow 0.3s ease, filter 0.3s ease;
 	overflow: hidden;
-	border-radius: 0;
-	background: #ffffff;
 	contain: layout style;
 }
 
@@ -638,16 +633,18 @@ section.loop-images-quotation {
 	object-fit: contain;
 	display: block;
 	pointer-events: none;
-	padding: 1rem;
+	padding: 0;
 	box-sizing: border-box;
+	background: white;
+	border-radius: 0;
 }
 
 @keyframes scroll-left {
 	0% {
-		transform: translateX(100vw);
+		translate: 100vw 0;
 	}
 	100% {
-		transform: translateX(calc(-100% - 100vw));
+		translate: calc(-100% - 100vw) 0;
 	}
 }
 
@@ -2386,14 +2383,11 @@ section.loop-images-quotation.vertical {
 }
 
 .partners-page-wrapper .login-track .login-item img {
-    padding: 15px;
+    padding: 0;
     background: white;
     object-fit: contain;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 0;
 }
-
-
 
 /* =========================================
    Product Page Specific Styles (Moved from product.php)

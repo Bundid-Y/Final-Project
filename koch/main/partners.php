@@ -32,8 +32,8 @@ $dbPartners = get_active_partners($pdo, $companyId);
         <link rel="icon" type="image/png" href="../img/company_logo/logo 2.png" />
         
         <!-- Custom CSS & JS -->
-        <link rel="stylesheet" href="../css/style.css">
-        <script src="../js/script.js" defer></script>
+        <link rel="stylesheet" href="../css/style.css?v=<?php echo time(); ?>">
+        <script src="../js/script.js?v=<?php echo time(); ?>" defer></script>
 </head>
 
 <body>
@@ -85,31 +85,15 @@ $dbPartners = get_active_partners($pdo, $companyId);
                                                 <div class="right-graphic-container">
                                                         <div class="red-block">
                                                                 <!-- Logo Loop Inside Red Block -->
-                                                                <section class="loop-images-quotation vertical"
-                                                                        style="background-color: transparent !important; --bg: transparent; height: 100%; min-height: 500px; padding: 20px 0; width: 100%;">
-                                                                        <?php if (!empty($dbPartners)): $pCount = count($dbPartners); $totalItems = $pCount * 2; ?>
-                                                                        <div class="login-track vertical" style="--time: <?php echo max(30, $pCount * 4); ?>s; --total: <?php echo $totalItems; ?>; --top: -300rem;">
+                                                                <section class="loop-images-quotation vertical" style="background-color: transparent !important; --bg: transparent; height: 100%; min-height: 500px; padding: 20px 0; width: 100%;">
+                                                                        <?php if (!empty($dbPartners)): $pCount = count($dbPartners); $totalItems = $pCount * 2; $topRem = max(40, $totalItems * 16 - 56); $animTime = max(9, $pCount * 3); ?>
+                                                                        <div class="login-track vertical" style="--time: <?php echo $animTime; ?>s; --total: <?php echo $totalItems; ?>; --top: -<?php echo $topRem; ?>rem;">
                                                                                 <?php $idx = 1; foreach ($dbPartners as $p): ?>
                                                                                 <div class="login-item" style="--i: <?php echo $idx++; ?>;"><img src="<?php echo htmlspecialchars(resolve_image_url((string)$p['logo_url'])); ?>" alt="<?php echo htmlspecialchars((string)$p['name']); ?>"></div>
                                                                                 <?php endforeach; ?>
                                                                                 <?php foreach ($dbPartners as $p): ?>
                                                                                 <div class="login-item" style="--i: <?php echo $idx++; ?>;"><img src="<?php echo htmlspecialchars(resolve_image_url((string)$p['logo_url'])); ?>" alt="<?php echo htmlspecialchars((string)$p['name']); ?>"></div>
                                                                                 <?php endforeach; ?>
-                                                                        </div>
-                                                                        <?php else: ?>
-                                                                        <div class="login-track vertical" style="--time: 40s; --total: 24; --top: -300rem;">
-                                                                                <div class="login-item" style="--i: 1;"><img src="../img/customer_logo/Mazda.png" alt="Mazda"></div>
-                                                                                <div class="login-item" style="--i: 2;"><img src="../img/customer_logo/Suzuki.png" alt="Suzuki"></div>
-                                                                                <div class="login-item" style="--i: 3;"><img src="../img/customer_logo/Honda.png" alt="Honda"></div>
-                                                                                <div class="login-item" style="--i: 4;"><img src="../img/customer_logo/Alpla.png" alt="Alpla"></div>
-                                                                                <div class="login-item" style="--i: 5;"><img src="../img/customer_logo/nhk.webp" alt="NHK"></div>
-                                                                                <div class="login-item" style="--i: 6;"><img src="../img/customer_logo/siamgoshi.jpg" alt="Siam Goshi"></div>
-                                                                                <div class="login-item" style="--i: 7;"><img src="../img/customer_logo/Mazda.png" alt="Mazda"></div>
-                                                                                <div class="login-item" style="--i: 8;"><img src="../img/customer_logo/Suzuki.png" alt="Suzuki"></div>
-                                                                                <div class="login-item" style="--i: 9;"><img src="../img/customer_logo/Honda.png" alt="Honda"></div>
-                                                                                <div class="login-item" style="--i: 10;"><img src="../img/customer_logo/Alpla.png" alt="Alpla"></div>
-                                                                                <div class="login-item" style="--i: 11;"><img src="../img/customer_logo/nhk.webp" alt="NHK"></div>
-                                                                                <div class="login-item" style="--i: 12;"><img src="../img/customer_logo/siamgoshi.jpg" alt="Siam Goshi"></div>
                                                                         </div>
                                                                         <?php endif; ?>
                                                                 </section>
