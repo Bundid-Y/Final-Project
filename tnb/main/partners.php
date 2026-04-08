@@ -2,9 +2,13 @@
 require_once __DIR__ . '/../../admin/includes/bootstrap.php';
 require_once __DIR__ . '/../../admin/includes/content.php';
 
-$pdo = Database::connection();
-$companyId = get_company_id_by_code($pdo, 'TNB');
-$dbPartners = get_active_partners($pdo, $companyId);
+try {
+    $pdo = Database::connection();
+    $companyId = get_company_id_by_code($pdo, 'TNB');
+    $dbPartners = get_active_partners($pdo, $companyId);
+} catch (Throwable $e) {
+    $dbPartners = [];
+}
 ?>
 <!DOCTYPE html>
 <html lang="th">

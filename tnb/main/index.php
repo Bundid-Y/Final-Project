@@ -2,12 +2,19 @@
 require_once __DIR__ . '/../../admin/includes/bootstrap.php';
 require_once __DIR__ . '/../../admin/includes/content.php';
 
-$pdo = Database::connection();
-$companyId = get_company_id_by_code($pdo, 'TNB');
-$dbSliders = get_active_sliders($pdo, $companyId);
-$dbPartners = get_active_partners($pdo, $companyId);
-$dbTruckTypes = get_active_truck_types($pdo);
-$companyInfo = get_company_info($pdo, 'TNB');
+try {
+    $pdo = Database::connection();
+    $companyId = get_company_id_by_code($pdo, 'TNB');
+    $dbSliders = get_active_sliders($pdo, $companyId);
+    $dbPartners = get_active_partners($pdo, $companyId);
+    $dbTruckTypes = get_active_truck_types($pdo);
+    $companyInfo = get_company_info($pdo, 'TNB');
+} catch (Throwable $e) {
+    $dbSliders = [];
+    $dbPartners = [];
+    $dbTruckTypes = [];
+    $companyInfo = null;
+}
 ?>
 <!doctype html>
 <html lang="th">

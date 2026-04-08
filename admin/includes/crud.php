@@ -66,9 +66,10 @@ function create_slider(PDO $pdo, array $data, int $adminId, array $files = []): 
 
 function update_slider(PDO $pdo, int $id, array $data, int $adminId, array $files = []): array
 {
-    // Handle file upload
-    $imageUrl = sanitize_text((string) ($data['image_url'] ?? ''));
-    if (!empty($files['image_file'])) {
+    // Keep existing image unless a new file is uploaded
+    $existing = get_slider_by_id($pdo, $id);
+    $imageUrl = $existing['image_url'] ?? '';
+    if (!empty($files['image_file']) && ($files['image_file']['error'] ?? 4) === UPLOAD_ERR_OK) {
         require_once __DIR__ . '/upload.php';
         try {
             $upload = handle_uploaded_file('image_file', 'sliders');
@@ -166,9 +167,10 @@ function create_partner(PDO $pdo, array $data, int $adminId, array $files = []):
 
 function update_partner(PDO $pdo, int $id, array $data, int $adminId, array $files = []): array
 {
-    // Handle file upload
-    $logoUrl = sanitize_text((string) ($data['logo_url'] ?? ''));
-    if (!empty($files['logo_file'])) {
+    // Keep existing logo unless a new file is uploaded
+    $existing = get_partner_by_id($pdo, $id);
+    $logoUrl = $existing['logo_url'] ?? '';
+    if (!empty($files['logo_file']) && ($files['logo_file']['error'] ?? 4) === UPLOAD_ERR_OK) {
         require_once __DIR__ . '/upload.php';
         try {
             $upload = handle_uploaded_file('logo_file', 'partners');
@@ -257,9 +259,10 @@ function create_product(PDO $pdo, array $data, int $adminId, array $files = []):
 
 function update_product(PDO $pdo, int $id, array $data, int $adminId, array $files = []): array
 {
-    // Handle file upload
-    $imageUrl = sanitize_text((string) ($data['image_url'] ?? ''));
-    if (!empty($files['image_file']) && $files['image_file']['error'] === UPLOAD_ERR_OK) {
+    // Keep existing image unless a new file is uploaded
+    $existing = get_product_by_id($pdo, $id);
+    $imageUrl = $existing['image_url'] ?? '';
+    if (!empty($files['image_file']) && ($files['image_file']['error'] ?? 4) === UPLOAD_ERR_OK) {
         require_once __DIR__ . '/upload.php';
         try {
             $upload = handle_uploaded_file('image_file', 'products');

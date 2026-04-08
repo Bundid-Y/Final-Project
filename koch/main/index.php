@@ -3,12 +3,19 @@ require_once __DIR__ . '/../../admin/includes/bootstrap.php';
 require_once __DIR__ . '/../../admin/includes/content.php';
 require_once __DIR__ . '/../../admin/includes/crud.php';
 
-$pdo = Database::connection();
-$companyId = get_company_id_by_code($pdo, 'KOCH');
-$dbSliders = get_active_sliders($pdo, $companyId);
-$dbPartners = get_active_partners($pdo, $companyId);
-$dbProducts = get_active_featured_products($pdo);
-$companyInfo = get_company_info($pdo, 'KOCH');
+try {
+    $pdo = Database::connection();
+    $companyId = get_company_id_by_code($pdo, 'KOCH');
+    $dbSliders = get_active_sliders($pdo, $companyId);
+    $dbPartners = get_active_partners($pdo, $companyId);
+    $dbProducts = get_active_featured_products($pdo);
+    $companyInfo = get_company_info($pdo, 'KOCH');
+} catch (Throwable $e) {
+    $dbSliders = [];
+    $dbPartners = [];
+    $dbProducts = [];
+    $companyInfo = null;
+}
 
 ?>
 <!doctype html>

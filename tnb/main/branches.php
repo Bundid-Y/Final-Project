@@ -2,9 +2,13 @@
 require_once __DIR__ . '/../../admin/includes/bootstrap.php';
 require_once __DIR__ . '/../../admin/includes/content.php';
 
-$pdo = Database::connection();
-$companyId = get_company_id_by_code($pdo, 'TNB');
-$companyInfo = get_company_info($pdo, 'TNB');
+try {
+    $pdo = Database::connection();
+    $companyId = get_company_id_by_code($pdo, 'TNB');
+    $companyInfo = get_company_info($pdo, 'TNB');
+} catch (Throwable $e) {
+    $companyInfo = null;
+}
 ?>
 <!DOCTYPE html>
 <html lang="th">

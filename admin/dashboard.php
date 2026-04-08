@@ -840,10 +840,9 @@ $distinctActions = get_distinct_actions($pdo);
 <?php $allSliders = get_all_sliders($pdo, $filterCompanyId); ?>
 <div class="card">
     <div class="card-h"><h2><i class="fas fa-images"></i> เนื้อหาสไลเดอร์</h2><div style="display:flex;gap:8px;align-items:center"><span style="font-size:12px;color:var(--muted)"><?php echo count($allSliders);?> รายการ</span><button class="btn btn-sm btn-primary" onclick="openModal('sliderModal')"><i class="fas fa-plus"></i> เพิ่มสไลเดอร์</button></div></div>
-    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>ID</th><th>รูปภาพ</th><th>หัวข้อ</th><th>คำอธิบาย</th><th>บริษัท</th><th>สถานะ</th><th>จัดการ</th></tr></thead><tbody>
-    <?php if($allSliders===[]):?><tr class="empty"><td colspan="7">ไม่พบสไลเดอร์</td></tr>
+    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>รูปภาพ</th><th>หัวข้อ</th><th>คำอธิบาย</th><th>บริษัท</th><th>สถานะ</th><th>จัดการ</th></tr></thead><tbody>
+    <?php if($allSliders===[]):?><tr class="empty"><td colspan="6">ไม่พบสไลเดอร์</td></tr>
     <?php else: foreach($allSliders as $s):?><tr>
-        <td style="font-size:12px;font-weight:600">#<?php echo (int)$s['id'];?></td>
         <td><?php if($s['image_url']):?><img src="<?php echo h(resolve_image_url((string)$s['image_url']));?>" style="width:60px;height:35px;object-fit:cover;border-radius:6px" alt=""><?php else:?><span style="color:var(--muted);font-size:11px">ไม่มีรูปภาพ</span><?php endif;?></td>
         <td style="font-size:12px;font-weight:600"><?php echo h((string)$s['title']);?></td>
         <td style="font-size:12px;color:var(--muted);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><?php echo h((string)($s['subtitle']??''));?></td>
@@ -879,7 +878,9 @@ $distinctActions = get_distinct_actions($pdo);
 
 <?php elseif($section==='products'): ?>
 <!-- =================== PRODUCTS =================== -->
-<?php $allProducts = get_all_products_admin($pdo, $filterCompanyId); ?>
+<?php $allProducts = get_all_products_admin($pdo, $filterCompanyId);
+$catLabels = ['mail'=>'กล่องกระดาษ','corrugated'=>'บรรจุภัณฑ์ไม้','diecut'=>'บรรจุภัณฑ์พลาสติก','accessory'=>'บรรจุภัณฑ์เหล็ก'];
+?>
 <div class="card">
     <div class="card-h"><h2><i class="fas fa-boxes-stacked"></i> สินค้า (KOCH)</h2><div style="display:flex;gap:8px;align-items:center"><span style="font-size:12px;color:var(--muted)"><?php echo count($allProducts);?> รายการ</span><button class="btn btn-sm btn-primary" onclick="openModal('productModal')"><i class="fas fa-plus"></i> เพิ่มสินค้า</button></div></div>
     <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>รูปภาพ</th><th>ชื่อ</th><th>หมวดหมู่</th><th>สถานะ</th><th>จัดการ</th></tr></thead><tbody>
@@ -887,7 +888,7 @@ $distinctActions = get_distinct_actions($pdo);
     <?php else: foreach($allProducts as $p):?><tr>
         <td><?php if($p['image_url']):?><img src="<?php echo h(resolve_image_url((string)$p['image_url']));?>" style="width:40px;height:40px;object-fit:cover;border-radius:6px" alt=""><?php else:?><span style="color:var(--muted);font-size:11px">-</span><?php endif;?></td>
         <td style="font-size:12px;font-weight:600"><?php echo h((string)$p['name']);?></td>
-        <td style="font-size:12px"><?php echo h(ucfirst((string)($p['category']??'')));?></td>
+        <td style="font-size:12px"><?php echo h($catLabels[$p['category']??''] ?? ucfirst((string)($p['category']??'')));?></td>
         <td><?php echo admin_status_badge($p['is_active']?'active':'inactive');?></td>
         <td><div class="act-btns">
             <button class="btn btn-xs btn-ghost" onclick="openEditProduct(<?php echo (int)$p['id'];?>,'<?php echo h(addslashes((string)$p['name']));?>','<?php echo h(addslashes((string)($p['description']??'')));?>','<?php echo h(addslashes((string)($p['category']??'')));?>',<?php echo $p['is_active']?1:0;?>)"><i class="fas fa-edit"></i></button>
@@ -1317,9 +1318,8 @@ $expFilters = [
             <div class="fm-group"><label>Title<span>*</span></label><input type="text" name="title" id="sm_name" class="fm-input" required maxlength="255"></div>
             <div class="fm-group"><label>Subtitle</label><input type="text" name="subtitle" id="sm_subtitle" class="fm-input" maxlength="500"></div>
             <div class="fm-group"><label>OR Upload Image</label><input type="file" name="image_file" id="sm_file" class="fm-input" accept="image/jpeg,image/png,image/webp"><small style="color:var(--muted);font-size:11px">JPG, PNG, WEBP up to 10MB.</small></div>
-            <div class="fm-group">
-                <div class="fm-group"><label>Company<span>*</span></label><select name="company_id" id="sm_company" class="fm-input" required><option value="<?php echo $kochId;?>">KOCH</option><option value="<?php echo $tnbId;?>">TNB</option></select></div>
-            </div>
+            <input type="hidden" name="company_id" id="sm_company" value="<?php echo $companyMode==='tnb'?$tnbId:$kochId;?>">
+            <div class="fm-group"><label>Company</label><input type="text" class="fm-input" value="<?php echo $companyMode==='tnb'?'TNB':'KOCH';?>" disabled style="background:#f1f5f9;font-weight:600"></div>
             <div class="fm-check"><input type="checkbox" name="is_active" id="sm_active" value="1" checked><label for="sm_active">Active</label></div>
         </div>
         <div class="modal-foot"><button type="button" class="btn btn-ghost" onclick="closeModal('sliderModal')">Cancel</button><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save</button></div>
@@ -1490,7 +1490,6 @@ function openEditSlider(id,title,subtitle,companyId,active){
     document.getElementById('sm_id').value=id;
     document.getElementById('sm_name').value=title;
     document.getElementById('sm_subtitle').value=subtitle;
-    document.getElementById('sm_company').value=companyId;
     document.getElementById('sm_active').checked=!!active;
     openModal('sliderModal');
 }

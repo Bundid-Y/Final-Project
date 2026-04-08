@@ -2,9 +2,13 @@
 require_once __DIR__ . '/../../admin/includes/bootstrap.php';
 require_once __DIR__ . '/../../admin/includes/content.php';
 
-$pdo = Database::connection();
-$companyId = get_company_id_by_code($pdo, 'KOCH');
-$dbProducts = get_active_products($pdo);
+try {
+    $pdo = Database::connection();
+    $companyId = get_company_id_by_code($pdo, 'KOCH');
+    $dbProducts = get_active_products($pdo);
+} catch (Throwable $e) {
+    $dbProducts = [];
+}
 
 $categoryMap = [
     'mail' => ['กล่องกระดาษ', 'paper', 'box', 'cardboard', 'mail'],

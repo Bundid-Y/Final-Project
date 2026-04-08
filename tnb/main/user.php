@@ -16,22 +16,33 @@ if ($userCompany !== 'TNB' && !$isAdmin) {
     redirect_to(user_page_by_company($userCompany));
 }
 
-$pdo = Database::connection();
-$profile = get_profile_summary($pdo, (int) $currentUser['id']);
-$activities = get_recent_activity_logs($pdo, (int) $currentUser['id'], 15);
-$serviceHistory = get_tnb_service_history($pdo, (int) $currentUser['id'], 20);
-$quotations = get_tnb_user_quotations($pdo, (int) $currentUser['id'], 20);
-$qStats = get_tnb_quotation_stats($pdo, (int) $currentUser['id']);
-$notifications = get_user_notifications($pdo, (int) $currentUser['id']);
-$unreadCount = get_unread_notification_count($pdo, (int) $currentUser['id']);
-$sessions = get_user_login_sessions($pdo, (int) $currentUser['id']);
 $successMessage = flash('success_message');
 $errorMessage = flash('error_message');
+try {
+    $pdo = Database::connection();
+    $profile = get_profile_summary($pdo, (int) $currentUser['id']);
+    $activities = get_recent_activity_logs($pdo, (int) $currentUser['id'], 15);
+    $serviceHistory = get_tnb_service_history($pdo, (int) $currentUser['id'], 20);
+    $quotations = get_tnb_user_quotations($pdo, (int) $currentUser['id'], 20);
+    $qStats = get_tnb_quotation_stats($pdo, (int) $currentUser['id']);
+    $notifications = get_user_notifications($pdo, (int) $currentUser['id']);
+    $unreadCount = get_unread_notification_count($pdo, (int) $currentUser['id']);
+    $sessions = get_user_login_sessions($pdo, (int) $currentUser['id']);
+} catch (Throwable $e) {
+    $profile = [];
+    $activities = [];
+    $serviceHistory = [];
+    $quotations = [];
+    $qStats = ['total' => 0, 'pending' => 0, 'approved' => 0, 'rejected' => 0];
+    $notifications = [];
+    $unreadCount = 0;
+    $sessions = [];
+}
 $section = $_GET['section'] ?? 'dashboard';
 if (!in_array($section, ['dashboard','profile','quotations','tracking','transport','notifications','sessions','settings'], true)) $section = 'dashboard';
 
 // Auto-mark notifications as read when viewing notifications section
-if ($section === 'notifications') {
+if ($section === 'notifications' && isset($pdo)) {
     $stmt = $pdo->prepare('UPDATE notifications SET is_read = 1 WHERE user_id = :uid AND is_read = 0');
     $stmt->execute([':uid' => (int) $currentUser['id']]);
     $unreadCount = get_unread_notification_count($pdo, (int) $currentUser['id']);
