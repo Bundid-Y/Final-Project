@@ -292,7 +292,7 @@ textarea.fm-input{resize:vertical;min-height:80px}
         <div class="avatar"><i class="fas fa-user-shield"></i></div>
         <div class="info">
             <h4><?php echo h($user['username']); ?></h4>
-            <span><?php echo h(ucfirst((string) $user['role'])); ?> &middot; <?php echo h((string) $user['company_name']); ?></span>
+            <span><?php echo h(ucfirst((string) $user['role'])); ?> &middot; <?php echo h((string) ($user['company_code'] ?? $user['company_name'])); ?></span>
         </div>
     </div>
     <div style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.08)">
@@ -635,7 +635,7 @@ textarea.fm-input{resize:vertical;min-height:80px}
     <div class="card-h"><h2><i class="fas fa-users"></i> ผู้ใช้ทั้งหมด</h2></div>
     <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>ผู้ใช้</th><th>อีเมล</th><th>บริษัท</th><th>บทบาท</th><th>สถานะ</th><th>วันที่สมัคร</th><th>จัดการ</th></tr></thead><tbody>
     <?php
-    $allUsers = $pdo->prepare('SELECT u.*, c.name AS company_name FROM users u LEFT JOIN companies c ON c.id = u.company_id' . ($filterCompanyId !== null ? ' WHERE u.company_id = :cid AND u.status != \'inactive\'' : ' WHERE u.status != \'inactive\'') . ' ORDER BY u.created_at DESC LIMIT 50');
+    $allUsers = $pdo->prepare('SELECT u.*, c.code AS company_name FROM users u LEFT JOIN companies c ON c.id = u.company_id' . ($filterCompanyId !== null ? ' WHERE u.company_id = :cid AND u.status != \'inactive\'' : ' WHERE u.status != \'inactive\'') . ' ORDER BY u.created_at DESC LIMIT 50');
     $allUsers->execute($filterCompanyId !== null ? [':cid' => $filterCompanyId] : []);
     $allUsersList = $allUsers->fetchAll();
     if($allUsersList===[]):?><tr class="empty"><td colspan="7">ไม่พบผู้ใช้</td></tr>
@@ -1339,9 +1339,8 @@ $expFilters = [
         <div class="modal-body">
             <div class="fm-group"><label>Partner Name<span>*</span></label><input type="text" name="name" id="pm_name" class="fm-input" required maxlength="255"></div>
             <div class="fm-group"><label>OR Upload Logo</label><input type="file" name="logo_file" id="pm_file" class="fm-input" accept="image/jpeg,image/png,image/webp"><small style="color:var(--muted);font-size:11px">JPG, PNG, WEBP up to 10MB.</small></div>
-            <div class="fm-group">
-                <div class="fm-group"><label>Company<span>*</span></label><select name="company_id" id="pm_company" class="fm-input" required><option value="<?php echo $kochId;?>">KOCH</option><option value="<?php echo $tnbId;?>">TNB</option></select></div>
-            </div>
+            <input type="hidden" name="company_id" id="pm_company" value="<?php echo $companyMode==='tnb'?$tnbId:$kochId;?>">
+            <div class="fm-group"><label>Company</label><input type="text" class="fm-input" value="<?php echo $companyMode==='tnb'?'TNB':'KOCH';?>" disabled style="background:#f1f5f9;font-weight:600"></div>
             <div class="fm-check"><input type="checkbox" name="is_active" id="pm_active" value="1" checked><label for="pm_active">Active</label></div>
         </div>
         <div class="modal-foot"><button type="button" class="btn btn-ghost" onclick="closeModal('partnerModal')">Cancel</button><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save</button></div>
@@ -1501,7 +1500,6 @@ function openEditPartner(id,name,companyId,active){
     document.getElementById('pm_action').value='update';
     document.getElementById('pm_id').value=id;
     document.getElementById('pm_name').value=name;
-    document.getElementById('pm_company').value=companyId;
     document.getElementById('pm_active').checked=!!active;
     openModal('partnerModal');
 }

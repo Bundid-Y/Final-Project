@@ -10,7 +10,7 @@ require_once __DIR__ . '/activity.php';
 // =============================================
 function get_all_sliders(PDO $pdo, ?int $companyId = null): array
 {
-    $sql = 'SELECT s.*, c.name AS company_name FROM slider_contents s LEFT JOIN companies c ON c.id = s.company_id';
+    $sql = 'SELECT s.*, c.code AS company_name FROM slider_contents s LEFT JOIN companies c ON c.id = s.company_id';
     $params = [];
     if ($companyId !== null) {
         $sql .= ' WHERE s.company_id = :cid';
@@ -112,7 +112,7 @@ function delete_slider(PDO $pdo, int $id, int $adminId): array
 // =============================================
 function get_all_partners(PDO $pdo, ?int $companyId = null): array
 {
-    $sql = 'SELECT p.*, c.name AS company_name FROM partners p LEFT JOIN companies c ON c.id = p.company_id';
+    $sql = 'SELECT p.*, c.code AS company_name FROM partners p LEFT JOIN companies c ON c.id = p.company_id';
     $params = [];
     if ($companyId !== null) {
         $sql .= ' WHERE p.company_id = :cid';
@@ -392,7 +392,7 @@ function delete_truck_card(PDO $pdo, int $id, int $adminId): array
 // =============================================
 function get_all_users_admin(PDO $pdo, ?int $companyId = null, ?string $role = null, ?string $status = null): array
 {
-    $sql = 'SELECT u.*, c.name AS company_name, c.code AS company_code FROM users u LEFT JOIN companies c ON c.id = u.company_id WHERE 1=1';
+    $sql = 'SELECT u.*, c.code AS company_name, c.code AS company_code FROM users u LEFT JOIN companies c ON c.id = u.company_id WHERE 1=1';
     $params = [];
     if ($companyId !== null) {
         $sql .= ' AND u.company_id = :cid';
@@ -522,7 +522,7 @@ function update_tnb_quotation_status(PDO $pdo, int $id, string $status, ?float $
 // =============================================
 function get_all_email_templates(PDO $pdo, ?int $companyId = null): array
 {
-    $sql = 'SELECT et.*, c.name AS company_name FROM email_templates et LEFT JOIN companies c ON c.id = et.company_id WHERE 1=1';
+    $sql = 'SELECT et.*, c.code AS company_name FROM email_templates et LEFT JOIN companies c ON c.id = et.company_id WHERE 1=1';
     $params = [];
     if ($companyId !== null) {
         $sql .= ' AND (et.company_id = :cid OR et.company_id IS NULL)';
@@ -587,7 +587,7 @@ function delete_email_template(PDO $pdo, int $id, int $adminId): array
 // =============================================
 function get_activity_logs_filtered(PDO $pdo, array $filters = [], int $limit = 50, int $offset = 0): array
 {
-    $sql = 'SELECT al.*, u.username, u.first_name, u.last_name, c.code AS company_code, c.name AS company_name
+    $sql = 'SELECT al.*, u.username, u.first_name, u.last_name, c.code AS company_code, c.code AS company_name
             FROM activity_logs al
             LEFT JOIN users u ON u.id = al.user_id
             LEFT JOIN companies c ON c.id = al.company_id
@@ -619,7 +619,7 @@ function get_activity_logs_filtered(PDO $pdo, array $filters = [], int $limit = 
         $params[':ip'] = '%' . $filters['ip_address'] . '%';
     }
 
-    $countSql = str_replace('SELECT al.*, u.username, u.first_name, u.last_name, c.code AS company_code', 'SELECT COUNT(*)', $sql);
+    $countSql = preg_replace('/^SELECT .+ FROM/', 'SELECT COUNT(*) FROM', $sql, 1);
     $countStmt = $pdo->prepare($countSql);
     $countStmt->execute($params);
     $total = (int) $countStmt->fetchColumn();
@@ -788,7 +788,7 @@ function remove_user_permission(PDO $pdo, int $userId, string $permissionName, i
 
 function get_all_featured_products_admin(PDO $pdo, ?int $companyId = null): array
 {
-    $sql = 'SELECT fp.*, c.name AS company_name FROM featured_products fp LEFT JOIN companies c ON c.id = fp.company_id';
+    $sql = 'SELECT fp.*, c.code AS company_name FROM featured_products fp LEFT JOIN companies c ON c.id = fp.company_id';
     $params = [];
     if ($companyId !== null) {
         $sql .= ' WHERE fp.company_id = :cid';

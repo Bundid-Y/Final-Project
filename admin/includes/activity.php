@@ -17,10 +17,10 @@ function log_activity(PDO $pdo, ?int $userId, string $action, ?string $tableName
         $companyId = $userCompanyId !== false ? (int) $userCompanyId : null;
     }
     
-    // Get company name
+    // Get company name (use short code e.g. KOCH, TNB)
     $companyName = null;
     if ($companyId !== null) {
-        $companyStmt = $pdo->prepare('SELECT name FROM companies WHERE id = :id LIMIT 1');
+        $companyStmt = $pdo->prepare('SELECT code FROM companies WHERE id = :id LIMIT 1');
         $companyStmt->execute([':id' => $companyId]);
         $companyName = $companyStmt->fetchColumn();
     }

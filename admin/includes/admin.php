@@ -210,7 +210,7 @@ function admin_recent_tnb_quotations(PDO $pdo, ?int $companyId = null, int $limi
 
 function admin_recent_users(PDO $pdo, ?int $companyId = null, int $limit = 5): array
 {
-    $sql = 'SELECT u.id, u.username, u.email, u.first_name, u.last_name, u.role, u.status, u.created_at, c.name AS company_name FROM users u LEFT JOIN companies c ON c.id = u.company_id';
+    $sql = 'SELECT u.id, u.username, u.email, u.first_name, u.last_name, u.role, u.status, u.created_at, c.code AS company_name FROM users u LEFT JOIN companies c ON c.id = u.company_id';
     $params = [];
     if ($companyId !== null) {
         $sql .= ' WHERE u.company_id = :cid AND u.status != \'inactive\'';
