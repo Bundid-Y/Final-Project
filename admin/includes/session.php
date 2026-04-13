@@ -143,9 +143,9 @@ function set_authenticated_user(array $user, string $sessionToken): void
     $_SESSION['company_id'] = (int) $user['company_id'];
     $_SESSION['company_code'] = (string) $user['company_code'];
 
-    // If admin/manager user, also store auth in admin dashboard session
+    // If admin user, also store auth in admin dashboard session
     // This allows admin dashboard to work independently from company pages
-    if (in_array((string) $user['role'], ['super_admin', 'admin', 'manager'], true)) {
+    if (in_array((string) $user['role'], ['super_admin', 'admin'], true)) {
         $currentSessionName = session_name();
         if ($currentSessionName !== SESSION_NAME) {
             $isHttps = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';

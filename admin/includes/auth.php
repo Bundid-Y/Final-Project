@@ -24,7 +24,7 @@ function find_admin_user_by_identifier(PDO $pdo, string $identifier): ?array
          FROM users u
          INNER JOIN companies c ON c.id = u.company_id
          WHERE (u.username = :ident_user OR u.email = :ident_email)
-           AND u.role IN ('super_admin', 'admin', 'manager')
+           AND u.role IN ('super_admin', 'admin')
          LIMIT 1"
     );
     $stmt->execute([
@@ -171,7 +171,7 @@ function user_redirect_url(array $user): string
 {
     $role = (string) ($user['role'] ?? 'user');
 
-    if (in_array($role, ['super_admin', 'admin', 'manager'], true)) {
+    if (in_array($role, ['super_admin', 'admin'], true)) {
         return project_url('admin/dashboard.php');
     }
 

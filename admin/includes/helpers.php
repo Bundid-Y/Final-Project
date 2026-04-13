@@ -144,7 +144,7 @@ function crud_notification_title_th(string $action, string $entity): string
     ];
     
     $entityMap = [
-        'slider' => 'สไลเดอร์',
+        'slider' => 'สไลด์',
         'partner' => 'พันธมิตร',
         'product' => 'สินค้า',
         'truck_card' => 'บริการขนส่ง',

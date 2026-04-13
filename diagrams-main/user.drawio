@@ -1,0 +1,420 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36" version="29.6.6">
+  <diagram name="Agent &amp; User Flow" id="AgentUserFlow01">
+    <mxGraphModel dx="1422" dy="762" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!--
+          LIFELINE CENTER-X:
+          User=100  Agent=220  หน้าหลัก=380  เข้าสู่ระบบ=530
+          ข้อมูลพื้นฐาน=700  คำขอ/แจ้งปัญหา=890  ข้อมูลการอนุมัติ=1080
+          วิเคราะห์ฯ=1270  ออกจากระบบ=1450
+        -->
+
+        <!-- ===== ACTOR ICONS ===== -->
+        <mxCell id="icon-agent" parent="1"
+          style="shape=actor;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;"
+          value="" vertex="1">
+          <mxGeometry height="26" width="18" x="91" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="icon-user" parent="1"
+          style="shape=actor;whiteSpace=wrap;html=1;labelBackgroundColor=none;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;"
+          value="" vertex="1">
+          <mxGeometry height="26" width="18" x="211" y="10" as="geometry" />
+        </mxCell>
+
+        <!-- ===== OBJECT / ACTOR HEADERS ===== -->
+        <mxCell id="hdr-agent" parent="1"
+          style="shape=mxgraph.flowchart.start_2;html=1;whiteSpace=wrap;fontStyle=1;fontSize=16;labelBackgroundColor=none;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;"
+          value="Agent" vertex="1">
+          <mxGeometry height="52" width="52" x="74" y="38" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr-user" parent="1"
+          style="shape=mxgraph.flowchart.start_2;html=1;whiteSpace=wrap;fontStyle=1;fontSize=16;labelBackgroundColor=none;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;"
+          value="User" vertex="1">
+          <mxGeometry height="52" width="52" x="194" y="38" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr-home" parent="1"
+          style="rounded=1;html=1;whiteSpace=wrap;fontStyle=1;fontSize=16;labelBackgroundColor=none;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;"
+          value="หน้าหลัก" vertex="1">
+          <mxGeometry height="44" width="130" x="315" y="46" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr-login" parent="1"
+          style="rounded=1;html=1;whiteSpace=wrap;fontStyle=1;fontSize=16;labelBackgroundColor=none;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;"
+          value="เข้าสู่ระบบ" vertex="1">
+          <mxGeometry height="44" width="130" x="465" y="46" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr-basic" parent="1"
+          style="rounded=1;html=1;whiteSpace=wrap;fontStyle=1;fontSize=16;labelBackgroundColor=none;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;"
+          value="ข้อมูลพื้นฐาน" vertex="1">
+          <mxGeometry height="44" width="140" x="630" y="46" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr-request" parent="1"
+          style="rounded=1;html=1;whiteSpace=wrap;fontStyle=1;fontSize=16;labelBackgroundColor=none;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;"
+          value="คำขอ/&#xa;แจ้งปัญหา" vertex="1">
+          <mxGeometry height="52" width="140" x="820" y="38" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr-approve" parent="1"
+          style="rounded=1;html=1;whiteSpace=wrap;fontStyle=1;fontSize=16;labelBackgroundColor=none;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;"
+          value="ข้อมูลการอนุมัติ" vertex="1">
+          <mxGeometry height="44" width="150" x="1005" y="46" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr-report" parent="1"
+          style="rounded=1;html=1;whiteSpace=wrap;fontStyle=1;fontSize=16;labelBackgroundColor=none;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;"
+          value="วิเคราะห์และ&#xa;ออกรายงาน" vertex="1">
+          <mxGeometry height="52" width="150" x="1195" y="38" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr-logout" parent="1"
+          style="rounded=1;html=1;whiteSpace=wrap;fontStyle=1;fontSize=16;labelBackgroundColor=none;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;"
+          value="ออกจากระบบ" vertex="1">
+          <mxGeometry height="44" width="140" x="1380" y="46" as="geometry" />
+        </mxCell>
+
+        <!-- ===== LIFELINES ===== -->
+        <mxCell id="ll-agent"   edge="1" parent="1" style="endArrow=none;dashed=1;fontFamily=Sarabun;">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="100"  y="90" as="sourcePoint"/><mxPoint x="100"  y="1440" as="targetPoint"/></mxGeometry>
+        </mxCell>
+        <mxCell id="ll-user"    edge="1" parent="1" style="endArrow=none;dashed=1;fontFamily=Sarabun;">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="220"  y="90" as="sourcePoint"/><mxPoint x="220"  y="1440" as="targetPoint"/></mxGeometry>
+        </mxCell>
+        <mxCell id="ll-home"    edge="1" parent="1" style="endArrow=none;dashed=1;fontFamily=Sarabun;">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="380"  y="90" as="sourcePoint"/><mxPoint x="380"  y="1440" as="targetPoint"/></mxGeometry>
+        </mxCell>
+        <mxCell id="ll-login"   edge="1" parent="1" style="endArrow=none;dashed=1;fontFamily=Sarabun;">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="530"  y="90" as="sourcePoint"/><mxPoint x="530"  y="1440" as="targetPoint"/></mxGeometry>
+        </mxCell>
+        <mxCell id="ll-basic"   edge="1" parent="1" style="endArrow=none;dashed=1;fontFamily=Sarabun;">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="700"  y="90" as="sourcePoint"/><mxPoint x="700"  y="1440" as="targetPoint"/></mxGeometry>
+        </mxCell>
+        <mxCell id="ll-request" edge="1" parent="1" style="endArrow=none;dashed=1;fontFamily=Sarabun;">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="890"  y="90" as="sourcePoint"/><mxPoint x="890"  y="1440" as="targetPoint"/></mxGeometry>
+        </mxCell>
+        <mxCell id="ll-approve" edge="1" parent="1" style="endArrow=none;dashed=1;fontFamily=Sarabun;">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="1080" y="90" as="sourcePoint"/><mxPoint x="1080" y="1440" as="targetPoint"/></mxGeometry>
+        </mxCell>
+        <mxCell id="ll-report"  edge="1" parent="1" style="endArrow=none;dashed=1;fontFamily=Sarabun;">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="1270" y="90" as="sourcePoint"/><mxPoint x="1270" y="1440" as="targetPoint"/></mxGeometry>
+        </mxCell>
+        <mxCell id="ll-logout"  edge="1" parent="1" style="endArrow=none;dashed=1;fontFamily=Sarabun;">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="1450" y="90" as="sourcePoint"/><mxPoint x="1450" y="1440" as="targetPoint"/></mxGeometry>
+        </mxCell>
+
+        <!-- ===================================================== -->
+        <!--             AGENT (LEADER) SECTION — ครึ่งบน          -->
+        <!-- ===================================================== -->
+
+        <!-- 1. Agent → เข้าสู่ระบบ -->
+        <mxCell id="a1-req" edge="1" parent="1"
+          style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;fontSize=14;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontColor=default;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;"
+          value="เข้าสู่ระบบใส่ชื่อผู้ใช้และรหัสผ่าน">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="100" y="160" as="sourcePoint"/>
+            <mxPoint x="524" y="160" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="a1-box" parent="1"
+          style="rounded=0;fontSize=12;fontFamily=Sarabun;"
+          value="" vertex="1">
+          <mxGeometry height="26" width="12" x="524" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="a1-fwd" edge="1" parent="1"
+          style="edgeStyle=orthogonalEdgeStyle;endArrow=open;dashed=1;fontSize=14;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontColor=default;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;"
+          value="ข้อมูลถูกต้อง / แสดงหน้าหลัก">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="524" y="190" as="sourcePoint"/>
+            <mxPoint x="380" y="190" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="a1-ret" edge="1" parent="1"
+          style="edgeStyle=orthogonalEdgeStyle;endArrow=open;dashed=1;fontSize=14;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontColor=default;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;"
+          value="เข้าสู่หน้าหลักสำเร็จ">
+          <mxGeometry relative="1" x="-0.35" y="-5" as="geometry">
+            <mxPoint as="offset"/>
+            <mxPoint x="380" y="218" as="sourcePoint"/>
+            <mxPoint x="100" y="218" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 2. Agent → ข้อมูลพื้นฐาน -->
+        <mxCell id="a2-req" edge="1" parent="1"
+          style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;fontSize=14;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontColor=default;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;"
+          value="จัดการข้อมูลพื้นฐาน">
+          <mxGeometry relative="1" x="0.22" y="5" as="geometry">
+            <mxPoint as="offset"/>
+            <mxPoint x="100" y="290" as="sourcePoint"/>
+            <mxPoint x="694" y="290" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="a2-box" parent="1"
+          style="rounded=0;fontSize=12;fontFamily=Sarabun;"
+          value="" vertex="1">
+          <mxGeometry height="26" width="12" x="694" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="a2-ret" edge="1" parent="1"
+          style="edgeStyle=orthogonalEdgeStyle;endArrow=open;dashed=1;fontSize=14;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontColor=default;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;"
+          value="แสดงข้อมูลพื้นฐาน">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="694" y="320" as="sourcePoint"/>
+            <mxPoint x="380" y="320" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 3. Agent → จัดการคำขอและแจ้งปัญหา -->
+        <mxCell id="a3-req" edge="1" parent="1"
+          style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;fontSize=14;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontColor=default;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;"
+          value="จัดการคำขอและแจ้งปัญหา">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="100" y="390" as="sourcePoint"/>
+            <mxPoint x="884" y="390" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="a3-box" parent="1"
+          style="rounded=0;fontSize=12;fontFamily=Sarabun;"
+          value="" vertex="1">
+          <mxGeometry height="26" width="12" x="884" y="390" as="geometry" />
+        </mxCell>
+        <mxCell id="a3-ret" edge="1" parent="1"
+          style="edgeStyle=orthogonalEdgeStyle;endArrow=open;dashed=1;fontSize=14;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontColor=default;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;"
+          value="แสดงข้อมูลคำขอและแจ้งปัญหา">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="884" y="420" as="sourcePoint"/>
+            <mxPoint x="380" y="420" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 4. Agent → ข้อมูลการอนุมัติ -->
+        <mxCell id="a4-req" edge="1" parent="1"
+          style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;fontSize=14;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontColor=default;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;"
+          value="จัดการข้อมูลการอนุมัติ">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="100" y="490" as="sourcePoint"/>
+            <mxPoint x="1074" y="490" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="a4-box" parent="1"
+          style="rounded=0;fontSize=12;fontFamily=Sarabun;"
+          value="" vertex="1">
+          <mxGeometry height="26" width="12" x="1074" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="a4-ret" edge="1" parent="1"
+          style="edgeStyle=orthogonalEdgeStyle;endArrow=open;dashed=1;fontSize=14;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontColor=default;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;"
+          value="แสดงข้อมูลการอนุมัติ">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1074" y="520" as="sourcePoint"/>
+            <mxPoint x="380" y="520" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 5. Agent → วิเคราะห์และออกรายงาน -->
+        <mxCell id="a5-req" edge="1" parent="1"
+          style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;fontSize=14;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontColor=default;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;"
+          value="วิเคราะห์และออกรายงาน">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="100" y="590" as="sourcePoint"/>
+            <mxPoint x="1264" y="590" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="a5-box" parent="1"
+          style="rounded=0;fontSize=12;fontFamily=Sarabun;"
+          value="" vertex="1">
+          <mxGeometry height="26" width="12" x="1264" y="590" as="geometry" />
+        </mxCell>
+        <mxCell id="a5-ret" edge="1" parent="1"
+          style="edgeStyle=orthogonalEdgeStyle;endArrow=open;dashed=1;fontSize=14;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontColor=default;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;"
+          value="แสดงรายงาน">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1264" y="620" as="sourcePoint"/>
+            <mxPoint x="380" y="620" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 6. Agent → ออกจากระบบ -->
+        <mxCell id="a6-req" edge="1" parent="1"
+          style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;fontSize=14;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontColor=default;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;"
+          value="ออกจากระบบ">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="100" y="690" as="sourcePoint"/>
+            <mxPoint x="1444" y="690" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="a6-box" parent="1"
+          style="rounded=0;fontSize=12;fontFamily=Sarabun;"
+          value="" vertex="1">
+          <mxGeometry height="26" width="12" x="1444" y="690" as="geometry" />
+        </mxCell>
+        <mxCell id="a6-ret" edge="1" parent="1"
+          style="edgeStyle=orthogonalEdgeStyle;endArrow=open;dashed=1;fontSize=14;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontColor=default;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;"
+          value="กลับสู่หน้าเข้าสู่ระบบ">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1444" y="720" as="sourcePoint"/>
+            <mxPoint x="100" y="720" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ===== DIVIDER ===== -->
+        <mxCell id="divider" edge="1" parent="1"
+          style="endArrow=none;strokeWidth=2;strokeColor=#999999;fontFamily=Sarabun;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="50"   y="780" as="sourcePoint"/>
+            <mxPoint x="1520" y="780" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ===================================================== -->
+        <!--                USER SECTION — ครึ่งล่าง               -->
+        <!-- ===================================================== -->
+
+        <!-- 1. User → เข้าสู่ระบบ -->
+        <mxCell id="u1-req" edge="1" parent="1"
+          style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;fontSize=14;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontColor=default;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;"
+          value="เข้าสู่ระบบใส่ชื่อผู้ใช้และรหัสผ่าน">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="220" y="840" as="sourcePoint"/>
+            <mxPoint x="524" y="840" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="u1-box" parent="1"
+          style="rounded=0;fontSize=12;fontFamily=Sarabun;"
+          value="" vertex="1">
+          <mxGeometry height="26" width="12" x="524" y="840" as="geometry" />
+        </mxCell>
+        <mxCell id="u1-fwd" edge="1" parent="1"
+          style="edgeStyle=orthogonalEdgeStyle;endArrow=open;dashed=1;fontSize=14;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontColor=default;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;"
+          value="ข้อมูลถูกต้อง / แสดงหน้าหลัก">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="524" y="870" as="sourcePoint"/>
+            <mxPoint x="380" y="870" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="u1-ret" edge="1" parent="1"
+          style="edgeStyle=orthogonalEdgeStyle;endArrow=open;dashed=1;fontSize=14;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontColor=default;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;"
+          value="เข้าสู่หน้าหลักสำเร็จ">
+          <mxGeometry relative="1" x="-0.35" y="-5" as="geometry">
+            <mxPoint as="offset"/>
+            <mxPoint x="380" y="898" as="sourcePoint"/>
+            <mxPoint x="220" y="898" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 2. User → ข้อมูลพื้นฐาน -->
+        <mxCell id="u2-req" edge="1" parent="1"
+          style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;fontSize=14;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontColor=default;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;"
+          value="ดูข้อมูลพื้นฐาน">
+          <mxGeometry relative="1" x="0.22" y="5" as="geometry">
+            <mxPoint as="offset"/>
+            <mxPoint x="220" y="960" as="sourcePoint"/>
+            <mxPoint x="694" y="960" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="u2-box" parent="1"
+          style="rounded=0;fontSize=12;fontFamily=Sarabun;"
+          value="" vertex="1">
+          <mxGeometry height="26" width="12" x="694" y="960" as="geometry" />
+        </mxCell>
+        <mxCell id="u2-ret" edge="1" parent="1"
+          style="edgeStyle=orthogonalEdgeStyle;endArrow=open;dashed=1;fontSize=14;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontColor=default;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;"
+          value="แสดงข้อมูลพื้นฐาน">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="694" y="990" as="sourcePoint"/>
+            <mxPoint x="380" y="990" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 3. User → ส่งคำขอเบิกวัสดุ -->
+        <mxCell id="u3-req" edge="1" parent="1"
+          style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;fontSize=14;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontColor=default;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;"
+          value="ส่งคำขอเบิกวัสดุ">
+          <mxGeometry relative="1" x="-0.01" y="11" as="geometry">
+            <mxPoint as="offset"/>
+            <mxPoint x="220" y="1060" as="sourcePoint"/>
+            <mxPoint x="884" y="1060" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="u3-box" parent="1"
+          style="rounded=0;fontSize=12;fontFamily=Sarabun;"
+          value="" vertex="1">
+          <mxGeometry height="26" width="12" x="884" y="1060" as="geometry" />
+        </mxCell>
+        <mxCell id="u3-ret" edge="1" parent="1"
+          style="edgeStyle=orthogonalEdgeStyle;endArrow=open;dashed=1;fontSize=14;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontColor=default;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;"
+          value="บันทึกคำขอสำเร็จ">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="884" y="1090" as="sourcePoint"/>
+            <mxPoint x="380" y="1090" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 4. User → แจ้งปัญหา -->
+        <mxCell id="u4-req" edge="1" parent="1"
+          style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;fontSize=14;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontColor=default;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;"
+          value="แจ้งปัญหา">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="220" y="1160" as="sourcePoint"/>
+            <mxPoint x="884" y="1160" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="u4-box" parent="1"
+          style="rounded=0;fontSize=12;fontFamily=Sarabun;"
+          value="" vertex="1">
+          <mxGeometry height="26" width="12" x="884" y="1160" as="geometry" />
+        </mxCell>
+        <mxCell id="u4-ret" edge="1" parent="1"
+          style="edgeStyle=orthogonalEdgeStyle;endArrow=open;dashed=1;fontSize=14;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontColor=default;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;"
+          value="บันทึกการแจ้งปัญหาสำเร็จ">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="884" y="1190" as="sourcePoint"/>
+            <mxPoint x="380" y="1190" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 5. User → ดูสถานะการอนุมัติ -->
+        <mxCell id="u5-req" edge="1" parent="1"
+          style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;fontSize=14;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontColor=default;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;"
+          value="ดูสถานะการอนุมัติ">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="220" y="1260" as="sourcePoint"/>
+            <mxPoint x="1074" y="1260" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="u5-box" parent="1"
+          style="rounded=0;fontSize=12;fontFamily=Sarabun;"
+          value="" vertex="1">
+          <mxGeometry height="26" width="12" x="1074" y="1260" as="geometry" />
+        </mxCell>
+        <mxCell id="u5-ret" edge="1" parent="1"
+          style="edgeStyle=orthogonalEdgeStyle;endArrow=open;dashed=1;fontSize=14;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontColor=default;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;"
+          value="แสดงสถานะการอนุมัติ">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1074" y="1290" as="sourcePoint"/>
+            <mxPoint x="380" y="1290" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 6. User → ออกจากระบบ -->
+        <mxCell id="u6-req" edge="1" parent="1"
+          style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;fontSize=14;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontColor=default;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;"
+          value="ออกจากระบบ">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="220" y="1360" as="sourcePoint"/>
+            <mxPoint x="1444" y="1360" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="u6-box" parent="1"
+          style="rounded=0;fontSize=12;fontFamily=Sarabun;"
+          value="" vertex="1">
+          <mxGeometry height="26" width="12" x="1444" y="1360" as="geometry" />
+        </mxCell>
+        <mxCell id="u6-ret" edge="1" parent="1"
+          style="edgeStyle=orthogonalEdgeStyle;endArrow=open;dashed=1;fontSize=14;verticalAlign=bottom;labelBackgroundColor=#ffffff;fontColor=default;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;"
+          value="กลับสู่หน้าเข้าสู่ระบบ">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1444" y="1390" as="sourcePoint"/>
+            <mxPoint x="220" y="1390" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

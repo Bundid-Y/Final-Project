@@ -1,0 +1,1386 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>KOCH Database Table Documentation</title>
+    <style>
+        @page {
+            size: A4 landscape;
+            margin: 2cm;
+        }
+        body {
+            font-family: "TH Sarabun New", "Sarabun", sans-serif;
+            font-size: 14px;
+            line-height: 1.4;
+            margin: 40px;
+        }
+        .table-section {
+            margin-bottom: 40px;
+            page-break-after: always;
+        }
+        .table-section:last-child {
+            page-break-after: auto;
+        }
+        .summary-table {
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 20px;
+            border-collapse: collapse;
+        }
+        .summary-table td {
+            padding: 5px 10px;
+            font-size: 14px;
+        }
+        .summary-table td:first-child {
+            width: 150px;
+            font-weight: bold;
+        }
+        .detail-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        .detail-table caption {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .detail-table th, .detail-table td {
+            border: 1px solid #000;
+            padding: 6px 8px;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 13px;
+        }
+        .detail-table th {
+            background-color: #f5f5f5;
+            font-weight: bold;
+        }
+        .detail-table td {
+            text-align: left;
+        }
+        .detail-table td:first-child,
+        .detail-table td:nth-child(3),
+        .detail-table td:nth-child(4) {
+            text-align: center;
+        }
+        .col-no { width: 5%; }
+        .col-attr { width: 18%; }
+        .col-type { width: 10%; }
+        .col-width { width: 8%; }
+        .col-desc { width: 20%; }
+        .col-valid { width: 18%; }
+        .col-key { width: 12%; }
+        .col-default { width: 9%; }
+        h2 {
+            font-size: 18px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            page-break-before: always;
+        }
+        h2:first-of-type {
+            page-break-before: auto;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Table 1: companies -->
+<div class="table-section">
+    <h2>1. ตาราง: companies</h2>
+    <table class="summary-table">
+        <tr>
+            <td>รหัส</td>
+            <td>companies</td>
+        </tr>
+        <tr>
+            <td>ชื่อตาราง</td>
+            <td>ข้อมูลบริษัท</td>
+        </tr>
+        <tr>
+            <td>วัตถุประสงค์</td>
+            <td>เก็บข้อมูลบริษัทในเครือ (KOCH, TNB)</td>
+        </tr>
+        <tr>
+            <td>ตารางที่เกี่ยวข้อง</td>
+            <td>users, system_settings, truck_types, koch_quotations, sliders, partners, featured_products, contact_messages</td>
+        </tr>
+    </table>
+
+    <table class="detail-table">
+        <caption>ตารางแสดงรายละเอียด</caption>
+        <thead>
+            <tr>
+                <th class="col-no">ลำดับ<br>(No.)</th>
+                <th class="col-attr">คุณสมบัติ<br>(Attribute)</th>
+                <th class="col-type">ประเภท<br>(Type)</th>
+                <th class="col-width">ขนาด<br>(Width)</th>
+                <th class="col-desc">คำอธิบาย<br>(Description)</th>
+                <th class="col-valid">ตรวจสอบความถูกต้อง<br>(Validation Check)</th>
+                <th class="col-key">ประเภทคีย์<br>(Key Type)</th>
+                <th class="col-default">ค่าเบื้องต้น<br>(Default)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>id</td>
+                <td>INT</td>
+                <td>-</td>
+                <td>รหัสบริษัท (Auto Increment)</td>
+                <td>ไม่ซ้ำ, ไม่ว่าง</td>
+                <td>Primary Key</td>
+                <td>AUTO_INCREMENT</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>code</td>
+                <td>VARCHAR</td>
+                <td>50</td>
+                <td>รหัสย่อบริษัท (KOCH, TNB)</td>
+                <td>ไม่ซ้ำ, ไม่ว่าง</td>
+                <td>Unique Key</td>
+                <td>'KOCH'</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>name</td>
+                <td>VARCHAR</td>
+                <td>100</td>
+                <td>ชื่อบริษัท</td>
+                <td>ไม่ว่าง</td>
+                <td>-</td>
+                <td>'KOCH Industries'</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>description</td>
+                <td>TEXT</td>
+                <td>-</td>
+                <td>รายละเอียดบริษัท</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>logo_url</td>
+                <td>VARCHAR</td>
+                <td>255</td>
+                <td>URL รูปโลโก้</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>website_url</td>
+                <td>VARCHAR</td>
+                <td>255</td>
+                <td>URL เว็บไซต์</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>is_active</td>
+                <td>TINYINT</td>
+                <td>1</td>
+                <td>สถานะการใช้งาน</td>
+                <td>0 หรือ 1</td>
+                <td>-</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td>created_at</td>
+                <td>DATETIME</td>
+                <td>-</td>
+                <td>วันที่สร้าง</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>9</td>
+                <td>updated_at</td>
+                <td>DATETIME</td>
+                <td>-</td>
+                <td>วันที่แก้ไขล่าสุด</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Table 2: users -->
+<div class="table-section">
+    <h2>2. ตาราง: users</h2>
+    <table class="summary-table">
+        <tr>
+            <td>รหัส</td>
+            <td>users</td>
+        </tr>
+        <tr>
+            <td>ชื่อตาราง</td>
+            <td>ข้อมูลผู้ใช้งาน</td>
+        </tr>
+        <tr>
+            <td>วัตถุประสงค์</td>
+            <td>เก็บข้อมูลผู้ใช้งานระบบของทั้งสองบริษัท</td>
+        </tr>
+        <tr>
+            <td>ตารางที่เกี่ยวข้อง</td>
+            <td>companies, koch_quotations, notifications, activity_logs, user_sessions, user_permissions, password_resets</td>
+        </tr>
+    </table>
+
+    <table class="detail-table">
+        <caption>ตารางแสดงรายละเอียด</caption>
+        <thead>
+            <tr>
+                <th class="col-no">ลำดับ<br>(No.)</th>
+                <th class="col-attr">คุณสมบัติ<br>(Attribute)</th>
+                <th class="col-type">ประเภท<br>(Type)</th>
+                <th class="col-width">ขนาด<br>(Width)</th>
+                <th class="col-desc">คำอธิบาย<br>(Description)</th>
+                <th class="col-valid">ตรวจสอบความถูกต้อง<br>(Validation Check)</th>
+                <th class="col-key">ประเภทคีย์<br>(Key Type)</th>
+                <th class="col-default">ค่าเบื้องต้น<br>(Default)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>id</td>
+                <td>INT</td>
+                <td>-</td>
+                <td>รหัสผู้ใช้งาน</td>
+                <td>ไม่ซ้ำ, ไม่ว่าง</td>
+                <td>Primary Key</td>
+                <td>AUTO_INCREMENT</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>company_id</td>
+                <td>INT</td>
+                <td>-</td>
+                <td>รหัสบริษัท</td>
+                <td>อ้างอิง companies.id</td>
+                <td>Foreign Key</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>username</td>
+                <td>VARCHAR</td>
+                <td>50</td>
+                <td>ชื่อผู้ใช้งาน</td>
+                <td>ไม่ซ้ำ, ไม่ว่าง</td>
+                <td>Unique Key</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>email</td>
+                <td>VARCHAR</td>
+                <td>100</td>
+                <td>อีเมล</td>
+                <td>รูปแบบอีเมลถูกต้อง</td>
+                <td>Unique Key</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>password_hash</td>
+                <td>VARCHAR</td>
+                <td>255</td>
+                <td>รหัสผ่าน (เข้ารหัส)</td>
+                <td>ไม่ว่าง</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>first_name</td>
+                <td>VARCHAR</td>
+                <td>50</td>
+                <td>ชื่อ</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>last_name</td>
+                <td>VARCHAR</td>
+                <td>50</td>
+                <td>นามสกุล</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td>nick_name</td>
+                <td>VARCHAR</td>
+                <td>50</td>
+                <td>ชื่อเล่น</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>9</td>
+                <td>phone</td>
+                <td>VARCHAR</td>
+                <td>20</td>
+                <td>เบอร์โทรศัพท์</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td>role</td>
+                <td>ENUM</td>
+                <td>-</td>
+                <td>บทบาท</td>
+                <td>Super Admin, Admin, Manager, User</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>11</td>
+                <td>is_active</td>
+                <td>TINYINT</td>
+                <td>1</td>
+                <td>สถานะการใช้งาน</td>
+                <td>0 หรือ 1</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>12</td>
+                <td>last_login</td>
+                <td>DATETIME</td>
+                <td>-</td>
+                <td>วันที่เข้าสู่ระบบล่าสุด</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>13</td>
+                <td>created_at</td>
+                <td>DATETIME</td>
+                <td>-</td>
+                <td>วันที่สร้าง</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>14</td>
+                <td>updated_at</td>
+                <td>DATETIME</td>
+                <td>-</td>
+                <td>วันที่แก้ไขล่าสุด</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Table 3: products -->
+<div class="table-section">
+    <h2>3. ตาราง: products</h2>
+    <table class="summary-table">
+        <tr>
+            <td>รหัส</td>
+            <td>products</td>
+        </tr>
+        <tr>
+            <td>ชื่อตาราง</td>
+            <td>ข้อมูลสินค้า</td>
+        </tr>
+        <tr>
+            <td>วัตถุประสงค์</td>
+            <td>เก็บข้อมูลสินค้าของ KOCH</td>
+        </tr>
+        <tr>
+            <td>ตารางที่เกี่ยวข้อง</td>
+            <td>koch_quotations</td>
+        </tr>
+    </table>
+
+    <table class="detail-table">
+        <caption>ตารางแสดงรายละเอียด</caption>
+        <thead>
+            <tr>
+                <th class="col-no">ลำดับ<br>(No.)</th>
+                <th class="col-attr">คุณสมบัติ<br>(Attribute)</th>
+                <th class="col-type">ประเภท<br>(Type)</th>
+                <th class="col-width">ขนาด<br>(Width)</th>
+                <th class="col-desc">คำอธิบาย<br>(Description)</th>
+                <th class="col-valid">ตรวจสอบความถูกต้อง<br>(Validation Check)</th>
+                <th class="col-key">ประเภทคีย์<br>(Key Type)</th>
+                <th class="col-default">ค่าเบื้องต้น<br>(Default)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>id</td>
+                <td>INT</td>
+                <td>-</td>
+                <td>รหัสสินค้า</td>
+                <td>ไม่ซ้ำ, ไม่ว่าง</td>
+                <td>Primary Key</td>
+                <td>AUTO_INCREMENT</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>name</td>
+                <td>VARCHAR</td>
+                <td>100</td>
+                <td>ชื่อสินค้า</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>description</td>
+                <td>TEXT</td>
+                <td>-</td>
+                <td>รายละเอียดสินค้า</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>category</td>
+                <td>VARCHAR</td>
+                <td>50</td>
+                <td>หมวดหมู่</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>image_url</td>
+                <td>VARCHAR</td>
+                <td>255</td>
+                <td>URL รูปภาพ</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>display_order</td>
+                <td>INT</td>
+                <td>-</td>
+                <td>ลำดับการแสดง</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>is_active</td>
+                <td>TINYINT</td>
+                <td>1</td>
+                <td>สถานะการใช้งาน</td>
+                <td>0 หรือ 1</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td>created_at</td>
+                <td>DATETIME</td>
+                <td>-</td>
+                <td>วันที่สร้าง</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>9</td>
+                <td>updated_at</td>
+                <td>DATETIME</td>
+                <td>-</td>
+                <td>วันที่แก้ไขล่าสุด</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Table 4: koch_quotations -->
+<div class="table-section">
+    <h2>4. ตาราง: koch_quotations</h2>
+    <table class="summary-table">
+        <tr>
+            <td>รหัส</td>
+            <td>koch_quotations</td>
+        </tr>
+        <tr>
+            <td>ชื่อตาราง</td>
+            <td>ข้อมูลใบเสนอราคา KOCH</td>
+        </tr>
+        <tr>
+            <td>วัตถุประสงค์</td>
+            <td>เก็บข้อมูลใบเสนอราคาสินค้าของ KOCH</td>
+        </tr>
+        <tr>
+            <td>ตารางที่เกี่ยวข้อง</td>
+            <td>users, companies, products</td>
+        </tr>
+    </table>
+
+    <table class="detail-table">
+        <caption>ตารางแสดงรายละเอียด</caption>
+        <thead>
+            <tr>
+                <th class="col-no">ลำดับ<br>(No.)</th>
+                <th class="col-attr">คุณสมบัติ<br>(Attribute)</th>
+                <th class="col-type">ประเภท<br>(Type)</th>
+                <th class="col-width">ขนาด<br>(Width)</th>
+                <th class="col-desc">คำอธิบาย<br>(Description)</th>
+                <th class="col-valid">ตรวจสอบความถูกต้อง<br>(Validation Check)</th>
+                <th class="col-key">ประเภทคีย์<br>(Key Type)</th>
+                <th class="col-default">ค่าเบื้องต้น<br>(Default)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>id</td>
+                <td>INT</td>
+                <td>-</td>
+                <td>รหัสใบเสนอราคา</td>
+                <td>ไม่ซ้ำ, ไม่ว่าง</td>
+                <td>Primary Key</td>
+                <td>AUTO_INCREMENT</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>user_id</td>
+                <td>INT</td>
+                <td>-</td>
+                <td>รหัสผู้ขอใบเสนอราคา</td>
+                <td>อ้างอิง users.id</td>
+                <td>Foreign Key</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>company_id</td>
+                <td>INT</td>
+                <td>-</td>
+                <td>รหัสบริษัท</td>
+                <td>อ้างอิง companies.id</td>
+                <td>Foreign Key</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>product_id</td>
+                <td>INT</td>
+                <td>-</td>
+                <td>รหัสสินค้า</td>
+                <td>อ้างอิง products.id</td>
+                <td>Foreign Key</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>quoted_by</td>
+                <td>INT</td>
+                <td>-</td>
+                <td>รหัสผู้เสนอราคา</td>
+                <td>อ้างอิง users.id</td>
+                <td>Foreign Key</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>quotation_number</td>
+                <td>VARCHAR</td>
+                <td>50</td>
+                <td>เลขที่ใบเสนอราคา</td>
+                <td>ไม่ซ้ำ</td>
+                <td>Unique Key</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>first_name</td>
+                <td>VARCHAR</td>
+                <td>50</td>
+                <td>ชื่อผู้ขอใบเสนอราคา</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td>last_name</td>
+                <td>VARCHAR</td>
+                <td>50</td>
+                <td>นามสกุลผู้ขอใบเสนอราคา</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>9</td>
+                <td>email</td>
+                <td>VARCHAR</td>
+                <td>100</td>
+                <td>อีเมลผู้ขอใบเสนอราคา</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td>phone</td>
+                <td>VARCHAR</td>
+                <td>20</td>
+                <td>เบอร์โทรศัพท์</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>11</td>
+                <td>company_name</td>
+                <td>VARCHAR</td>
+                <td>100</td>
+                <td>ชื่อบริษัทผู้ขอ</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>12</td>
+                <td>product_type</td>
+                <td>VARCHAR</td>
+                <td>50</td>
+                <td>ประเภทสินค้า</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>13</td>
+                <td>quantity</td>
+                <td>INT</td>
+                <td>-</td>
+                <td>จำนวน</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>14</td>
+                <td>specifications</td>
+                <td>TEXT</td>
+                <td>-</td>
+                <td>รายละเอียดเพิ่มเติม</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>15</td>
+                <td>status</td>
+                <td>ENUM</td>
+                <td>-</td>
+                <td>สถานะ</td>
+                <td>pending, quoted, approved, completed</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>16</td>
+                <td>quoted_at</td>
+                <td>DATETIME</td>
+                <td>-</td>
+                <td>วันที่เสนอราคา</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>17</td>
+                <td>created_at</td>
+                <td>DATETIME</td>
+                <td>-</td>
+                <td>วันที่สร้าง</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>18</td>
+                <td>updated_at</td>
+                <td>DATETIME</td>
+                <td>-</td>
+                <td>วันที่แก้ไขล่าสุด</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Table 5: sliders -->
+<div class="table-section">
+    <h2>5. ตาราง: sliders</h2>
+    <table class="summary-table">
+        <tr>
+            <td>รหัส</td>
+            <td>sliders</td>
+        </tr>
+        <tr>
+            <td>ชื่อตาราง</td>
+            <td>ข้อมูลสไลด์โชว์</td>
+        </tr>
+        <tr>
+            <td>วัตถุประสงค์</td>
+            <td>เก็บข้อมูลสไลด์แสดงบนหน้าแรก</td>
+        </tr>
+        <tr>
+            <td>ตารางที่เกี่ยวข้อง</td>
+            <td>companies</td>
+        </tr>
+    </table>
+
+    <table class="detail-table">
+        <caption>ตารางแสดงรายละเอียด</caption>
+        <thead>
+            <tr>
+                <th class="col-no">ลำดับ<br>(No.)</th>
+                <th class="col-attr">คุณสมบัติ<br>(Attribute)</th>
+                <th class="col-type">ประเภท<br>(Type)</th>
+                <th class="col-width">ขนาด<br>(Width)</th>
+                <th class="col-desc">คำอธิบาย<br>(Description)</th>
+                <th class="col-valid">ตรวจสอบความถูกต้อง<br>(Validation Check)</th>
+                <th class="col-key">ประเภทคีย์<br>(Key Type)</th>
+                <th class="col-default">ค่าเบื้องต้น<br>(Default)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>id</td>
+                <td>INT</td>
+                <td>-</td>
+                <td>รหัสสไลด์</td>
+                <td>ไม่ซ้ำ, ไม่ว่าง</td>
+                <td>Primary Key</td>
+                <td>AUTO_INCREMENT</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>company_id</td>
+                <td>INT</td>
+                <td>-</td>
+                <td>รหัสบริษัท</td>
+                <td>อ้างอิง companies.id</td>
+                <td>Foreign Key</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>title</td>
+                <td>VARCHAR</td>
+                <td>100</td>
+                <td>หัวข้อ</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>subtitle</td>
+                <td>VARCHAR</td>
+                <td>200</td>
+                <td>คำบรรยายย่อย</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>image_url</td>
+                <td>VARCHAR</td>
+                <td>255</td>
+                <td>URL รูปภาพ</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>button_text</td>
+                <td>VARCHAR</td>
+                <td>50</td>
+                <td>ข้อความปุ่ม</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>button_url</td>
+                <td>VARCHAR</td>
+                <td>255</td>
+                <td>URL ปุ่ม</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td>display_order</td>
+                <td>INT</td>
+                <td>-</td>
+                <td>ลำดับการแสดง</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>9</td>
+                <td>is_active</td>
+                <td>TINYINT</td>
+                <td>1</td>
+                <td>สถานะการใช้งาน</td>
+                <td>0 หรือ 1</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td>created_at</td>
+                <td>DATETIME</td>
+                <td>-</td>
+                <td>วันที่สร้าง</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>11</td>
+                <td>updated_at</td>
+                <td>DATETIME</td>
+                <td>-</td>
+                <td>วันที่แก้ไขล่าสุด</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Table 6: partners -->
+<div class="table-section">
+    <h2>6. ตาราง: partners</h2>
+    <table class="summary-table">
+        <tr>
+            <td>รหัส</td>
+            <td>partners</td>
+        </tr>
+        <tr>
+            <td>ชื่อตาราง</td>
+            <td>ข้อมูลพาร์ทเนอร์</td>
+        </tr>
+        <tr>
+            <td>วัตถุประสงค์</td>
+            <td>เก็บข้อมูลพาร์ทเนอร์/ลูกค้าของบริษัท</td>
+        </tr>
+        <tr>
+            <td>ตารางที่เกี่ยวข้อง</td>
+            <td>companies</td>
+        </tr>
+    </table>
+
+    <table class="detail-table">
+        <caption>ตารางแสดงรายละเอียด</caption>
+        <thead>
+            <tr>
+                <th class="col-no">ลำดับ<br>(No.)</th>
+                <th class="col-attr">คุณสมบัติ<br>(Attribute)</th>
+                <th class="col-type">ประเภท<br>(Type)</th>
+                <th class="col-width">ขนาด<br>(Width)</th>
+                <th class="col-desc">คำอธิบาย<br>(Description)</th>
+                <th class="col-valid">ตรวจสอบความถูกต้อง<br>(Validation Check)</th>
+                <th class="col-key">ประเภทคีย์<br>(Key Type)</th>
+                <th class="col-default">ค่าเบื้องต้น<br>(Default)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>id</td>
+                <td>INT</td>
+                <td>-</td>
+                <td>รหัสพาร์ทเนอร์</td>
+                <td>ไม่ซ้ำ, ไม่ว่าง</td>
+                <td>Primary Key</td>
+                <td>AUTO_INCREMENT</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>company_id</td>
+                <td>INT</td>
+                <td>-</td>
+                <td>รหัสบริษัท</td>
+                <td>อ้างอิง companies.id</td>
+                <td>Foreign Key</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>name</td>
+                <td>VARCHAR</td>
+                <td>100</td>
+                <td>ชื่อพาร์ทเนอร์</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>description</td>
+                <td>TEXT</td>
+                <td>-</td>
+                <td>รายละเอียด</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>logo_url</td>
+                <td>VARCHAR</td>
+                <td>255</td>
+                <td>URL รูปโลโก้</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>website_url</td>
+                <td>VARCHAR</td>
+                <td>255</td>
+                <td>URL เว็บไซต์</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>display_order</td>
+                <td>INT</td>
+                <td>-</td>
+                <td>ลำดับการแสดง</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td>is_active</td>
+                <td>TINYINT</td>
+                <td>1</td>
+                <td>สถานะการใช้งาน</td>
+                <td>0 หรือ 1</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>9</td>
+                <td>created_at</td>
+                <td>DATETIME</td>
+                <td>-</td>
+                <td>วันที่สร้าง</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td>updated_at</td>
+                <td>DATETIME</td>
+                <td>-</td>
+                <td>วันที่แก้ไขล่าสุด</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Table 7: featured_products -->
+<div class="table-section">
+    <h2>7. ตาราง: featured_products</h2>
+    <table class="summary-table">
+        <tr><td>รหัส</td><td>featured_products</td></tr>
+        <tr><td>ชื่อตาราง</td><td>ข้อมูลสินค้าแนะนำ</td></tr>
+        <tr><td>วัตถุประสงค์</td><td>เก็บข้อมูลสินค้าแนะนำพิเศษ</td></tr>
+        <tr><td>ตารางที่เกี่ยวข้อง</td><td>companies</td></tr>
+    </table>
+    <table class="detail-table">
+        <caption>ตารางแสดงรายละเอียด</caption>
+        <thead>
+            <tr>
+                <th class="col-no">ลำดับ<br>(No.)</th>
+                <th class="col-attr">คุณสมบัติ<br>(Attribute)</th>
+                <th class="col-type">ประเภท<br>(Type)</th>
+                <th class="col-width">ขนาด<br>(Width)</th>
+                <th class="col-desc">คำอธิบาย<br>(Description)</th>
+                <th class="col-valid">ตรวจสอบความถูกต้อง<br>(Validation Check)</th>
+                <th class="col-key">ประเภทคีย์<br>(Key Type)</th>
+                <th class="col-default">ค่าเบื้องต้น<br>(Default)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>1</td><td>id</td><td>INT</td><td>-</td><td>รหัสสินค้าแนะนำ</td><td>ไม่ซ้ำ, ไม่ว่าง</td><td>Primary Key</td><td>AUTO_INCREMENT</td></tr>
+            <tr><td>2</td><td>company_id</td><td>INT</td><td>-</td><td>รหัสบริษัท</td><td>อ้างอิง companies.id</td><td>Foreign Key</td><td>-</td></tr>
+            <tr><td>3</td><td>name</td><td>VARCHAR</td><td>100</td><td>ชื่อสินค้า</td><td>-</td><td>-</td><td>-</td></tr>
+            <tr><td>4</td><td>description</td><td>TEXT</td><td>-</td><td>รายละเอียด</td><td>-</td><td>-</td><td>-</td></tr>
+            <tr><td>5</td><td>image_url</td><td>VARCHAR</td><td>255</td><td>URL รูปภาพ</td><td>-</td><td>-</td><td>-</td></tr>
+            <tr><td>6</td><td>display_order</td><td>INT</td><td>-</td><td>ลำดับการแสดง</td><td>-</td><td>-</td><td>-</td></tr>
+            <tr><td>7</td><td>is_active</td><td>TINYINT</td><td>1</td><td>สถานะการใช้งาน</td><td>0 หรือ 1</td><td>-</td><td>-</td></tr>
+            <tr><td>8</td><td>created_at</td><td>DATETIME</td><td>-</td><td>วันที่สร้าง</td><td>-</td><td>-</td><td>-</td></tr>
+            <tr><td>9</td><td>updated_at</td><td>DATETIME</td><td>-</td><td>วันที่แก้ไขล่าสุด</td><td>-</td><td>-</td><td>-</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Table 8: contact_messages -->
+<div class="table-section">
+    <h2>8. ตาราง: contact_messages</h2>
+    <table class="summary-table">
+        <tr><td>รหัส</td><td>contact_messages</td></tr>
+        <tr><td>ชื่อตาราง</td><td>ข้อมูลข้อความติดต่อ</td></tr>
+        <tr><td>วัตถุประสงค์</td><td>เก็บข้อมูลข้อความติดต่อจากลูกค้า</td></tr>
+        <tr><td>ตารางที่เกี่ยวข้อง</td><td>companies</td></tr>
+    </table>
+    <table class="detail-table">
+        <caption>ตารางแสดงรายละเอียด</caption>
+        <thead>
+            <tr>
+                <th class="col-no">ลำดับ<br>(No.)</th>
+                <th class="col-attr">คุณสมบัติ<br>(Attribute)</th>
+                <th class="col-type">ประเภท<br>(Type)</th>
+                <th class="col-width">ขนาด<br>(Width)</th>
+                <th class="col-desc">คำอธิบาย<br>(Description)</th>
+                <th class="col-valid">ตรวจสอบความถูกต้อง<br>(Validation Check)</th>
+                <th class="col-key">ประเภทคีย์<br>(Key Type)</th>
+                <th class="col-default">ค่าเบื้องต้น<br>(Default)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>1</td><td>id</td><td>INT</td><td>-</td><td>รหัสข้อความ</td><td>ไม่ซ้ำ, ไม่ว่าง</td><td>Primary Key</td><td>AUTO_INCREMENT</td></tr>
+            <tr><td>2</td><td>company_id</td><td>INT</td><td>-</td><td>รหัสบริษัท</td><td>อ้างอิง companies.id</td><td>Foreign Key</td><td>-</td></tr>
+            <tr><td>3</td><td>name</td><td>VARCHAR</td><td>100</td><td>ชื่อผู้ติดต่อ</td><td>-</td><td>-</td><td>-</td></tr>
+            <tr><td>4</td><td>email</td><td>VARCHAR</td><td>100</td><td>อีเมล</td><td>-</td><td>-</td><td>-</td></tr>
+            <tr><td>5</td><td>phone</td><td>VARCHAR</td><td>20</td><td>เบอร์โทรศัพท์</td><td>-</td><td>-</td><td>-</td></tr>
+            <tr><td>6</td><td>subject</td><td>VARCHAR</td><td>200</td><td>หัวข้อ</td><td>-</td><td>-</td><td>-</td></tr>
+            <tr><td>7</td><td>message</td><td>TEXT</td><td>-</td><td>ข้อความ</td><td>-</td><td>-</td><td>-</td></tr>
+            <tr><td>8</td><td>status</td><td>ENUM</td><td>-</td><td>สถานะ</td><td>new, read, replied</td><td>-</td><td>-</td></tr>
+            <tr><td>9</td><td>ip_address</td><td>VARCHAR</td><td>45</td><td>IP Address</td><td>-</td><td>-</td><td>-</td></tr>
+            <tr><td>10</td><td>created_at</td><td>DATETIME</td><td>-</td><td>วันที่สร้าง</td><td>-</td><td>-</td><td>-</td></tr>
+            <tr><td>11</td><td>updated_at</td><td>DATETIME</td><td>-</td><td>วันที่แก้ไขล่าสุด</td><td>-</td><td>-</td><td>-</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Table 9: system_settings -->
+<div class="table-section">
+    <h2>9. ตาราง: system_settings</h2>
+    <table class="summary-table">
+        <tr><td>รหัส</td><td>system_settings</td></tr>
+        <tr><td>ชื่อตาราง</td><td>ข้อมูลการตั้งค่าระบบ</td></tr>
+        <tr><td>วัตถุประสงค์</td><td>เก็บข้อมูลการตั้งค่าระบบแยกตามบริษัท</td></tr>
+        <tr><td>ตารางที่เกี่ยวข้อง</td><td>companies</td></tr>
+    </table>
+    <table class="detail-table">
+        <caption>ตารางแสดงรายละเอียด</caption>
+        <thead>
+            <tr>
+                <th class="col-no">ลำดับ<br>(No.)</th>
+                <th class="col-attr">คุณสมบัติ<br>(Attribute)</th>
+                <th class="col-type">ประเภท<br>(Type)</th>
+                <th class="col-width">ขนาด<br>(Width)</th>
+                <th class="col-desc">คำอธิบาย<br>(Description)</th>
+                <th class="col-valid">ตรวจสอบความถูกต้อง<br>(Validation Check)</th>
+                <th class="col-key">ประเภทคีย์<br>(Key Type)</th>
+                <th class="col-default">ค่าเบื้องต้น<br>(Default)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>1</td><td>id</td><td>INT</td><td>-</td><td>รหัสการตั้งค่า</td><td>ไม่ซ้ำ, ไม่ว่าง</td><td>Primary Key</td><td>AUTO_INCREMENT</td></tr>
+            <tr><td>2</td><td>company_id</td><td>INT</td><td>-</td><td>รหัสบริษัท</td><td>อ้างอิง companies.id</td><td>Foreign Key</td><td>-</td></tr>
+            <tr><td>3</td><td>setting_key</td><td>VARCHAR</td><td>100</td><td>คีย์การตั้งค่า</td><td>ไม่ซ้ำ</td><td>Unique Key</td><td>-</td></tr>
+            <tr><td>4</td><td>setting_value</td><td>TEXT</td><td>-</td><td>ค่าการตั้งค่า</td><td>-</td><td>-</td><td>-</td></tr>
+            <tr><td>5</td><td>data_type</td><td>VARCHAR</td><td>20</td><td>ประเภทข้อมูล</td><td>-</td><td>-</td><td>-</td></tr>
+            <tr><td>6</td><td>description</td><td>VARCHAR</td><td>255</td><td>คำอธิบาย</td><td>-</td><td>-</td><td>-</td></tr>
+            <tr><td>7</td><td>category</td><td>VARCHAR</td><td>50</td><td>หมวดหมู่</td><td>-</td><td>-</td><td>-</td></tr>
+            <tr><td>8</td><td>is_system</td><td>TINYINT</td><td>1</td><td>เป็นการตั้งค่าระบบ</td><td>0 หรือ 1</td><td>-</td><td>-</td></tr>
+            <tr><td>9</td><td>created_at</td><td>DATETIME</td><td>-</td><td>วันที่สร้าง</td><td>-</td><td>-</td><td>-</td></tr>
+            <tr><td>10</td><td>updated_at</td><td>DATETIME</td><td>-</td><td>วันที่แก้ไขล่าสุด</td><td>-</td><td>-</td><td>-</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Table 10: truck_types -->
+<div class="table-section">
+    <h2>10. ตาราง: truck_types</h2>
+    <table class="summary-table">
+        <tr><td>รหัส</td><td>truck_types</td></tr>
+        <tr><td>ชื่อตาราง</td><td>ข้อมูลประเภทรถบรรทุก</td></tr>
+        <tr><td>วัตถุประสงค์</td><td>เก็บข้อมูลประเภทรถบรรทุกสำหรับ TNB</td></tr>
+        <tr><td>ตารางที่เกี่ยวข้อง</td><td>companies</td></tr>
+    </table>
+    <table class="detail-table">
+        <caption>ตารางแสดงรายละเอียด</caption>
+        <thead>
+            <tr>
+                <th class="col-no">ลำดับ<br>(No.)</th>
+                <th class="col-attr">คุณสมบัติ<br>(Attribute)</th>
+                <th class="col-type">ประเภท<br>(Type)</th>
+                <th class="col-width">ขนาด<br>(Width)</th>
+                <th class="col-desc">คำอธิบาย<br>(Description)</th>
+                <th class="col-valid">ตรวจสอบความถูกต้อง<br>(Validation Check)</th>
+                <th class="col-key">ประเภทคีย์<br>(Key Type)</th>
+                <th class="col-default">ค่าเบื้องต้น<br>(Default)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>1</td><td>id</td><td>INT</td><td>-</td><td>รหัสประเภทรถ</td><td>ไม่ซ้ำ, ไม่ว่าง</td><td>Primary Key</td><td>AUTO_INCREMENT</td></tr>
+            <tr><td>2</td><td>company_id</td><td>INT</td><td>-</td><td>รหัสบริษัท</td><td>อ้างอิง companies.id</td><td>Foreign Key</td><td>-</td></tr>
+            <tr><td>3</td><td>name</td><td>VARCHAR</td><td>100</td><td>ชื่อประเภทรถ</td><td>-</td><td>-</td><td>-</td></tr>
+            <tr><td>4</td><td>code</td><td>VARCHAR</td><td>50</td><td>รหัสประเภท</td><td>-</td><td>-</td><td>-</td></tr>
+            <tr><td>5</td><td>capacity_tons</td><td>DECIMAL</td><td>10,2</td><td>ความจุ (ตัน)</td><td>-</td><td>-</td><td>-</td></tr>
+            <tr><td>6</td><td>description</td><td>TEXT</td><td>-</td><td>รายละเอียด</td><td>-</td><td>-</td><td>-</td></tr>
+            <tr><td>7</td><td>image_url</td><td>VARCHAR</td><td>255</td><td>URL รูปภาพ</td><td>-</td><td>-</td><td>-</td></tr>
+            <tr><td>8</td><td>display_order</td><td>INT</td><td>-</td><td>ลำดับการแสดง</td><td>-</td><td>-</td><td>-</td></tr>
+            <tr><td>9</td><td>is_active</td><td>TINYINT</td><td>1</td><td>สถานะการใช้งาน</td><td>0 หรือ 1</td><td>-</td><td>-</td></tr>
+            <tr><td>10</td><td>created_at</td><td>DATETIME</td><td>-</td><td>วันที่สร้าง</td><td>-</td><td>-</td><td>-</td></tr>
+            <tr><td>11</td><td>updated_at</td><td>DATETIME</td><td>-</td><td>วันที่แก้ไขล่าสุด</td><td>-</td><td>-</td><td>-</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Table 11: notifications -->
+<div class="table-section">
+    <h2>11. ตาราง: notifications</h2>
+    <table class="summary-table">
+        <tr><td>รหัส</td><td>notifications</td></tr>
+        <tr><td>ชื่อตาราง</td><td>ข้อมูลการแจ้งเตือน</td></tr>
+        <tr><td>วัตถุประสงค์</td><td>เก็บข้อมูลการแจ้งเตือนในระบบ</td></tr>
+        <tr><td>ตารางที่เกี่ยวข้อง</td><td>users, companies</td></tr>
+    </table>
+    <table class="detail-table">
+        <caption>ตารางแสดงรายละเอียด</caption>
+        <thead>
+            <tr>
+                <th class="col-no">ลำดับ<br>(No.)</th>
+                <th class="col-attr">คุณสมบัติ<br>(Attribute)</th>
+                <th class="col-type">ประเภท<br>(Type)</th>
+                <th class="col-width">ขนาด<br>(Width)</th>
+                <th class="col-desc">คำอธิบาย<br>(Description)</th>
+                <th class="col-valid">ตรวจสอบความถูกต้อง<br>(Validation Check)</th>
+                <th class="col-key">ประเภทคีย์<br>(Key Type)</th>
+                <th class="col-default">ค่าเบื้องต้น<br>(Default)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>1</td><td>id</td><td>INT</td><td>-</td><td>รหัสการแจ้งเตือน</td><td>ไม่ซ้ำ, ไม่ว่าง</td><td>Primary Key</td><td>AUTO_INCREMENT</td></tr>
+            <tr><td>2</td><td>user_id</td><td>INT</td><td>-</td><td>รหัสผู้ใช้</td><td>อ้างอิง users.id</td><td>Foreign Key</td><td>-</td></tr>
+            <tr><td>3</td><td>company_id</td><td>INT</td><td>-</td><td>รหัสบริษัท</td><td>อ้างอิง companies.id</td><td>Foreign Key</td><td>-</td></tr>
+            <tr><td>4</td><td>title</td><td>VARCHAR</td><td>200</td><td>หัวข้อ</td><td>-</td><td>-</td><td>-</td></tr>
+            <tr><td>5</td><td>message</td><td>TEXT</td><td>-</td><td>ข้อความ</td><td>-</td><td>-</td><td>-</td></tr>
+            <tr><td>6</td><td>type</td><td>ENUM</td><td>-</td><td>ประเภท</td><td>quotation, quote, login_failed</td><td>-</td><td>-</td></tr>
+            <tr><td>7</td><td>related_table</td><td>VARCHAR</td><td>50</td><td>ตารางที่เกี่ยวข้อง</td><td>-</td><td>-</td><td>-</td></tr>
+            <tr><td>8</td><td>related_id</td><td>INT</td><td>-</td><td>รหัสที่เกี่ยวข้อง</td><td>-</td><td>-</td><td>-</td></tr>
+            <tr><td>9</td><td>is_read</td><td>TINYINT</td><td>1</td><td>อ่านแล้ว</td><td>0 หรือ 1</td><td>-</td><td>-</td></tr>
+            <tr><td>10</td><td>is_email_sent</td><td>TINYINT</td><td>1</td><td>ส่งอีเมลแล้ว</td><td>0 หรือ 1</td><td>-</td><td>-</td></tr>
+            <tr><td>11</td><td>priority</td><td>INT</td><td>-</td><td>ความสำคัญ</td><td>-</td><td>-</td><td>-</td></tr>
+            <tr><td>12</td><td>email_sent_at</td><td>DATETIME</td><td>-</td><td>วันที่ส่งอีเมล</td><td>-</td><td>-</td><td>-</td></tr>
+            <tr><td>13</td><td>created_at</td><td>DATETIME</td><td>-</td><td>วันที่สร้าง</td><td>-</td><td>-</td><td>-</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Table 12: activity_logs -->
+<div class="table-section">
+    <h2>12. ตาราง: activity_logs</h2>
+    <table class="summary-table">
+        <tr><td>รหัส</td><td>activity_logs</td></tr>
+        <tr><td>ชื่อตาราง</td><td>ข้อมูลบันทึกกิจกรรม</td></tr>
+        <tr><td>วัตถุประสงค์</td><td>เก็บข้อมูลบันทึกกิจกรรมการใช้งานระบบ</td></tr>
+        <tr><td>ตารางที่เกี่ยวข้อง</td><td>users, companies</td></tr>
+    </table>
+    <table class="detail-table">
+        <caption>ตารางแสดงรายละเอียด</caption>
+        <thead>
+            <tr>
+                <th class="col-no">ลำดับ<br>(No.)</th>
+                <th class="col-attr">คุณสมบัติ<br>(Attribute)</th>
+                <th class="col-type">ประเภท<br>(Type)</th>
+                <th class="col-width">ขนาด<br>(Width)</th>
+                <th class="col-desc">คำอธิบาย<br>(Description)</th>
+                <th class="col-valid">ตรวจสอบความถูกต้อง<br>(Validation Check)</th>
+                <th class="col-key">ประเภทคีย์<br>(Key Type)</th>
+                <th class="col-default">ค่าเบื้องต้น<br>(Default)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>1</td><td>id</td><td>INT</td><td>-</td><td>รหัสบันทึก</td><td>ไม่ซ้ำ, ไม่ว่าง</td><td>Primary Key</td><td>AUTO_INCREMENT</td></tr>
+            <tr><td>2</td><td>user_id</td><td>INT</td><td>-</td><td>รหัสผู้ใช้</td><td>อ้างอิง users.id</td><td>Foreign Key</td><td>-</td></tr>
+            <tr><td>3</td><td>company_id</td><td>INT</td><td>-</td><td>รหัสบริษัท</td><td>อ้างอิง companies.id</td><td>Foreign Key</td><td>-</td></tr>
+            <tr><td>4</td><td>company_name</td><td>VARCHAR</td><td>50</td><td>ชื่อบริษัท</td><td>-</td><td>-</td><td>'KOCH'</td></tr>
+            <tr><td>5</td><td>action</td><td>ENUM</td><td>-</td><td>การกระทำ</td><td>create, update, delete, login</td><td>-</td><td>-</td></tr>
+            <tr><td>6</td><td>table_name</td><td>VARCHAR</td><td>50</td><td>ชื่อตาราง</td><td>-</td><td>-</td><td>-</td></tr>
+            <tr><td>7</td><td>record_id</td><td>INT</td><td>-</td><td>รหัสเรกคอร์ด</td><td>-</td><td>-</td><td>-</td></tr>
+            <tr><td>8</td><td>old_values</td><td>JSON</td><td>-</td><td>ข้อมูลเก่า</td><td>-</td><td>-</td><td>-</td></tr>
+            <tr><td>9</td><td>new_values</td><td>JSON</td><td>-</td><td>ข้อมูลใหม่</td><td>-</td><td>-</td><td>-</td></tr>
+            <tr><td>10</td><td>ip_address</td><td>VARCHAR</td><td>45</td><td>IP Address</td><td>-</td><td>-</td><td>-</td></tr>
+            <tr><td>11</td><td>user_agent</td><td>VARCHAR</td><td>255</td><td>User Agent</td><td>-</td><td>-</td><td>-</td></tr>
+            <tr><td>12</td><td>created_at</td><td>DATETIME</td><td>-</td><td>วันที่สร้าง</td><td>-</td><td>-</td><td>-</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Table 13: user_sessions -->
+<div class="table-section">
+    <h2>13. ตาราง: user_sessions</h2>
+    <table class="summary-table">
+        <tr><td>รหัส</td><td>user_sessions</td></tr>
+        <tr><td>ชื่อตาราง</td><td>ข้อมูลเซสชันผู้ใช้</td></tr>
+        <tr><td>วัตถุประสงค์</td><td>เก็บข้อมูลเซสชันการเข้าสู่ระบบของผู้ใช้</td></tr>
+        <tr><td>ตารางที่เกี่ยวข้อง</td><td>users</td></tr>
+    </table>
+    <table class="detail-table">
+        <caption>ตารางแสดงรายละเอียด</caption>
+        <thead>
+            <tr>
+                <th class="col-no">ลำดับ<br>(No.)</th>
+                <th class="col-attr">คุณสมบัติ<br>(Attribute)</th>
+                <th class="col-type">ประเภท<br>(Type)</th>
+                <th class="col-width">ขนาด<br>(Width)</th>
+                <th class="col-desc">คำอธิบาย<br>(Description)</th>
+                <th class="col-valid">ตรวจสอบความถูกต้อง<br>(Validation Check)</th>
+                <th class="col-key">ประเภทคีย์<br>(Key Type)</th>
+                <th class="col-default">ค่าเบื้องต้น<br>(Default)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>1</td><td>id</td><td>INT</td><td>-</td><td>รหัสเซสชัน</td><td>ไม่ซ้ำ, ไม่ว่าง</td><td>Primary Key</td><td>AUTO_INCREMENT</td></tr>
+            <tr><td>2</td><td>user_id</td><td>INT</td><td>-</td><td>รหัสผู้ใช้</td><td>อ้างอิง users.id</td><td>Foreign Key</td><td>-</td></tr>
+            <tr><td>3</td><td>session_token</td><td>VARCHAR</td><td>255</td><td>Token เซสชัน</td><td>ไม่ซ้ำ</td><td>Unique Key</td><td>-</td></tr>
+            <tr><td>4</td><td>ip_address</td><td>VARCHAR</td><td>45</td><td>IP Address</td><td>-</td><td>-</td><td>-</td></tr>
+            <tr><td>5</td><td>user_agent</td><td>VARCHAR</td><td>255</td><td>User Agent</td><td>-</td><td>-</td><td>-</td></tr>
+            <tr><td>6</td><td>is_active</td><td>TINYINT</td><td>1</td><td>สถานะใช้งาน</td><td>0 หรือ 1</td><td>-</td><td>-</td></tr>
+            <tr><td>7</td><td>expires_at</td><td>DATETIME</td><td>-</td><td>วันที่หมดอายุ</td><td>-</td><td>-</td><td>-</td></tr>
+            <tr><td>8</td><td>created_at</td><td>DATETIME</td><td>-</td><td>วันที่สร้าง</td><td>-</td><td>-</td><td>-</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Table 14: user_permissions -->
+<div class="table-section">
+    <h2>14. ตาราง: user_permissions</h2>
+    <table class="summary-table">
+        <tr><td>รหัส</td><td>user_permissions</td></tr>
+        <tr><td>ชื่อตาราง</td><td>ข้อมูลสิทธิ์ผู้ใช้</td></tr>
+        <tr><td>วัตถุประสงค์</td><td>เก็บข้อมูลสิทธิ์การใช้งานรายบุคคล</td></tr>
+        <tr><td>ตารางที่เกี่ยวข้อง</td><td>users</td></tr>
+    </table>
+    <table class="detail-table">
+        <caption>ตารางแสดงรายละเอียด</caption>
+        <thead>
+            <tr>
+                <th class="col-no">ลำดับ<br>(No.)</th>
+                <th class="col-attr">คุณสมบัติ<br>(Attribute)</th>
+                <th class="col-type">ประเภท<br>(Type)</th>
+                <th class="col-width">ขนาด<br>(Width)</th>
+                <th class="col-desc">คำอธิบาย<br>(Description)</th>
+                <th class="col-valid">ตรวจสอบความถูกต้อง<br>(Validation Check)</th>
+                <th class="col-key">ประเภทคีย์<br>(Key Type)</th>
+                <th class="col-default">ค่าเบื้องต้น<br>(Default)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>1</td><td>id</td><td>INT</td><td>-</td><td>รหัสสิทธิ์</td><td>ไม่ซ้ำ, ไม่ว่าง</td><td>Primary Key</td><td>AUTO_INCREMENT</td></tr>
+            <tr><td>2</td><td>user_id</td><td>INT</td><td>-</td><td>รหัสผู้ใช้</td><td>อ้างอิง users.id</td><td>Foreign Key</td><td>-</td></tr>
+            <tr><td>3</td><td>permission_key</td><td>VARCHAR</td><td>100</td><td>คีย์สิทธิ์</td><td>-</td><td>-</td><td>-</td></tr>
+            <tr><td>4</td><td>permission_value</td><td>TINYINT</td><td>1</td><td>ค่าสิทธิ์</td><td>0 หรือ 1</td><td>-</td><td>-</td></tr>
+            <tr><td>5</td><td>created_at</td><td>DATETIME</td><td>-</td><td>วันที่สร้าง</td><td>-</td><td>-</td><td>-</td></tr>
+            <tr><td>6</td><td>updated_at</td><td>DATETIME</td><td>-</td><td>วันที่แก้ไขล่าสุด</td><td>-</td><td>-</td><td>-</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Table 15: password_resets -->
+<div class="table-section">
+    <h2>15. ตาราง: password_resets</h2>
+    <table class="summary-table">
+        <tr><td>รหัส</td><td>password_resets</td></tr>
+        <tr><td>ชื่อตาราง</td><td>ข้อมูลรีเซ็ตรหัสผ่าน</td></tr>
+        <tr><td>วัตถุประสงค์</td><td>เก็บข้อมูลคำขอรีเซ็ตรหัสผ่าน</td></tr>
+        <tr><td>ตารางที่เกี่ยวข้อง</td><td>companies</td></tr>
+    </table>
+    <table class="detail-table">
+        <caption>ตารางแสดงรายละเอียด</caption>
+        <thead>
+            <tr>
+                <th class="col-no">ลำดับ<br>(No.)</th>
+                <th class="col-attr">คุณสมบัติ<br>(Attribute)</th>
+                <th class="col-type">ประเภท<br>(Type)</th>
+                <th class="col-width">ขนาด<br>(Width)</th>
+                <th class="col-desc">คำอธิบาย<br>(Description)</th>
+                <th class="col-valid">ตรวจสอบความถูกต้อง<br>(Validation Check)</th>
+                <th class="col-key">ประเภทคีย์<br>(Key Type)</th>
+                <th class="col-default">ค่าเบื้องต้น<br>(Default)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>1</td><td>id</td><td>INT</td><td>-</td><td>รหัสรีเซ็ต</td><td>ไม่ซ้ำ, ไม่ว่าง</td><td>Primary Key</td><td>AUTO_INCREMENT</td></tr>
+            <tr><td>2</td><td>email</td><td>VARCHAR</td><td>100</td><td>อีเมล</td><td>-</td><td>-</td><td>-</td></tr>
+            <tr><td>3</td><td>token</td><td>VARCHAR</td><td>255</td><td>Token รีเซ็ต</td><td>ไม่ซ้ำ</td><td>Unique Key</td><td>-</td></tr>
+            <tr><td>4</td><td>company_id</td><td>INT</td><td>-</td><td>รหัสบริษัท</td><td>อ้างอิง companies.id</td><td>Foreign Key</td><td>-</td></tr>
+            <tr><td>5</td><td>is_used</td><td>TINYINT</td><td>1</td><td>ใช้แล้ว</td><td>0 หรือ 1</td><td>-</td><td>-</td></tr>
+            <tr><td>6</td><td>expires_at</td><td>DATETIME</td><td>-</td><td>วันที่หมดอายุ</td><td>-</td><td>-</td><td>-</td></tr>
+            <tr><td>7</td><td>ip_address</td><td>VARCHAR</td><td>45</td><td>IP Address</td><td>-</td><td>-</td><td>-</td></tr>
+            <tr><td>8</td><td>created_at</td><td>DATETIME</td><td>-</td><td>วันที่สร้าง</td><td>-</td><td>-</td><td>-</td></tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

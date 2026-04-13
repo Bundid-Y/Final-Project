@@ -1,0 +1,230 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36" version="29.6.6">
+  <diagram name="Use Case Diagram" id="UseCaseDiagram01">
+    <mxGraphModel dx="1422" dy="762" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!--
+          9 UCs × 58px + 8 gaps × 20px = 682px content
+          System box: x=200, y=30, w=720, h=780
+          Title ~45px → UC start y = 30+45+27 = 102
+          UCn y = 102 + (n-1)*78
+          UC center-x = 200+360 = 560  →  x = 560-110 = 450
+          Actor Admin: x=70,  y=405 (center at ~435)
+          Actor Agent: x=970, y=240 (center at ~270)
+          Actor User:  x=970, y=590 (center at ~620)
+        -->
+
+        <!-- SYSTEM BOUNDARY -->
+        <mxCell id="sys-box" parent="1" vertex="1"
+          style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fontSize=15;fontStyle=1;
+                 fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;
+                 fillColor=none;strokeColor=#000000;"
+          value="ระบบจัดการวัสดุ (MP Material System)">
+          <mxGeometry x="200" y="30" width="720" height="780" as="geometry" />
+        </mxCell>
+
+        <!-- USE CASES — all 220×58, gap=20, start y=102 -->
+
+        <!-- UC1: เข้าสู่ระบบ  y=102 -->
+        <mxCell id="uc1" parent="1" vertex="1"
+          style="ellipse;whiteSpace=wrap;html=1;fontSize=14;fontFamily=Sarabun;
+                 fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;
+                 fillColor=#ffffff;strokeColor=#000000;"
+          value="เข้าสู่ระบบ">
+          <mxGeometry x="450" y="102" width="220" height="58" as="geometry" />
+        </mxCell>
+
+        <!-- UC2: หน้าหลัก  y=180 -->
+        <mxCell id="uc2" parent="1" vertex="1"
+          style="ellipse;whiteSpace=wrap;html=1;fontSize=14;fontFamily=Sarabun;
+                 fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;
+                 fillColor=#ffffff;strokeColor=#000000;"
+          value="หน้าหลัก">
+          <mxGeometry x="450" y="180" width="220" height="58" as="geometry" />
+        </mxCell>
+
+        <!-- UC3: จัดการข้อมูลผู้ใช้งาน  y=258 -->
+        <mxCell id="uc3" parent="1" vertex="1"
+          style="ellipse;whiteSpace=wrap;html=1;fontSize=14;fontFamily=Sarabun;
+                 fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;
+                 fillColor=#ffffff;strokeColor=#000000;"
+          value="จัดการข้อมูลผู้ใช้งาน">
+          <mxGeometry x="450" y="258" width="220" height="58" as="geometry" />
+        </mxCell>
+
+        <!-- UC4: บันทึกรายการแจ้งปัญหา  y=336 -->
+        <mxCell id="uc4" parent="1" vertex="1"
+          style="ellipse;whiteSpace=wrap;html=1;fontSize=14;fontFamily=Sarabun;
+                 fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;
+                 fillColor=#ffffff;strokeColor=#000000;"
+          value="บันทึกรายการแจ้งปัญหา">
+          <mxGeometry x="450" y="336" width="220" height="58" as="geometry" />
+        </mxCell>
+
+        <!-- UC5: จัดการส่งงานให้ช่าง  y=414 -->
+        <mxCell id="uc5" parent="1" vertex="1"
+          style="ellipse;whiteSpace=wrap;html=1;fontSize=14;fontFamily=Sarabun;
+                 fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;
+                 fillColor=#ffffff;strokeColor=#000000;"
+          value="จัดการส่งงานให้ช่าง">
+          <mxGeometry x="450" y="414" width="220" height="58" as="geometry" />
+        </mxCell>
+
+        <!-- UC6: ดูประวัติการแก้ไขข้อมูล  y=492 -->
+        <mxCell id="uc6" parent="1" vertex="1"
+          style="ellipse;whiteSpace=wrap;html=1;fontSize=14;fontFamily=Sarabun;
+                 fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;
+                 fillColor=#ffffff;strokeColor=#000000;"
+          value="ดูประวัติการแก้ไขข้อมูล">
+          <mxGeometry x="450" y="492" width="220" height="58" as="geometry" />
+        </mxCell>
+
+        <!-- UC7: ดูสถานะรายการแจ้งปัญหา  y=570 -->
+        <mxCell id="uc7" parent="1" vertex="1"
+          style="ellipse;whiteSpace=wrap;html=1;fontSize=14;fontFamily=Sarabun;
+                 fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;
+                 fillColor=#ffffff;strokeColor=#000000;"
+          value="ดูสถานะรายการแจ้งปัญหา">
+          <mxGeometry x="450" y="570" width="220" height="58" as="geometry" />
+        </mxCell>
+
+        <!-- UC8: วิเคราะห์และออกรายงาน  y=648 -->
+        <mxCell id="uc8" parent="1" vertex="1"
+          style="ellipse;whiteSpace=wrap;html=1;fontSize=14;fontFamily=Sarabun;
+                 fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;
+                 fillColor=#ffffff;strokeColor=#000000;"
+          value="วิเคราะห์และออกรายงาน">
+          <mxGeometry x="450" y="648" width="220" height="58" as="geometry" />
+        </mxCell>
+
+        <!-- UC9: ออกจากระบบ  y=726 -->
+        <mxCell id="uc9" parent="1" vertex="1"
+          style="ellipse;whiteSpace=wrap;html=1;fontSize=14;fontFamily=Sarabun;
+                 fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;
+                 fillColor=#ffffff;strokeColor=#000000;"
+          value="ออกจากระบบ">
+          <mxGeometry x="450" y="726" width="220" height="58" as="geometry" />
+        </mxCell>
+
+        <!-- ACTORS -->
+        <!-- Admin (left) center y ≈ midpoint all UCs = (131+755)/2 = 443 → y=413 -->
+        <mxCell id="act-admin" parent="1" vertex="1"
+          style="shape=actor;whiteSpace=wrap;html=1;fontSize=15;fontStyle=1;
+                 fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;
+                 verticalLabelPosition=bottom;verticalAlign=top;"
+          value="Admin">
+          <mxGeometry x="70" y="413" width="40" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Agent (upper right) center y ≈ mid of UC1-7 = (131+599)/2=365 → y=335 -->
+        <mxCell id="act-agent" parent="1" vertex="1"
+          style="shape=actor;whiteSpace=wrap;html=1;fontSize=15;fontStyle=1;
+                 fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;
+                 verticalLabelPosition=bottom;verticalAlign=top;"
+          value="Agent">
+          <mxGeometry x="970" y="335" width="40" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- User (lower right) center y ≈ mid of UC1,2,4,7,9 = (131+755)/2=443 → y=590 -->
+        <mxCell id="act-user" parent="1" vertex="1"
+          style="shape=actor;whiteSpace=wrap;html=1;fontSize=15;fontStyle=1;
+                 fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;
+                 verticalLabelPosition=bottom;verticalAlign=top;"
+          value="User">
+          <mxGeometry x="970" y="560" width="40" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- === ASSOCIATIONS ===
+             Admin → UC1,2,3,6,7,8,9
+             Agent → UC1,2,4,5,6,7,9
+             User  → UC1,2,4,7,9
+        -->
+
+        <!-- Admin → UCs (exit right, entry left) -->
+        <mxCell id="e-a1" edge="1" parent="1" source="act-admin" target="uc1"
+          style="endArrow=none;edgeStyle=none;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-a2" edge="1" parent="1" source="act-admin" target="uc2"
+          style="endArrow=none;edgeStyle=none;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-a3" edge="1" parent="1" source="act-admin" target="uc3"
+          style="endArrow=none;edgeStyle=none;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-a6" edge="1" parent="1" source="act-admin" target="uc6"
+          style="endArrow=none;edgeStyle=none;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-a7" edge="1" parent="1" source="act-admin" target="uc7"
+          style="endArrow=none;edgeStyle=none;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-a8" edge="1" parent="1" source="act-admin" target="uc8"
+          style="endArrow=none;edgeStyle=none;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-a9" edge="1" parent="1" source="act-admin" target="uc9"
+          style="endArrow=none;edgeStyle=none;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Agent → UCs (exit left, entry right) -->
+        <mxCell id="e-ag1" edge="1" parent="1" source="act-agent" target="uc1"
+          style="endArrow=none;edgeStyle=none;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-ag2" edge="1" parent="1" source="act-agent" target="uc2"
+          style="endArrow=none;edgeStyle=none;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-ag4" edge="1" parent="1" source="act-agent" target="uc4"
+          style="endArrow=none;edgeStyle=none;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-ag5" edge="1" parent="1" source="act-agent" target="uc5"
+          style="endArrow=none;edgeStyle=none;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-ag6" edge="1" parent="1" source="act-agent" target="uc6"
+          style="endArrow=none;edgeStyle=none;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-ag7" edge="1" parent="1" source="act-agent" target="uc7"
+          style="endArrow=none;edgeStyle=none;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-ag9" edge="1" parent="1" source="act-agent" target="uc9"
+          style="endArrow=none;edgeStyle=none;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- User → UCs (exit left, entry right) -->
+        <mxCell id="e-u1" edge="1" parent="1" source="act-user" target="uc1"
+          style="endArrow=none;edgeStyle=none;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-u2" edge="1" parent="1" source="act-user" target="uc2"
+          style="endArrow=none;edgeStyle=none;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-u4" edge="1" parent="1" source="act-user" target="uc4"
+          style="endArrow=none;edgeStyle=none;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-u7" edge="1" parent="1" source="act-user" target="uc7"
+          style="endArrow=none;edgeStyle=none;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-u9" edge="1" parent="1" source="act-user" target="uc9"
+          style="endArrow=none;edgeStyle=none;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

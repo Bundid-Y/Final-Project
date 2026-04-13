@@ -41,7 +41,7 @@ function find_auth_from_company_sessions(): ?array
             $user = isset($_SESSION['auth_user']) && is_array($_SESSION['auth_user']) ? $_SESSION['auth_user'] : null;
             session_write_close();
 
-            if ($user !== null && in_array((string) ($user['role'] ?? ''), ['super_admin', 'admin', 'manager'], true)) {
+            if ($user !== null && in_array((string) ($user['role'] ?? ''), ['super_admin', 'admin'], true)) {
                 // Found admin auth, copy to admin session
                 session_name($currentName);
                 session_set_cookie_params([
@@ -82,7 +82,7 @@ function require_admin_user(): array
 {
     $user = require_authenticated_user();
 
-    if (!in_array((string) ($user['role'] ?? 'user'), ['super_admin', 'admin', 'manager'], true)) {
+    if (!in_array((string) ($user['role'] ?? 'user'), ['super_admin', 'admin'], true)) {
         redirect_to(user_page_by_company((string) ($user['company_code'] ?? 'KOCH')));
     }
 

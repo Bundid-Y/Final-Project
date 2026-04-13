@@ -9,7 +9,7 @@ if ($user === null) {
     redirect_to(project_url('koch/main/login.php'));
 }
 
-if (in_array((string) ($user['role'] ?? 'user'), ['super_admin', 'admin', 'manager'], true)) {
+if (in_array((string) ($user['role'] ?? 'user'), ['super_admin', 'admin'], true)) {
     redirect_to(project_url('admin/dashboard.php'));
 }
 

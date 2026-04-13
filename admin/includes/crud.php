@@ -417,7 +417,7 @@ function get_all_users_admin(PDO $pdo, ?int $companyId = null, ?string $role = n
 
 function update_user_role(PDO $pdo, int $userId, string $newRole, int $adminId): array
 {
-    $validRoles = ['super_admin', 'admin', 'manager', 'user'];
+    $validRoles = ['super_admin', 'admin', 'user'];
     if (!in_array($newRole, $validRoles, true)) {
         return ['success' => false, 'message' => 'Invalid role.'];
     }

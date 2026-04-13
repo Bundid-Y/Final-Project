@@ -85,9 +85,9 @@ function admin_action_label(string $a): string {
         'CONTACT_MESSAGE_SENT'=>'ส่งข้อความติดต่อ',
         'CONTACT_STATUS_CHANGED'=>'เปลี่ยนสถานะข้อความ',
         'CONTACT_DELETED'=>'ลบข้อความติดต่อ',
-        'SLIDER_CREATED'=>'สร้างสไลเดอร์',
-        'SLIDER_UPDATED'=>'แก้ไขสไลเดอร์',
-        'SLIDER_DELETED'=>'ลบสไลเดอร์',
+        'SLIDER_CREATED'=>'สร้างสไลด์',
+        'SLIDER_UPDATED'=>'แก้ไขสไลด์',
+        'SLIDER_DELETED'=>'ลบสไลด์',
         'PARTNER_CREATED'=>'เพิ่มพันธมิตร',
         'PARTNER_UPDATED'=>'แก้ไขพันธมิตร',
         'PARTNER_DELETED'=>'ลบพันธมิตร',
@@ -114,7 +114,7 @@ function admin_action_label(string $a): string {
     return $m[$a] ?? $a;
 }
 
-$sectionTitles = ['overview'=>'ภาพรวม','users'=>'จัดการผู้ใช้','koch_quotations'=>'ใบเสนอราคา KOCH','tnb_quotations'=>'คำขอบริการ TNB','notifications'=>'การแจ้งเตือน','activity'=>'ประวัติการใช้งาน','settings'=>'ตั้งค่าระบบ','sliders'=>'จัดการสไลเดอร์','partners'=>'จัดการพันธมิตร','products'=>'จัดการสินค้า','featured_products'=>'สินค้าแนะนำ','truck_cards'=>'การ์ดประเภทรถ','email_templates'=>'ตั้งค่าอีเมลแจ้งเตือน','export_data'=>'ส่งออกข้อมูล'];
+$sectionTitles = ['overview'=>'ภาพรวม','users'=>'จัดการผู้ใช้','koch_quotations'=>'ใบเสนอราคา KOCH','tnb_quotations'=>'คำขอบริการ TNB','notifications'=>'การแจ้งเตือน','activity'=>'ประวัติการใช้งาน','settings'=>'ตั้งค่าระบบ','sliders'=>'จัดการสไลด์','partners'=>'จัดการพันธมิตร','products'=>'จัดการสินค้า','featured_products'=>'สินค้าแนะนำ','truck_cards'=>'การ์ดประเภทรถ','email_templates'=>'ตั้งค่าอีเมลแจ้งเตือน','export_data'=>'ส่งออกข้อมูล'];
 ?>
 <!DOCTYPE html>
 <html lang="th">
@@ -272,7 +272,7 @@ textarea.fm-input{resize:vertical;min-height:80px}
 .act-btns{display:flex;gap:4px}
 
 /* ===== ROLE BADGE ===== */
-.role-super_admin{background:#fef3c7;color:#92400e}.role-admin{background:#dbeafe;color:#1e40af}.role-manager{background:#e0e7ff;color:#3730a3}.role-user{background:#f1f5f9;color:#475569}
+.role-super_admin{background:#fef3c7;color:#92400e}.role-admin{background:#dbeafe;color:#1e40af}.role-user{background:#f1f5f9;color:#475569}
 
 /* ===== PERM TABLE ===== */
 .perm-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:12px}
@@ -318,7 +318,7 @@ textarea.fm-input{resize:vertical;min-height:80px}
         <div class="divider"></div>
         <?php if ($companyMode !== 'all'): ?>
         <div class="label">เนื้อหา</div>
-        <a href="?section=sliders" class="<?php echo $section==='sliders'?'active':'';?>"><i class="fas fa-images"></i> สไลเดอร์</a>
+        <a href="?section=sliders" class="<?php echo $section==='sliders'?'active':'';?>"><i class="fas fa-images"></i> สไลด์</a>
         <a href="?section=partners" class="<?php echo $section==='partners'?'active':'';?>"><i class="fas fa-handshake"></i> พันธมิตร</a>
         <?php if ($companyMode === 'koch'): ?>
         <a href="?section=products" class="<?php echo $section==='products'?'active':'';?>"><i class="fas fa-boxes-stacked"></i> สินค้า</a>
@@ -616,16 +616,16 @@ textarea.fm-input{resize:vertical;min-height:80px}
     <div class="card-h"><h2><i class="fas fa-shield-alt"></i> ตารางสิทธิ์ตามบทบาท</h2></div>
     <div class="card-b" style="padding:12px 20px">
         <table class="perm-table">
-            <thead><tr><th>สิทธิ์การใช้งาน</th><th>Super Admin</th><th>Admin</th><th>Manager</th><th>User</th></tr></thead>
+            <thead><tr><th>สิทธิ์การใช้งาน</th><th>Super Admin</th><th>Admin</th><th>User</th></tr></thead>
             <tbody>
-                <tr><td>ดูข้อมูลทุกบริษัท</td><td class="perm-yes"><i class="fas fa-check"></i> ได้</td><td class="perm-no"><i class="fas fa-times"></i> เฉพาะบริษัทตัวเอง</td><td class="perm-no"><i class="fas fa-times"></i> เฉพาะทีม</td><td class="perm-no"><i class="fas fa-times"></i> เฉพาะของตัวเอง</td></tr>
-                <tr><td>จัดการผู้ใช้</td><td class="perm-yes"><i class="fas fa-check"></i> ทั้งหมด</td><td class="perm-yes"><i class="fas fa-check"></i> บริษัทตัวเอง</td><td class="perm-no"><i class="fas fa-times"></i> เฉพาะทีม</td><td class="perm-no"><i class="fas fa-times"></i> ไม่ได้</td></tr>
-                <tr><td>เปลี่ยนบทบาทผู้ใช้</td><td class="perm-yes"><i class="fas fa-check"></i> ทุกบทบาท</td><td class="perm-yes"><i class="fas fa-check"></i> Manager/User</td><td class="perm-no"><i class="fas fa-times"></i> ไม่ได้</td><td class="perm-no"><i class="fas fa-times"></i> ไม่ได้</td></tr>
-                <tr><td>จัดการเนื้อหา (CRUD)</td><td class="perm-yes"><i class="fas fa-check"></i> ทั้งหมด</td><td class="perm-yes"><i class="fas fa-check"></i> บริษัทตัวเอง</td><td class="perm-yes"><i class="fas fa-check"></i> ดูได้อย่างเดียว</td><td class="perm-no"><i class="fas fa-times"></i> ไม่ได้</td></tr>
-                <tr><td>ดูใบเสนอราคา</td><td class="perm-yes"><i class="fas fa-check"></i> ทั้งหมด</td><td class="perm-yes"><i class="fas fa-check"></i> บริษัทตัวเอง</td><td class="perm-yes"><i class="fas fa-check"></i> ทีมตัวเอง</td><td class="perm-yes"><i class="fas fa-check"></i> เฉพาะของตัวเอง</td></tr>
-                <tr><td>ประวัติการใช้งาน</td><td class="perm-yes"><i class="fas fa-check"></i> ทั้งหมด</td><td class="perm-yes"><i class="fas fa-check"></i> บริษัทตัวเอง</td><td class="perm-no"><i class="fas fa-times"></i> ไม่ได้</td><td class="perm-no"><i class="fas fa-times"></i> ไม่ได้</td></tr>
-                <tr><td>ตั้งค่าระบบ</td><td class="perm-yes"><i class="fas fa-check"></i> เต็มที่</td><td class="perm-no"><i class="fas fa-times"></i> ดูได้อย่างเดียว</td><td class="perm-no"><i class="fas fa-times"></i> ไม่ได้</td><td class="perm-no"><i class="fas fa-times"></i> ไม่ได้</td></tr>
-                <tr><td>ตั้งค่าอีเมล</td><td class="perm-yes"><i class="fas fa-check"></i> เต็มที่</td><td class="perm-yes"><i class="fas fa-check"></i> บริษัทตัวเอง</td><td class="perm-no"><i class="fas fa-times"></i> ไม่ได้</td><td class="perm-no"><i class="fas fa-times"></i> ไม่ได้</td></tr>
+                <tr><td>ดูข้อมูลทุกบริษัท</td><td class="perm-yes"><i class="fas fa-check"></i> ได้</td><td class="perm-no"><i class="fas fa-times"></i> เฉพาะบริษัทตัวเอง</td><td class="perm-no"><i class="fas fa-times"></i> เฉพาะของตัวเอง</td></tr>
+                <tr><td>จัดการผู้ใช้</td><td class="perm-yes"><i class="fas fa-check"></i> ทั้งหมด</td><td class="perm-yes"><i class="fas fa-check"></i> บริษัทตัวเอง</td><td class="perm-no"><i class="fas fa-times"></i> ไม่ได้</td></tr>
+                <tr><td>เปลี่ยนบทบาทผู้ใช้</td><td class="perm-yes"><i class="fas fa-check"></i> ทุกบทบาท</td><td class="perm-yes"><i class="fas fa-check"></i> User</td><td class="perm-no"><i class="fas fa-times"></i> ไม่ได้</td></tr>
+                <tr><td>จัดการเนื้อหา (CRUD)</td><td class="perm-yes"><i class="fas fa-check"></i> ทั้งหมด</td><td class="perm-yes"><i class="fas fa-check"></i> บริษัทตัวเอง</td><td class="perm-no"><i class="fas fa-times"></i> ไม่ได้</td></tr>
+                <tr><td>ดูใบเสนอราคา</td><td class="perm-yes"><i class="fas fa-check"></i> ทั้งหมด</td><td class="perm-yes"><i class="fas fa-check"></i> บริษัทตัวเอง</td><td class="perm-yes"><i class="fas fa-check"></i> เฉพาะของตัวเอง</td></tr>
+                <tr><td>ประวัติการใช้งาน</td><td class="perm-yes"><i class="fas fa-check"></i> ทั้งหมด</td><td class="perm-yes"><i class="fas fa-check"></i> บริษัทตัวเอง</td><td class="perm-no"><i class="fas fa-times"></i> ไม่ได้</td></tr>
+                <tr><td>ตั้งค่าระบบ</td><td class="perm-yes"><i class="fas fa-check"></i> เต็มที่</td><td class="perm-no"><i class="fas fa-times"></i> ดูได้อย่างเดียว</td><td class="perm-no"><i class="fas fa-times"></i> ไม่ได้</td></tr>
+                <tr><td>ตั้งค่าอีเมล</td><td class="perm-yes"><i class="fas fa-check"></i> เต็มที่</td><td class="perm-yes"><i class="fas fa-check"></i> บริษัทตัวเอง</td><td class="perm-no"><i class="fas fa-times"></i> ไม่ได้</td></tr>
             </tbody>
         </table>
     </div>
@@ -839,9 +839,9 @@ $distinctActions = get_distinct_actions($pdo);
 <!-- =================== SLIDERS =================== -->
 <?php $allSliders = get_all_sliders($pdo, $filterCompanyId); ?>
 <div class="card">
-    <div class="card-h"><h2><i class="fas fa-images"></i> เนื้อหาสไลเดอร์</h2><div style="display:flex;gap:8px;align-items:center"><span style="font-size:12px;color:var(--muted)"><?php echo count($allSliders);?> รายการ</span><button class="btn btn-sm btn-primary" onclick="openModal('sliderModal')"><i class="fas fa-plus"></i> เพิ่มสไลเดอร์</button></div></div>
+    <div class="card-h"><h2><i class="fas fa-images"></i> เนื้อหาสไลด์</h2><div style="display:flex;gap:8px;align-items:center"><span style="font-size:12px;color:var(--muted)"><?php echo count($allSliders);?> รายการ</span><button class="btn btn-sm btn-primary" onclick="openModal('sliderModal')"><i class="fas fa-plus"></i> เพิ่มสไลด์</button></div></div>
     <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>รูปภาพ</th><th>หัวข้อ</th><th>คำอธิบาย</th><th>บริษัท</th><th>สถานะ</th><th>จัดการ</th></tr></thead><tbody>
-    <?php if($allSliders===[]):?><tr class="empty"><td colspan="6">ไม่พบสไลเดอร์</td></tr>
+    <?php if($allSliders===[]):?><tr class="empty"><td colspan="6">ไม่พบสไลด์</td></tr>
     <?php else: foreach($allSliders as $s):?><tr>
         <td><?php if($s['image_url']):?><img src="<?php echo h(resolve_image_url((string)$s['image_url']));?>" style="width:60px;height:35px;object-fit:cover;border-radius:6px" alt=""><?php else:?><span style="color:var(--muted);font-size:11px">ไม่มีรูปภาพ</span><?php endif;?></td>
         <td style="font-size:12px;font-weight:600"><?php echo h((string)$s['title']);?></td>
@@ -1283,7 +1283,7 @@ $expFilters = [
         <div class="modal-body">
             <div class="fm-group"><label>Username</label><input type="text" class="fm-input" id="um_name" disabled></div>
             <div class="fm-row">
-                <div class="fm-group"><label>Role<span>*</span></label><select name="role" id="um_role" class="fm-input" required><option value="user">User</option><option value="manager">Manager</option><option value="admin">Admin</option><option value="super_admin">Super Admin</option></select></div>
+                <div class="fm-group"><label>Role<span>*</span></label><select name="role" id="um_role" class="fm-input" required><option value="user">User</option><option value="admin">Admin</option><option value="super_admin">Super Admin</option></select></div>
                 <div class="fm-group"><label>Status<span>*</span></label><select name="status" id="um_status" class="fm-input" required><option value="active">Active</option><option value="inactive">Inactive</option><option value="suspended">Suspended</option></select></div>
             </div>
             <div style="background:var(--bg);border-radius:10px;padding:14px;margin-top:8px">
@@ -1291,7 +1291,6 @@ $expFilters = [
                 <div style="font-size:12px;line-height:1.7;color:var(--text)">
                     <div><strong style="color:#92400e">Super Admin</strong> — เข้าถึงการจัดการบริษัท ผู้ใช้ การตั้งค่า และระบบทั้งหมดได้อย่างเต็บรูปแบบ</div>
                     <div><strong style="color:#1e40af">Admin</strong> — จัดการผู้ใช้ ข้อมูล ใบเสนอราคา และอีเมลเฉพาะบริษัทตนเอง</div>
-                    <div><strong style="color:#3730a3">Manager</strong> — ดูข้อมูลของทีมตนเองได้ จัดการเนื้อหาได้บางส่วน</div>
                     <div><strong style="color:#475569">User</strong> — ดูข้อมูลของตนเองเท่านั้น และเสนอราคา/ขอบริการ</div>
                 </div>
             </div>
@@ -1307,7 +1306,7 @@ $expFilters = [
 <!-- Slider Modal -->
 <div class="modal-overlay" id="sliderModal" onclick="if(event.target===this)closeModal('sliderModal')">
 <div class="modal">
-    <div class="modal-head"><h3><i class="fas fa-images"></i> <span id="sm_title">เพิ่มสไลเดอร์</span></h3><button class="modal-close" onclick="closeModal('sliderModal')">&times;</button></div>
+    <div class="modal-head"><h3><i class="fas fa-images"></i> <span id="sm_title">เพิ่มสไลด์</span></h3><button class="modal-close" onclick="closeModal('sliderModal')">&times;</button></div>
     <form method="POST" action="<?php echo h($crudUrl);?>" enctype="multipart/form-data">
         <input type="hidden" name="_csrf" value="<?php echo h($csrfToken);?>"><input type="hidden" name="company_mode" value="<?php echo h($companyMode);?>">
         <input type="hidden" name="entity" value="slider">
@@ -1569,7 +1568,7 @@ function loadFilterFields(type) {
                     <input type="hidden" name="filter_mode" value="filter">
                     <div><label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">Date From</label><input type="date" name="date_from" value="<?php echo h($expFilters['users']['date_from']);?>" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:inherit"></div>
                     <div><label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">Date To</label><input type="date" name="date_to" value="<?php echo h($expFilters['users']['date_to']);?>" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:inherit"></div>
-                    <div><label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">Role</label><select name="filter_role" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:inherit"><option value="">All Roles</option><option value="super_admin">Super Admin</option><option value="admin">Admin</option><option value="manager">Manager</option><option value="user">User</option></select></div>
+                    <div><label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">Role</label><select name="filter_role" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:inherit"><option value="">All Roles</option><option value="super_admin">Super Admin</option><option value="admin">Admin</option><option value="user">User</option></select></div>
                     <div><label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">Status</label><select name="filter_status" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:inherit"><option value="">All Status</option><option value="active">Active</option><option value="inactive">Inactive</option><option value="suspended">Suspended</option></select></div>
                 </form>
             `;

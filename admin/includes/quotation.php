@@ -39,7 +39,7 @@ function generate_document_number(PDO $pdo, string $table, string $column, strin
 function get_company_staff_users(PDO $pdo, int $companyId): array
 {
     $stmt = $pdo->prepare(
-        "SELECT id FROM users WHERE (company_id = :company_id OR role = 'super_admin') AND role IN ('super_admin', 'admin', 'manager') AND status = 'active'"
+        "SELECT id FROM users WHERE (company_id = :company_id OR role = 'super_admin') AND role IN ('super_admin', 'admin') AND status = 'active'"
     );
     $stmt->execute([':company_id' => $companyId]);
 
