@@ -29,11 +29,16 @@ if (!$result['success']) {
 set_flash('success_message', $result['message']);
 clear_old_input();
 
+// Check for pending redirect (e.g. from quotation page requiring login)
+$pendingRedirect = $_SESSION['redirect_after_login'] ?? null;
+unset($_SESSION['redirect_after_login']);
+$finalRedirect = $pendingRedirect ?: $result['redirect'];
+
 if (request_expects_json()) {
     json_response(true, $result['message'], [
-        'redirect' => $result['redirect'],
+        'redirect' => $finalRedirect,
         'user' => $result['user'],
     ]);
 }
 
-redirect_to($result['redirect']);
+redirect_to($finalRedirect);

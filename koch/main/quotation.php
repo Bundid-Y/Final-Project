@@ -3,15 +3,18 @@ require_once __DIR__ . '/../../admin/includes/bootstrap.php';
 
 $loggedInUser = authenticated_user();
 
-// Validate company if user is logged in (allow admins)
-if ($loggedInUser !== null) {
-    $userCompany = strtoupper((string) ($loggedInUser['company_code'] ?? ''));
-    $isAdmin = in_array((string) ($loggedInUser['role'] ?? 'user'), ['super_admin', 'admin', 'manager'], true);
-    
-    if ($userCompany !== 'KOCH' && !$isAdmin) {
-        // Redirect to correct company quotation page
-        redirect_to(project_url(company_slug_from_code($userCompany) . '/main/quotation.php'));
-    }
+// Must be logged in to access quotation page
+if ($loggedInUser === null) {
+    $_SESSION['redirect_after_login'] = project_url('koch/main/quotation.php');
+    redirect_to(project_url('koch/main/login.php'));
+}
+
+// Validate company (allow admins)
+$userCompany = strtoupper((string) ($loggedInUser['company_code'] ?? ''));
+$isAdmin = in_array((string) ($loggedInUser['role'] ?? 'user'), ['super_admin', 'admin'], true);
+
+if ($userCompany !== 'KOCH' && !$isAdmin) {
+    redirect_to(project_url(company_slug_from_code($userCompany) . '/main/quotation.php'));
 }
 
 $successMessage = flash('success_message');
