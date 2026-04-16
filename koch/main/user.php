@@ -9,7 +9,7 @@ if ($currentUser === null) {
 
 // Strict company validation - KOCH users ONLY (except admins)
 $userCompany = strtoupper((string) ($currentUser['company_code'] ?? ''));
-$isAdmin = in_array((string) ($currentUser['role'] ?? 'user'), ['super_admin', 'admin', 'manager'], true);
+$isAdmin = in_array((string) ($currentUser['role'] ?? 'user'), ['super_admin', 'admin'], true);
 
 if ($userCompany !== 'KOCH' && !$isAdmin) {
     // Not a KOCH user and not admin - redirect to correct company page
@@ -73,7 +73,7 @@ if ($prevSeen === -1) {
 
 $fullName = trim(($profile['first_name'] ?? '') . ' ' . ($profile['last_name'] ?? ''));
 $avatarUrl = !empty($profile['avatar_url']) ? h((string) $profile['avatar_url']) : '../img/company_logo/logo 2.png';
-$isAdmin = in_array((string) ($currentUser['role'] ?? 'user'), ['super_admin', 'admin', 'manager'], true);
+$isAdmin = in_array((string) ($currentUser['role'] ?? 'user'), ['super_admin', 'admin'], true);
 
 function koch_status_badge(string $status): string {
     $map = [

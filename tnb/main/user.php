@@ -9,7 +9,7 @@ if ($currentUser === null) {
 
 // Strict company validation - TNB users ONLY (except admins)
 $userCompany = strtoupper((string) ($currentUser['company_code'] ?? ''));
-$isAdmin = in_array((string) ($currentUser['role'] ?? 'user'), ['super_admin', 'admin', 'manager'], true);
+$isAdmin = in_array((string) ($currentUser['role'] ?? 'user'), ['super_admin', 'admin'], true);
 
 if ($userCompany !== 'TNB' && !$isAdmin) {
     // Not a TNB user and not admin - redirect to correct company page
@@ -65,7 +65,7 @@ if ($prevSeen === -1) {
 }
 $fullName = trim(($profile['first_name'] ?? '') . ' ' . ($profile['last_name'] ?? ''));
 $avatarUrl = !empty($profile['avatar_url']) ? h((string) $profile['avatar_url']) : '../img/company_logo/tnb_logo.webp';
-$isAdmin = in_array((string) ($currentUser['role'] ?? 'user'), ['super_admin', 'admin', 'manager'], true);
+$isAdmin = in_array((string) ($currentUser['role'] ?? 'user'), ['super_admin', 'admin'], true);
 
 function tnb_status_badge(string $status): string {
     $m = ['pending'=>['#fff3e0','#e65100','รอดำเนินการ'],'processing'=>['#e3f2fd','#1565c0','กำลังดำเนินการ'],'quoted'=>['#f3e5f5','#7b1fa2','เสนอราคาแล้ว'],'approved'=>['#e8f5e9','#2e7d32','อนุมัติแล้ว'],'in_transit'=>['#e0f7fa','#00838f','กำลังขนส่ง'],'delivered'=>['#e8f5e9','#1b5e20','ส่งถึงแล้ว'],'completed'=>['#e0f2f1','#00695c','เสร็จสิ้น'],'rejected'=>['#fbe9e7','#bf360c','ปฏิเสธ'],'cancelled'=>['#efebe9','#4e342e','ยกเลิก']];
