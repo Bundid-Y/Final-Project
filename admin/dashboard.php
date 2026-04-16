@@ -369,12 +369,6 @@ textarea.fm-input{resize:vertical;min-height:80px}
             </div>
         </div>
         <div class="topbar-right">
-            <?php if ($companyMode !== 'tnb'): ?>
-            <a href="<?php echo h(project_url('koch/main/quotation.php'));?>" class="tb-btn ghost"><i class="fas fa-plus"></i> ขอใบเสนอราคา KOCH</a>
-            <?php endif; ?>
-            <?php if ($companyMode !== 'koch'): ?>
-            <a href="<?php echo h(project_url('tnb/main/quotation.php'));?>" class="tb-btn ghost"><i class="fas fa-plus"></i> ขอบริการ TNB</a>
-            <?php endif; ?>
         </div>
     </div>
 
