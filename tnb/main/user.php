@@ -247,7 +247,7 @@ body{font-family:'Inter','Sarabun',-apple-system,BlinkMacSystemFont,sans-serif;b
 <div class="user-main">
     <div class="topbar">
         <div><button class="mob-tog" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><h1><?php echo $titles[$section]??'แดชบอร์ด';?></h1><div class="bc">TNB Logistics &rsaquo; <?php echo $titles[$section]??'แดชบอร์ด';?></div></div>
-        <div></div>
+        <div><?php if ($section === 'quotations'): ?><a href="<?php echo h(project_url('tnb/main/quotation.php')); ?>" class="topbar-btn"><i class="fas fa-plus"></i> ขอใบเสนอราคา</a><?php endif; ?></div>
     </div>
     <div class="mc">
         <?php if($successMessage):?><div class="ta ok" id="flashAlert"><i class="fas fa-check-circle"></i> <?php echo h((string)$successMessage);?></div><?php endif;?>

@@ -583,6 +583,9 @@ function koch_action_label(string $action): string {
                 <div class="breadcrumb">KOCH Packaging &rsaquo; <?php echo $titles[$section] ?? 'แดชบอร์ด'; ?></div>
             </div>
             <div class="topbar-right">
+                <?php if ($section === 'quotations'): ?>
+                    <a href="<?php echo h(project_url('koch/main/quotation.php')); ?>" class="topbar-btn primary"><i class="fas fa-plus"></i> ขอใบเสนอราคา</a>
+                <?php endif; ?>
             </div>
         </div>
 
