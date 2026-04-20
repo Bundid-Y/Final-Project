@@ -859,7 +859,7 @@ function koch_action_label(string $action): string {
                             </thead>
                             <tbody>
                             <?php
-                            $activeQuotations = array_filter($quotations, fn($q) => in_array((string)$q['status'], ['processing', 'quoted', 'approved']));
+                            $activeQuotations = array_filter($quotations, fn($q) => in_array((string)$q['status'], ['pending', 'processing', 'quoted', 'approved']));
                             if ($activeQuotations === []): ?>
                                 <tr class="empty-row"><td colspan="5">ไม่มีงานที่กำลังดำเนินการ</td></tr>
                             <?php else: ?>

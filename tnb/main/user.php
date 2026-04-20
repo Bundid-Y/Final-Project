@@ -315,7 +315,7 @@ body{font-family:'Inter','Sarabun',-apple-system,BlinkMacSystemFont,sans-serif;b
 
 <?php elseif($section==='tracking'): ?>
 <div class="tc"><div class="tc-h"><h2><i class="fas fa-shipping-fast"></i> ติดตามสถานะการขนส่ง</h2></div><div class="tc-b" style="padding:0"><div class="tw"><table class="tt"><thead><tr><th>เลขที่</th><th>ประเภท</th><th>เส้นทาง</th><th>Tracking</th><th>สถานะ</th><th>ขั้นตอน</th></tr></thead><tbody>
-<?php $active=array_filter($quotations,fn($q)=>in_array((string)$q['status'],['processing','quoted','approved','in_transit']));
+<?php $active=array_filter($quotations,fn($q)=>in_array((string)$q['status'],['pending','processing','quoted','approved','in_transit']));
 if($active===[]):?><tr class="empty"><td colspan="6">ไม่มีงานขนส่งที่กำลังดำเนินการ</td></tr>
 <?php else: foreach($active as $q):?><tr><td style="font-weight:600"><?php echo h((string)$q['request_number']);?></td><td><?php echo h((string)$q['service_type']);?></td><td><?php echo h((string)($q['route']??'-'));?></td><td style="font-size:13px"><?php echo h((string)($q['tracking_number']??'-'));?></td><td><?php echo tnb_status_badge((string)$q['status']);?></td><td>
 <?php $steps=['pending'=>1,'processing'=>2,'quoted'=>3,'approved'=>4,'in_transit'=>5,'delivered'=>6,'completed'=>7];$c=$steps[$q['status']]??1;$t=7;$p=($c/$t)*100;?>
