@@ -362,21 +362,16 @@ if($truckTypes===[]): ?>
 </div></div>
 
 <?php elseif($section==='sessions'): ?>
-<div class="tc"><div class="tc-h"><h2><i class="fas fa-shield-alt"></i> ประวัติการเข้าสู่ระบบ</h2></div><div class="tc-b">
+<div class="tc"><div class="tc-h"><h2><i class="fas fa-shield-alt"></i> ประวัติการเข้าใช้ระบบ</h2></div><div class="tc-b">
 <?php if($sessions===[]):?><p style="text-align:center;color:var(--txm);padding:32px 0">ไม่มีข้อมูลเซสชั่น</p>
-<?php else: foreach($sessions as $s):
-$isA=(int)$s['is_active']===1&&strtotime((string)$s['expires_at'])>time();
-$isC=isset($currentUser['session_token'])&&$s['session_token']===$currentUser['session_token'];
-$ua=(string)$s['user_agent'];
-$br='Unknown';if(str_contains($ua,'Chrome'))$br='Chrome';elseif(str_contains($ua,'Firefox'))$br='Firefox';elseif(str_contains($ua,'Safari'))$br='Safari';elseif(str_contains($ua,'Edge'))$br='Edge';
-$os='Unknown';if(str_contains($ua,'Windows'))$os='Windows';elseif(str_contains($ua,'Mac'))$os='macOS';elseif(str_contains($ua,'Linux'))$os='Linux';elseif(str_contains($ua,'Android'))$os='Android';elseif(str_contains($ua,'iPhone')||str_contains($ua,'iPad'))$os='iOS';
-?>
-<div class="sei"><div class="sec <?php echo $isA?'a':'i';?>"><i class="fas fa-laptop"></i></div><div class="seinf"><h4><?php echo h($br.' on '.$os);?> <?php echo $isC?'<span style="color:var(--ta);font-size:11px">(เซสชั่นปัจจุบัน)</span>':'';?></h4><p>IP: <?php echo h((string)$s['ip_address']);?> &middot; <?php echo h(date('d/m/Y H:i',strtotime((string)$s['created_at'])));?></p></div><span class="sest <?php echo $isA?'a':'e';?>"><?php echo $isA?'Active':'Expired';?></span></div>
-<?php endforeach; endif;?>
+<?php else: foreach($sessions as $s): ?><?php
+$isActive=(int)$s['is_active']===1&&strtotime((string)$s['expires_at'])>time();
+$isCurrent=isset($currentUser['session_token'])&&$s['session_token']===$currentUser['session_token'];
+?><div class="sei"><div class="seinf"><h4><?php echo h(date('d/m/Y H:i',strtotime((string)$s['created_at']))); ?> <?php echo $isCurrent?'<span style="color:var(--ta);font-size:11px">(เซสชั่นปัจจุบัน)</span>':''; ?></h4></div><span class="sest <?php echo $isActive?'a':'e'; ?>"><?php echo $isActive?'Active':'Expired'; ?></span></div><?php endforeach; endif;?>
 </div></div>
-<div class="tc"><div class="tc-h"><h2><i class="fas fa-history"></i> ประวัติกิจกรรมทั้งหมด</h2></div><div class="tc-b" style="padding:0"><div class="tw"><table class="tt"><thead><tr><th>วันที่</th><th>กิจกรรม</th><th>ตาราง</th><th>รหัส</th></tr></thead><tbody>
-<?php if($activities===[]):?><tr class="empty"><td colspan="4">ยังไม่มีกิจกรรม</td></tr>
-<?php else: foreach($activities as $a):?><tr><td style="white-space:nowrap;font-size:13px"><?php echo h(date('d/m/Y H:i',strtotime((string)$a['created_at'])));?></td><td><?php echo h(tnb_action_label((string)$a['action']));?></td><td style="font-size:13px;color:var(--txm)"><?php echo h((string)($a['table_name']??'-'));?></td><td style="font-size:13px"><?php echo h((string)($a['record_id']??'-'));?></td></tr><?php endforeach; endif;?>
+<div class="tc"><div class="tc-h"><h2><i class="fas fa-history"></i> ประวัติกิจกรรมทั้งหมด</h2></div><div class="tc-b" style="padding:0"><div class="tw"><table class="tt"><thead><tr><th>วันที่</th><th>กิจกรรม</th><th>ตาราง</th></tr></thead><tbody>
+<?php if($activities===[]):?><tr class="empty"><td colspan="3">ยังไม่มีกิจกรรม</td></tr>
+<?php else: foreach($activities as $a):?><tr><td style="white-space:nowrap;font-size:13px"><?php echo h(date('d/m/Y H:i',strtotime((string)$a['created_at'])));?></td><td><?php echo h(tnb_action_label((string)$a['action']));?></td><td style="font-size:13px;color:var(--txm)"><?php echo h((string)($a['table_name']??'-'));?></td></tr><?php endforeach; endif;?>
 </tbody></table></div></div></div>
 
 <?php elseif($section==='settings'): ?>

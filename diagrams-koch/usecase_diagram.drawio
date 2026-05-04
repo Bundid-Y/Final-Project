@@ -1,0 +1,259 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36" version="29.6.6">
+  <diagram name="KOCH Use Case Diagram" id="koch-usecase">
+    <mxGraphModel dx="1422" dy="762" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1300" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!--
+          10 UCs × 58px + 9 gaps × 20px = 742px content
+          System box: x=200, y=30, w=780, h=820
+          Title ~45px → UC start y = 30+45+27 = 102
+          UCn y = 102 + (n-1)*78
+          UC center-x = 200+390 = 590  →  x = 590-110 = 480
+          Actor Super Admin: x=50, y=260
+          Actor Admin KOCH:  x=50, y=520
+          Generalization: Super Admin ──▷ Admin KOCH
+          Actor KOCH User:   x=1070, y=452
+        -->
+
+        <!-- SYSTEM BOUNDARY -->
+        <mxCell id="sys-box" parent="1" vertex="1"
+          style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fontSize=15;fontStyle=1;
+                 fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;
+                 fillColor=none;strokeColor=#000000;"
+          value="ระบบจัดการ KOCH (KOCH Management System)">
+          <mxGeometry x="230" y="30" width="780" height="820" as="geometry" />
+        </mxCell>
+
+        <!-- USE CASES — all 220×58, gap=20, start y=102 -->
+
+        <!-- UC1: เข้าสู่ระบบ  y=102 -->
+        <mxCell id="uc1" parent="1" vertex="1"
+          style="ellipse;whiteSpace=wrap;html=1;fontSize=14;fontFamily=Sarabun;
+                 fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;
+                 fillColor=#ffffff;strokeColor=#b85450;"
+          value="เข้าสู่ระบบ">
+          <mxGeometry x="510" y="102" width="220" height="58" as="geometry" />
+        </mxCell>
+
+        <!-- UC2: หน้าหลัก  y=180 -->
+        <mxCell id="uc2" parent="1" vertex="1"
+          style="ellipse;whiteSpace=wrap;html=1;fontSize=14;fontFamily=Sarabun;
+                 fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;
+                 fillColor=#ffffff;strokeColor=#b85450;"
+          value="หน้าหลัก KOCH">
+          <mxGeometry x="510" y="180" width="220" height="58" as="geometry" />
+        </mxCell>
+
+        <!-- UC3: จัดการผู้ใช้งาน  y=258 -->
+        <mxCell id="uc3" parent="1" vertex="1"
+          style="ellipse;whiteSpace=wrap;html=1;fontSize=14;fontFamily=Sarabun;
+                 fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;
+                 fillColor=#ffffff;strokeColor=#b85450;"
+          value="จัดการผู้ใช้งาน">
+          <mxGeometry x="510" y="258" width="220" height="58" as="geometry" />
+        </mxCell>
+
+        <!-- UC4: จัดการเนื้อหา  y=336 -->
+        <mxCell id="uc4" parent="1" vertex="1"
+          style="ellipse;whiteSpace=wrap;html=1;fontSize=14;fontFamily=Sarabun;
+                 fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;
+                 fillColor=#ffffff;strokeColor=#b85450;"
+          value="จัดการเนื้อหา (สไลเดอร์/พันธมิตร/สินค้า)">
+          <mxGeometry x="510" y="336" width="220" height="58" as="geometry" />
+        </mxCell>
+
+        <!-- UC5: จัดการใบเสนอราคา  y=414 -->
+        <mxCell id="uc5" parent="1" vertex="1"
+          style="ellipse;whiteSpace=wrap;html=1;fontSize=14;fontFamily=Sarabun;
+                 fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;
+                 fillColor=#ffffff;strokeColor=#b85450;"
+          value="จัดการใบเสนอราคา KOCH">
+          <mxGeometry x="510" y="414" width="220" height="58" as="geometry" />
+        </mxCell>
+
+        <!-- UC6: ส่งใบเสนอราคา  y=492 -->
+        <mxCell id="uc6" parent="1" vertex="1"
+          style="ellipse;whiteSpace=wrap;html=1;fontSize=14;fontFamily=Sarabun;
+                 fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;
+                 fillColor=#ffffff;strokeColor=#b85450;"
+          value="ส่งใบเสนอราคา">
+          <mxGeometry x="510" y="492" width="220" height="58" as="geometry" />
+        </mxCell>
+
+        <!-- UC7: ดูการแจ้งเตือน  y=570 -->
+        <mxCell id="uc7" parent="1" vertex="1"
+          style="ellipse;whiteSpace=wrap;html=1;fontSize=14;fontFamily=Sarabun;
+                 fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;
+                 fillColor=#ffffff;strokeColor=#b85450;"
+          value="ดูการแจ้งเตือน">
+          <mxGeometry x="510" y="570" width="220" height="58" as="geometry" />
+        </mxCell>
+
+        <!-- UC8: ดู Activity Log  y=648 -->
+        <mxCell id="uc8" parent="1" vertex="1"
+          style="ellipse;whiteSpace=wrap;html=1;fontSize=14;fontFamily=Sarabun;
+                 fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;
+                 fillColor=#ffffff;strokeColor=#b85450;"
+          value="ดู Activity Log">
+          <mxGeometry x="510" y="648" width="220" height="58" as="geometry" />
+        </mxCell>
+
+        <!-- UC9: ติดต่อสอบถาม  y=726 -->
+        <mxCell id="uc9" parent="1" vertex="1"
+          style="ellipse;whiteSpace=wrap;html=1;fontSize=14;fontFamily=Sarabun;
+                 fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;
+                 fillColor=#ffffff;strokeColor=#b85450;"
+          value="ติดต่อสอบถาม">
+          <mxGeometry x="510" y="726" width="220" height="58" as="geometry" />
+        </mxCell>
+
+        <!-- UC10: ออกจากระบบ  y=804 -->
+        <mxCell id="uc10" parent="1" vertex="1"
+          style="ellipse;whiteSpace=wrap;html=1;fontSize=14;fontFamily=Sarabun;
+                 fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;
+                 fillColor=#ffffff;strokeColor=#b85450;"
+          value="ออกจากระบบ">
+          <mxGeometry x="510" y="804" width="220" height="58" as="geometry" />
+        </mxCell>
+
+        <!-- ACTORS -->
+
+        <!-- Super Admin (left-top) -->
+        <mxCell id="act-sa" parent="1" vertex="1"
+          style="shape=actor;whiteSpace=wrap;html=1;fontSize=14;fontStyle=1;
+                 fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;
+                 verticalLabelPosition=bottom;verticalAlign=top;fillColor=#fff2cc;strokeColor=#d6b656;"
+          value="Super Admin">
+          <mxGeometry x="55" y="260" width="40" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Admin KOCH (left-bottom) -->
+        <mxCell id="act-admin" parent="1" vertex="1"
+          style="shape=actor;whiteSpace=wrap;html=1;fontSize=14;fontStyle=1;
+                 fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;
+                 verticalLabelPosition=bottom;verticalAlign=top;fillColor=#f8cecc;strokeColor=#b85450;"
+          value="Admin KOCH">
+          <mxGeometry x="55" y="520" width="40" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Generalization: Super Admin ──▷ Admin KOCH (Super Admin สืบทอดสิทธิ์ทั้งหมดของ Admin KOCH) -->
+        <mxCell id="gen-sa-admin" edge="1" parent="1" source="act-sa" target="act-admin"
+          style="endArrow=block;endFill=0;edgeStyle=none;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#666666;strokeWidth=1.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- KOCH User (right) -->
+        <mxCell id="act-user" parent="1" vertex="1"
+          style="shape=actor;whiteSpace=wrap;html=1;fontSize=14;fontStyle=1;
+                 fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;
+                 verticalLabelPosition=bottom;verticalAlign=top;fillColor=#f8cecc;strokeColor=#b85450;"
+          value="KOCH User">
+          <mxGeometry x="1100" y="452" width="40" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- === ASSOCIATIONS ===
+             Super Admin ──▷ Admin KOCH (Generalization: สืบทอดสิทธิ์ทั้งหมด)
+             Admin KOCH → UC1,2,3,4,5,7,8,10
+             KOCH User → UC1,2,6,7,9,10
+        -->
+
+        <!-- Super Admin → UCs (exit right, entry left) — สีเหลือง -->
+        <mxCell id="e-sa1" edge="1" parent="1" source="act-sa" target="uc1"
+          style="endArrow=none;edgeStyle=none;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#d6b656;strokeWidth=1.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-sa2" edge="1" parent="1" source="act-sa" target="uc2"
+          style="endArrow=none;edgeStyle=none;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#d6b656;strokeWidth=1.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-sa3" edge="1" parent="1" source="act-sa" target="uc3"
+          style="endArrow=none;edgeStyle=none;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#d6b656;strokeWidth=1.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-sa4" edge="1" parent="1" source="act-sa" target="uc4"
+          style="endArrow=none;edgeStyle=none;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#d6b656;strokeWidth=1.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-sa5" edge="1" parent="1" source="act-sa" target="uc5"
+          style="endArrow=none;edgeStyle=none;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#d6b656;strokeWidth=1.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-sa7" edge="1" parent="1" source="act-sa" target="uc7"
+          style="endArrow=none;edgeStyle=none;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#d6b656;strokeWidth=1.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-sa8" edge="1" parent="1" source="act-sa" target="uc8"
+          style="endArrow=none;edgeStyle=none;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#d6b656;strokeWidth=1.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-sa10" edge="1" parent="1" source="act-sa" target="uc10"
+          style="endArrow=none;edgeStyle=none;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#d6b656;strokeWidth=1.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Admin KOCH → UCs (exit right, entry left) -->
+        <mxCell id="e-a1" edge="1" parent="1" source="act-admin" target="uc1"
+          style="endArrow=none;edgeStyle=none;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#b85450;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-a2" edge="1" parent="1" source="act-admin" target="uc2"
+          style="endArrow=none;edgeStyle=none;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#b85450;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-a3" edge="1" parent="1" source="act-admin" target="uc3"
+          style="endArrow=none;edgeStyle=none;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#b85450;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-a4" edge="1" parent="1" source="act-admin" target="uc4"
+          style="endArrow=none;edgeStyle=none;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#b85450;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-a5" edge="1" parent="1" source="act-admin" target="uc5"
+          style="endArrow=none;edgeStyle=none;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#b85450;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-a7" edge="1" parent="1" source="act-admin" target="uc7"
+          style="endArrow=none;edgeStyle=none;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#b85450;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-a8" edge="1" parent="1" source="act-admin" target="uc8"
+          style="endArrow=none;edgeStyle=none;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#b85450;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-a10" edge="1" parent="1" source="act-admin" target="uc10"
+          style="endArrow=none;edgeStyle=none;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#b85450;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- KOCH User → UCs (exit left, entry right) -->
+        <mxCell id="e-u1" edge="1" parent="1" source="act-user" target="uc1"
+          style="endArrow=none;edgeStyle=none;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#b85450;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-u2" edge="1" parent="1" source="act-user" target="uc2"
+          style="endArrow=none;edgeStyle=none;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#b85450;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-u6" edge="1" parent="1" source="act-user" target="uc6"
+          style="endArrow=none;edgeStyle=none;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#b85450;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-u7" edge="1" parent="1" source="act-user" target="uc7"
+          style="endArrow=none;edgeStyle=none;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#b85450;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-u9" edge="1" parent="1" source="act-user" target="uc9"
+          style="endArrow=none;edgeStyle=none;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#b85450;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-u10" edge="1" parent="1" source="act-user" target="uc10"
+          style="endArrow=none;edgeStyle=none;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#b85450;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

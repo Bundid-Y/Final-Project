@@ -964,26 +964,10 @@ function koch_action_label(string $action): string {
                         <?php
                             $isActive = (int)$s['is_active'] === 1 && strtotime((string)$s['expires_at']) > time();
                             $isCurrent = isset($currentUser['session_token']) && $s['session_token'] === $currentUser['session_token'];
-                            $ua = (string) $s['user_agent'];
-                            $browser = 'Unknown Browser';
-                            if (str_contains($ua, 'Chrome')) $browser = 'Chrome';
-                            elseif (str_contains($ua, 'Firefox')) $browser = 'Firefox';
-                            elseif (str_contains($ua, 'Safari')) $browser = 'Safari';
-                            elseif (str_contains($ua, 'Edge')) $browser = 'Edge';
-                            $os = 'Unknown OS';
-                            if (str_contains($ua, 'Windows')) $os = 'Windows';
-                            elseif (str_contains($ua, 'Mac')) $os = 'macOS';
-                            elseif (str_contains($ua, 'Linux')) $os = 'Linux';
-                            elseif (str_contains($ua, 'Android')) $os = 'Android';
-                            elseif (str_contains($ua, 'iPhone') || str_contains($ua, 'iPad')) $os = 'iOS';
                         ?>
                         <div class="session-item">
-                            <div class="session-icon <?php echo $isActive ? 'active' : 'inactive'; ?>">
-                                <i class="fas fa-<?php echo $isActive ? 'laptop' : 'laptop'; ?>"></i>
-                            </div>
                             <div class="session-info">
-                                <h4><?php echo h($browser . ' on ' . $os); ?> <?php echo $isCurrent ? '<span style="color:var(--koch-primary);font-size:11px;">(เซสชั่นปัจจุบัน)</span>' : ''; ?></h4>
-                                <p>IP: <?php echo h((string) $s['ip_address']); ?> &middot; <?php echo h(date('d/m/Y H:i', strtotime((string) $s['created_at']))); ?></p>
+                                <h4><?php echo h(date('d/m/Y H:i', strtotime((string) $s['created_at']))); ?> <?php echo $isCurrent ? '<span style="color:var(--koch-primary);font-size:11px;">(เซสชั่นปัจจุบัน)</span>' : ''; ?></h4>
                             </div>
                             <span class="session-status <?php echo $isActive ? 'active' : 'expired'; ?>">
                                 <?php echo $isActive ? 'Active' : 'Expired'; ?>
@@ -999,17 +983,16 @@ function koch_action_label(string $action): string {
                 <div class="k-card-body" style="padding:0;">
                     <div class="k-table-wrap">
                         <table class="k-table">
-                            <thead><tr><th>วันที่</th><th>กิจกรรม</th><th>ตาราง</th><th>รหัส</th></tr></thead>
+                            <thead><tr><th>วันที่</th><th>กิจกรรม</th><th>ตาราง</th></tr></thead>
                             <tbody>
                             <?php if ($activities === []): ?>
-                                <tr class="empty-row"><td colspan="4">ยังไม่มีกิจกรรม</td></tr>
+                                <tr class="empty-row"><td colspan="3">ยังไม่มีกิจกรรม</td></tr>
                             <?php else: ?>
                                 <?php foreach ($activities as $a): ?>
                                 <tr>
                                     <td style="white-space:nowrap;font-size:13px;"><?php echo h(date('d/m/Y H:i', strtotime((string) $a['created_at']))); ?></td>
                                     <td><?php echo h(koch_action_label((string) $a['action'])); ?></td>
                                     <td style="font-size:13px;color:var(--koch-text-muted);"><?php echo h((string) ($a['table_name'] ?? '-')); ?></td>
-                                    <td style="font-size:13px;"><?php echo h((string) ($a['record_id'] ?? '-')); ?></td>
                                 </tr>
                                 <?php endforeach; ?>
                             <?php endif; ?>

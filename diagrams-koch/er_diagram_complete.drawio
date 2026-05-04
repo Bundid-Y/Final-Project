@@ -1,0 +1,755 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0" version="29.6.6">
+  <diagram name="KOCH Physical ER Diagram" id="koch-er-complete">
+    <mxGraphModel dx="2000" dy="1500" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2339" pageHeight="1654" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- ==================== TABLES ==================== -->
+        
+        <!-- COMPANIES - Center Top -->
+        <mxCell id="t_co" value="companies" style="swimlane;fontStyle=1;align=center;startSize=28;fillColor=#f8cecc;strokeColor=#b85450;fontFamily=Helvetica;fontSize=13;fontWeight=bold;swimlaneLine=1;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="800" y="40" width="280" height="260" as="geometry"/>
+        </mxCell>
+        <mxCell id="co_id" value="PK id : INT AUTO_INCREMENT" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;strokeColor=#b85450;fillColor=#ffebee;fontWeight=bold;" vertex="1" parent="t_co">
+          <mxGeometry y="28" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="co_code" value="UK code : VARCHAR(50) = 'KOCH'" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;fillColor=#ffcdd2;fontWeight=bold;" vertex="1" parent="t_co">
+          <mxGeometry y="54" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="co_name" value="name : VARCHAR(100) = 'KOCH Industries'" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;fillColor=#ffcdd2;" vertex="1" parent="t_co">
+          <mxGeometry y="80" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="co_desc" value="description : TEXT" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_co">
+          <mxGeometry y="106" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="co_logo" value="logo_url : VARCHAR(255)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_co">
+          <mxGeometry y="132" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="co_web" value="website_url : VARCHAR(255)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_co">
+          <mxGeometry y="158" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="co_active" value="is_active : TINYINT(1) = 1" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;fillColor=#ffcdd2;" vertex="1" parent="t_co">
+          <mxGeometry y="184" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="co_created" value="created_at : DATETIME" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_co">
+          <mxGeometry y="210" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="co_updated" value="updated_at : DATETIME" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_co">
+          <mxGeometry y="236" width="280" height="26" as="geometry"/>
+        </mxCell>
+
+        <!-- USERS - Left -->
+        <mxCell id="t_us" value="users" style="swimlane;fontStyle=1;align=center;startSize=28;fillColor=#f8cecc;strokeColor=#b85450;fontFamily=Helvetica;fontSize=13;fontWeight=bold;swimlaneLine=1;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="40" y="360" width="280" height="400" as="geometry"/>
+        </mxCell>
+        <mxCell id="us_id" value="PK id : INT AUTO_INCREMENT" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;strokeColor=#b85450;fillColor=#ffebee;fontWeight=bold;" vertex="1" parent="t_us">
+          <mxGeometry y="28" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="us_co_id" value="FK company_id : INT → companies.id" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;fillColor=#ffcdd2;strokeColor=#b85450;fontWeight=bold;" vertex="1" parent="t_us">
+          <mxGeometry y="54" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="us_username" value="UK username : VARCHAR(50)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;fontWeight=bold;" vertex="1" parent="t_us">
+          <mxGeometry y="80" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="us_email" value="UK email : VARCHAR(100)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;fontWeight=bold;" vertex="1" parent="t_us">
+          <mxGeometry y="106" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="us_pass" value="password_hash : VARCHAR(255)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_us">
+          <mxGeometry y="132" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="us_fname" value="first_name : VARCHAR(50)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_us">
+          <mxGeometry y="158" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="us_lname" value="last_name : VARCHAR(50)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_us">
+          <mxGeometry y="184" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="us_nname" value="nick_name : VARCHAR(50)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_us">
+          <mxGeometry y="210" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="us_phone" value="phone : VARCHAR(20)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_us">
+          <mxGeometry y="236" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="us_role" value="role : ENUM(Super Admin,Admin,Manager,User)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_us">
+          <mxGeometry y="262" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="us_active" value="is_active : TINYINT(1)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_us">
+          <mxGeometry y="288" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="us_last_login" value="last_login : DATETIME" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_us">
+          <mxGeometry y="314" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="us_created" value="created_at : DATETIME" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_us">
+          <mxGeometry y="340" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="us_updated" value="updated_at : DATETIME" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_us">
+          <mxGeometry y="366" width="280" height="26" as="geometry"/>
+        </mxCell>
+
+        <!-- PRODUCTS - Right -->
+        <mxCell id="t_pr" value="products" style="swimlane;fontStyle=1;align=center;startSize=28;fillColor=#f8cecc;strokeColor=#b85450;fontFamily=Helvetica;fontSize=13;fontWeight=bold;swimlaneLine=1;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1560" y="360" width="280" height="280" as="geometry"/>
+        </mxCell>
+        <mxCell id="pr_id" value="PK id : INT AUTO_INCREMENT" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;strokeColor=#b85450;fillColor=#ffebee;fontWeight=bold;" vertex="1" parent="t_pr">
+          <mxGeometry y="28" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="pr_name" value="name : VARCHAR(100)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_pr">
+          <mxGeometry y="54" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="pr_desc" value="description : TEXT" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_pr">
+          <mxGeometry y="80" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="pr_cat" value="category : VARCHAR(50)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_pr">
+          <mxGeometry y="106" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="pr_img" value="image_url : VARCHAR(255)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_pr">
+          <mxGeometry y="132" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="pr_order" value="display_order : INT" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_pr">
+          <mxGeometry y="158" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="pr_active" value="is_active : TINYINT(1)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_pr">
+          <mxGeometry y="184" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="pr_created" value="created_at : DATETIME" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_pr">
+          <mxGeometry y="210" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="pr_updated" value="updated_at : DATETIME" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_pr">
+          <mxGeometry y="236" width="280" height="26" as="geometry"/>
+        </mxCell>
+
+        <!-- KOCH_QUOTATIONS - Center Bottom -->
+        <mxCell id="t_kq" value="koch_quotations" style="swimlane;fontStyle=1;align=center;startSize=28;fillColor=#f8cecc;strokeColor=#b85450;fontFamily=Helvetica;fontSize=13;fontWeight=bold;swimlaneLine=1;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="440" y="820" width="280" height="480" as="geometry"/>
+        </mxCell>
+        <mxCell id="kq_id" value="PK id : INT AUTO_INCREMENT" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;strokeColor=#b85450;fillColor=#ffebee;fontWeight=bold;" vertex="1" parent="t_kq">
+          <mxGeometry y="28" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="kq_user_id" value="FK user_id : INT → users.id" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;fillColor=#ffcdd2;strokeColor=#b85450;fontWeight=bold;" vertex="1" parent="t_kq">
+          <mxGeometry y="54" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="kq_co_id" value="FK company_id : INT → companies.id" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;fillColor=#ffcdd2;strokeColor=#b85450;fontWeight=bold;" vertex="1" parent="t_kq">
+          <mxGeometry y="80" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="kq_prod_id" value="FK product_id : INT → products.id" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;fillColor=#ffcdd2;strokeColor=#b85450;fontWeight=bold;" vertex="1" parent="t_kq">
+          <mxGeometry y="106" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="kq_qb" value="FK quoted_by : INT → users.id" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;fillColor=#ffcdd2;strokeColor=#b85450;fontWeight=bold;" vertex="1" parent="t_kq">
+          <mxGeometry y="132" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="kq_qnum" value="UK quotation_number : VARCHAR(50)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;fontWeight=bold;" vertex="1" parent="t_kq">
+          <mxGeometry y="158" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="kq_fname" value="first_name : VARCHAR(50)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_kq">
+          <mxGeometry y="184" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="kq_lname" value="last_name : VARCHAR(50)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_kq">
+          <mxGeometry y="210" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="kq_email" value="email : VARCHAR(100)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_kq">
+          <mxGeometry y="236" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="kq_phone" value="phone : VARCHAR(20)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_kq">
+          <mxGeometry y="262" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="kq_cname" value="company_name : VARCHAR(100)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_kq">
+          <mxGeometry y="288" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="kq_ptype" value="product_type : VARCHAR(50)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_kq">
+          <mxGeometry y="314" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="kq_qty" value="quantity : INT" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_kq">
+          <mxGeometry y="340" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="kq_spec" value="specifications : TEXT" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_kq">
+          <mxGeometry y="366" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="kq_status" value="status : ENUM(pending,quoted,approved,completed)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_kq">
+          <mxGeometry y="392" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="kq_qat" value="quoted_at : DATETIME" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_kq">
+          <mxGeometry y="418" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="kq_created" value="created_at : DATETIME" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_kq">
+          <mxGeometry y="444" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="kq_updated" value="updated_at : DATETIME" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_kq">
+          <mxGeometry y="470" width="280" height="26" as="geometry"/>
+        </mxCell>
+
+        <!-- SLIDERS -->
+        <mxCell id="t_sl" value="sliders" style="swimlane;fontStyle=1;align=center;startSize=28;fillColor=#f8cecc;strokeColor=#b85450;fontFamily=Helvetica;fontSize=13;fontWeight=bold;swimlaneLine=1;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="800" y="820" width="280" height="320" as="geometry"/>
+        </mxCell>
+        <mxCell id="sl_id" value="PK id : INT AUTO_INCREMENT" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;strokeColor=#b85450;fillColor=#ffebee;fontWeight=bold;" vertex="1" parent="t_sl">
+          <mxGeometry y="28" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="sl_co_id" value="FK company_id : INT → companies.id" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;fillColor=#ffcdd2;strokeColor=#b85450;fontWeight=bold;" vertex="1" parent="t_sl">
+          <mxGeometry y="54" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="sl_title" value="title : VARCHAR(100)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_sl">
+          <mxGeometry y="80" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="sl_sub" value="subtitle : VARCHAR(200)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_sl">
+          <mxGeometry y="106" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="sl_img" value="image_url : VARCHAR(255)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_sl">
+          <mxGeometry y="132" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="sl_btn" value="button_text : VARCHAR(50)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_sl">
+          <mxGeometry y="158" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="sl_url" value="button_url : VARCHAR(255)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_sl">
+          <mxGeometry y="184" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="sl_order" value="display_order : INT" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_sl">
+          <mxGeometry y="210" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="sl_active" value="is_active : TINYINT(1)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_sl">
+          <mxGeometry y="236" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="sl_created" value="created_at : DATETIME" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_sl">
+          <mxGeometry y="262" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="sl_updated" value="updated_at : DATETIME" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_sl">
+          <mxGeometry y="288" width="280" height="26" as="geometry"/>
+        </mxCell>
+
+        <!-- PARTNERS -->
+        <mxCell id="t_pa" value="partners" style="swimlane;fontStyle=1;align=center;startSize=28;fillColor=#f8cecc;strokeColor=#b85450;fontFamily=Helvetica;fontSize=13;fontWeight=bold;swimlaneLine=1;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1160" y="820" width="280" height="294" as="geometry"/>
+        </mxCell>
+        <mxCell id="pa_id" value="PK id : INT AUTO_INCREMENT" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;strokeColor=#b85450;fillColor=#ffebee;fontWeight=bold;" vertex="1" parent="t_pa">
+          <mxGeometry y="28" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="pa_co_id" value="FK company_id : INT → companies.id" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;fillColor=#ffcdd2;strokeColor=#b85450;fontWeight=bold;" vertex="1" parent="t_pa">
+          <mxGeometry y="54" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="pa_name" value="name : VARCHAR(100)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_pa">
+          <mxGeometry y="80" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="pa_desc" value="description : TEXT" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_pa">
+          <mxGeometry y="106" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="pa_logo" value="logo_url : VARCHAR(255)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_pa">
+          <mxGeometry y="132" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="pa_web" value="website_url : VARCHAR(255)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_pa">
+          <mxGeometry y="158" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="pa_order" value="display_order : INT" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_pa">
+          <mxGeometry y="184" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="pa_active" value="is_active : TINYINT(1)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_pa">
+          <mxGeometry y="210" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="pa_created" value="created_at : DATETIME" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_pa">
+          <mxGeometry y="236" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="pa_updated" value="updated_at : DATETIME" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_pa">
+          <mxGeometry y="262" width="280" height="26" as="geometry"/>
+        </mxCell>
+
+        <!-- FEATURED_PRODUCTS -->
+        <mxCell id="t_fp" value="featured_products" style="swimlane;fontStyle=1;align=center;startSize=28;fillColor=#f8cecc;strokeColor=#b85450;fontFamily=Helvetica;fontSize=13;fontWeight=bold;swimlaneLine=1;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1560" y="700" width="280" height="294" as="geometry"/>
+        </mxCell>
+        <mxCell id="fp_id" value="PK id : INT AUTO_INCREMENT" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;strokeColor=#b85450;fillColor=#ffebee;fontWeight=bold;" vertex="1" parent="t_fp">
+          <mxGeometry y="28" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="fp_co_id" value="FK company_id : INT → companies.id" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;fillColor=#ffcdd2;strokeColor=#b85450;fontWeight=bold;" vertex="1" parent="t_fp">
+          <mxGeometry y="54" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="fp_name" value="name : VARCHAR(100)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_fp">
+          <mxGeometry y="80" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="fp_desc" value="description : TEXT" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_fp">
+          <mxGeometry y="106" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="fp_img" value="image_url : VARCHAR(255)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_fp">
+          <mxGeometry y="132" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="fp_order" value="display_order : INT" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_fp">
+          <mxGeometry y="158" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="fp_active" value="is_active : TINYINT(1)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_fp">
+          <mxGeometry y="184" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="fp_created" value="created_at : DATETIME" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_fp">
+          <mxGeometry y="210" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="fp_updated" value="updated_at : DATETIME" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_fp">
+          <mxGeometry y="236" width="280" height="26" as="geometry"/>
+        </mxCell>
+
+        <!-- CONTACT_MESSAGES -->
+        <mxCell id="t_cm" value="contact_messages" style="swimlane;fontStyle=1;align=center;startSize=28;fillColor=#f8cecc;strokeColor=#b85450;fontFamily=Helvetica;fontSize=13;fontWeight=bold;swimlaneLine=1;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="440" y="360" width="280" height="340" as="geometry"/>
+        </mxCell>
+        <mxCell id="cm_id" value="PK id : INT AUTO_INCREMENT" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;strokeColor=#b85450;fillColor=#ffebee;fontWeight=bold;" vertex="1" parent="t_cm">
+          <mxGeometry y="28" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="cm_co_id" value="FK company_id : INT → companies.id" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;fillColor=#ffcdd2;strokeColor=#b85450;fontWeight=bold;" vertex="1" parent="t_cm">
+          <mxGeometry y="54" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="cm_name" value="name : VARCHAR(100)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_cm">
+          <mxGeometry y="80" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="cm_email" value="email : VARCHAR(100)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_cm">
+          <mxGeometry y="106" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="cm_phone" value="phone : VARCHAR(20)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_cm">
+          <mxGeometry y="132" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="cm_subject" value="subject : VARCHAR(200)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_cm">
+          <mxGeometry y="158" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="cm_msg" value="message : TEXT" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_cm">
+          <mxGeometry y="184" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="cm_status" value="status : ENUM(new,read,replied)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_cm">
+          <mxGeometry y="210" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="cm_ip" value="ip_address : VARCHAR(45)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_cm">
+          <mxGeometry y="236" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="cm_created" value="created_at : DATETIME" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_cm">
+          <mxGeometry y="262" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="cm_updated" value="updated_at : DATETIME" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_cm">
+          <mxGeometry y="288" width="280" height="26" as="geometry"/>
+        </mxCell>
+
+        <!-- SYSTEM_SETTINGS -->
+        <mxCell id="t_ss" value="system_settings" style="swimlane;fontStyle=1;align=center;startSize=28;fillColor=#f8cecc;strokeColor=#b85450;fontFamily=Helvetica;fontSize=13;fontWeight=bold;swimlaneLine=1;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1160" y="40" width="280" height="280" as="geometry"/>
+        </mxCell>
+        <mxCell id="ss_id" value="PK id : INT AUTO_INCREMENT" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;strokeColor=#b85450;fillColor=#ffebee;fontWeight=bold;" vertex="1" parent="t_ss">
+          <mxGeometry y="28" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="ss_co_id" value="FK company_id : INT → companies.id" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;fillColor=#ffcdd2;strokeColor=#b85450;fontWeight=bold;" vertex="1" parent="t_ss">
+          <mxGeometry y="54" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="ss_key" value="UK setting_key : VARCHAR(100)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;fontWeight=bold;" vertex="1" parent="t_ss">
+          <mxGeometry y="80" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="ss_val" value="setting_value : TEXT" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_ss">
+          <mxGeometry y="106" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="ss_type" value="data_type : VARCHAR(20)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_ss">
+          <mxGeometry y="132" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="ss_desc" value="description : VARCHAR(255)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_ss">
+          <mxGeometry y="158" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="ss_cat" value="category : VARCHAR(50)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_ss">
+          <mxGeometry y="184" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="ss_sys" value="is_system : TINYINT(1)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_ss">
+          <mxGeometry y="210" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="ss_created" value="created_at : DATETIME" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_ss">
+          <mxGeometry y="236" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="ss_updated" value="updated_at : DATETIME" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_ss">
+          <mxGeometry y="262" width="280" height="26" as="geometry"/>
+        </mxCell>
+
+        <!-- TRUCK_TYPES -->
+        <mxCell id="t_tt" value="truck_types" style="swimlane;fontStyle=1;align=center;startSize=28;fillColor=#f8cecc;strokeColor=#b85450;fontFamily=Helvetica;fontSize=13;fontWeight=bold;swimlaneLine=1;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1560" y="40" width="280" height="320" as="geometry"/>
+        </mxCell>
+        <mxCell id="tt_id" value="PK id : INT AUTO_INCREMENT" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;strokeColor=#b85450;fillColor=#ffebee;fontWeight=bold;" vertex="1" parent="t_tt">
+          <mxGeometry y="28" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="tt_co_id" value="FK company_id : INT → companies.id" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;fillColor=#ffcdd2;strokeColor=#b85450;fontWeight=bold;" vertex="1" parent="t_tt">
+          <mxGeometry y="54" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="tt_name" value="name : VARCHAR(100)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_tt">
+          <mxGeometry y="80" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="tt_code" value="code : VARCHAR(50)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_tt">
+          <mxGeometry y="106" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="tt_cap" value="capacity_tons : DECIMAL(10,2)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_tt">
+          <mxGeometry y="132" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="tt_desc" value="description : TEXT" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_tt">
+          <mxGeometry y="158" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="tt_img" value="image_url : VARCHAR(255)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_tt">
+          <mxGeometry y="184" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="tt_order" value="display_order : INT" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_tt">
+          <mxGeometry y="210" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="tt_active" value="is_active : TINYINT(1)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_tt">
+          <mxGeometry y="236" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="tt_created" value="created_at : DATETIME" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_tt">
+          <mxGeometry y="262" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="tt_updated" value="updated_at : DATETIME" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_tt">
+          <mxGeometry y="288" width="280" height="26" as="geometry"/>
+        </mxCell>
+
+        <!-- NOTIFICATIONS -->
+        <mxCell id="t_no" value="notifications" style="swimlane;fontStyle=1;align=center;startSize=28;fillColor=#f8cecc;strokeColor=#b85450;fontFamily=Helvetica;fontSize=13;fontWeight=bold;swimlaneLine=1;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1200" width="280" height="370" as="geometry"/>
+        </mxCell>
+        <mxCell id="no_id" value="PK id : INT AUTO_INCREMENT" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;strokeColor=#b85450;fillColor=#ffebee;fontWeight=bold;" vertex="1" parent="t_no">
+          <mxGeometry y="28" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="no_user_id" value="FK user_id : INT → users.id" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;fillColor=#ffcdd2;strokeColor=#b85450;fontWeight=bold;" vertex="1" parent="t_no">
+          <mxGeometry y="54" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="no_co_id" value="FK company_id : INT → companies.id" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;fillColor=#ffcdd2;strokeColor=#b85450;fontWeight=bold;" vertex="1" parent="t_no">
+          <mxGeometry y="80" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="no_title" value="title : VARCHAR(200)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_no">
+          <mxGeometry y="106" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="no_msg" value="message : TEXT" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_no">
+          <mxGeometry y="132" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="no_type" value="type : ENUM(quotation,quote,login_failed)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_no">
+          <mxGeometry y="158" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="no_rtbl" value="related_table : VARCHAR(50)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_no">
+          <mxGeometry y="184" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="no_rid" value="related_id : INT" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_no">
+          <mxGeometry y="210" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="no_read" value="is_read : TINYINT(1)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_no">
+          <mxGeometry y="236" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="no_email" value="is_email_sent : TINYINT(1)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_no">
+          <mxGeometry y="262" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="no_prio" value="priority : INT" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_no">
+          <mxGeometry y="288" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="no_esat" value="email_sent_at : DATETIME" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_no">
+          <mxGeometry y="314" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="no_created" value="created_at : DATETIME" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_no">
+          <mxGeometry y="340" width="280" height="26" as="geometry"/>
+        </mxCell>
+
+        <!-- ACTIVITY_LOGS -->
+        <mxCell id="t_al" value="activity_logs" style="swimlane;fontStyle=1;align=center;startSize=28;fillColor=#f8cecc;strokeColor=#b85450;fontFamily=Helvetica;fontSize=13;fontWeight=bold;swimlaneLine=1;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="440" y="1200" width="280" height="350" as="geometry"/>
+        </mxCell>
+        <mxCell id="al_id" value="PK id : INT AUTO_INCREMENT" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;strokeColor=#b85450;fillColor=#ffebee;fontWeight=bold;" vertex="1" parent="t_al">
+          <mxGeometry y="28" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="al_user_id" value="FK user_id : INT → users.id" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;fillColor=#ffcdd2;strokeColor=#b85450;fontWeight=bold;" vertex="1" parent="t_al">
+          <mxGeometry y="54" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="al_co_id" value="FK company_id : INT → companies.id" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;fillColor=#ffcdd2;strokeColor=#b85450;fontWeight=bold;" vertex="1" parent="t_al">
+          <mxGeometry y="80" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="al_cname" value="company_name : VARCHAR(50) = 'KOCH'" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;fillColor=#ffcdd2;" vertex="1" parent="t_al">
+          <mxGeometry y="106" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="al_action" value="action : ENUM(create,update,delete,login)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_al">
+          <mxGeometry y="132" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="al_tbl" value="table_name : VARCHAR(50)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_al">
+          <mxGeometry y="158" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="al_rid" value="record_id : INT" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_al">
+          <mxGeometry y="184" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="al_old" value="old_values : JSON" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_al">
+          <mxGeometry y="210" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="al_new" value="new_values : JSON" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_al">
+          <mxGeometry y="236" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="al_ip" value="ip_address : VARCHAR(45)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_al">
+          <mxGeometry y="262" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="al_ua" value="user_agent : VARCHAR(255)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_al">
+          <mxGeometry y="288" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="al_created" value="created_at : DATETIME" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_al">
+          <mxGeometry y="314" width="280" height="26" as="geometry"/>
+        </mxCell>
+
+        <!-- USER_SESSIONS -->
+        <mxCell id="t_usess" value="user_sessions" style="swimlane;fontStyle=1;align=center;startSize=28;fillColor=#f8cecc;strokeColor=#b85450;fontFamily=Helvetica;fontSize=13;fontWeight=bold;swimlaneLine=1;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="800" y="1200" width="280" height="260" as="geometry"/>
+        </mxCell>
+        <mxCell id="usess_id" value="PK id : INT AUTO_INCREMENT" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;strokeColor=#b85450;fillColor=#ffebee;fontWeight=bold;" vertex="1" parent="t_usess">
+          <mxGeometry y="28" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="usess_user_id" value="FK user_id : INT → users.id" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;fillColor=#ffcdd2;strokeColor=#b85450;fontWeight=bold;" vertex="1" parent="t_usess">
+          <mxGeometry y="54" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="usess_token" value="UK session_token : VARCHAR(255)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;fontWeight=bold;" vertex="1" parent="t_usess">
+          <mxGeometry y="80" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="usess_ip" value="ip_address : VARCHAR(45)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_usess">
+          <mxGeometry y="106" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="usess_ua" value="user_agent : VARCHAR(255)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_usess">
+          <mxGeometry y="132" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="usess_active" value="is_active : TINYINT(1)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_usess">
+          <mxGeometry y="158" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="usess_expires" value="expires_at : DATETIME" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_usess">
+          <mxGeometry y="184" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="usess_created" value="created_at : DATETIME" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_usess">
+          <mxGeometry y="210" width="280" height="26" as="geometry"/>
+        </mxCell>
+
+        <!-- USER_PERMISSIONS -->
+        <mxCell id="t_up" value="user_permissions" style="swimlane;fontStyle=1;align=center;startSize=28;fillColor=#f8cecc;strokeColor=#b85450;fontFamily=Helvetica;fontSize=13;fontWeight=bold;swimlaneLine=1;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1160" y="1200" width="280" height="210" as="geometry"/>
+        </mxCell>
+        <mxCell id="up_id" value="PK id : INT AUTO_INCREMENT" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;strokeColor=#b85450;fillColor=#ffebee;fontWeight=bold;" vertex="1" parent="t_up">
+          <mxGeometry y="28" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="up_user_id" value="FK user_id : INT → users.id" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;fillColor=#ffcdd2;strokeColor=#b85450;fontWeight=bold;" vertex="1" parent="t_up">
+          <mxGeometry y="54" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="up_key" value="permission_key : VARCHAR(100)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_up">
+          <mxGeometry y="80" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="up_val" value="permission_value : TINYINT(1)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_up">
+          <mxGeometry y="106" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="up_created" value="created_at : DATETIME" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_up">
+          <mxGeometry y="132" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="up_updated" value="updated_at : DATETIME" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_up">
+          <mxGeometry y="158" width="280" height="26" as="geometry"/>
+        </mxCell>
+
+        <!-- PASSWORD_RESETS -->
+        <mxCell id="t_prst" value="password_resets" style="swimlane;fontStyle=1;align=center;startSize=28;fillColor=#f8cecc;strokeColor=#b85450;fontFamily=Helvetica;fontSize=13;fontWeight=bold;swimlaneLine=1;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1560" y="1060" width="280" height="250" as="geometry"/>
+        </mxCell>
+        <mxCell id="prst_id" value="PK id : INT AUTO_INCREMENT" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;strokeColor=#b85450;fillColor=#ffebee;fontWeight=bold;" vertex="1" parent="t_prst">
+          <mxGeometry y="28" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="prst_email" value="email : VARCHAR(100)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_prst">
+          <mxGeometry y="54" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="prst_token" value="UK token : VARCHAR(255)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;fillColor=#ffcdd2;fontWeight=bold;" vertex="1" parent="t_prst">
+          <mxGeometry y="80" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="prst_co_id" value="FK company_id : INT → companies.id" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;fillColor=#ffcdd2;strokeColor=#b85450;fontWeight=bold;" vertex="1" parent="t_prst">
+          <mxGeometry y="106" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="prst_used" value="is_used : TINYINT(1)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_prst">
+          <mxGeometry y="132" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="prst_expires" value="expires_at : DATETIME" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_prst">
+          <mxGeometry y="158" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="prst_ip" value="ip_address : VARCHAR(45)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_prst">
+          <mxGeometry y="184" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="prst_created" value="created_at : DATETIME" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="t_prst">
+          <mxGeometry y="210" width="280" height="26" as="geometry"/>
+        </mxCell>
+
+        <!-- ==================== RELATIONSHIPS - All Connected ==================== -->
+        
+        <!-- companies -> users (1:N) -->
+        <mxCell id="rel1" edge="1" parent="1" source="t_co" target="t_us" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#b85450;strokeWidth=2;endArrow=ERmany;endFill=0;startArrow=ERmandOne;startFill=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="720" y="170"/>
+              <mxPoint x="180" y="170"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- companies -> contact_messages (1:N) -->
+        <mxCell id="rel2" edge="1" parent="1" source="t_co" target="t_cm" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#b85450;strokeWidth=2;endArrow=ERmany;endFill=0;startArrow=ERmandOne;startFill=0;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="870" y="340"/>
+              <mxPoint x="580" y="340"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- companies -> system_settings (1:N) -->
+        <mxCell id="rel3" edge="1" parent="1" source="t_co" target="t_ss" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#b85450;strokeWidth=2;endArrow=ERmany;endFill=0;startArrow=ERmandOne;startFill=0;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1120" y="105"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- companies -> truck_types (1:N) -->
+        <mxCell id="rel4" edge="1" parent="1" source="t_co" target="t_tt" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#b85450;strokeWidth=2;endArrow=ERmany;endFill=0;startArrow=ERmandOne;startFill=0;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1120" y="235"/>
+              <mxPoint x="1520" y="235"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- companies -> koch_quotations (1:N) -->
+        <mxCell id="rel5" edge="1" parent="1" source="t_co" target="t_kq" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#b85450;strokeWidth=2;endArrow=ERmany;endFill=0;startArrow=ERmandOne;startFill=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="940" y="340"/>
+              <mxPoint x="580" y="340"/>
+              <mxPoint x="580" y="820"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- companies -> sliders (1:N) -->
+        <mxCell id="rel6" edge="1" parent="1" source="t_co" target="t_sl" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#b85450;strokeWidth=2;endArrow=ERmany;endFill=0;startArrow=ERmandOne;startFill=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="940" y="340"/>
+              <mxPoint x="940" y="820"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- companies -> partners (1:N) -->
+        <mxCell id="rel7" edge="1" parent="1" source="t_co" target="t_pa" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#b85450;strokeWidth=2;endArrow=ERmany;endFill=0;startArrow=ERmandOne;startFill=0;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1010" y="340"/>
+              <mxPoint x="1300" y="340"/>
+              <mxPoint x="1300" y="820"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- companies -> featured_products (1:N) -->
+        <mxCell id="rel8" edge="1" parent="1" source="t_co" target="t_fp" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#b85450;strokeWidth=2;endArrow=ERmany;endFill=0;startArrow=ERmandOne;startFill=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1120" y="170"/>
+              <mxPoint x="1700" y="170"/>
+              <mxPoint x="1700" y="700"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- users -> koch_quotations (1:N) -->
+        <mxCell id="rel9" edge="1" parent="1" source="t_us" target="t_kq" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#b85450;strokeWidth=2;endArrow=ERmany;endFill=0;startArrow=ERmandOne;startFill=0;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="340" y="458"/>
+              <mxPoint x="400" y="458"/>
+              <mxPoint x="400" y="898"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- users -> notifications (1:N) -->
+        <mxCell id="rel10" edge="1" parent="1" source="t_us" target="t_no" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#b85450;strokeWidth=2;endArrow=ERmany;endFill=0;startArrow=ERmandOne;startFill=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="180" y="800"/>
+              <mxPoint x="180" y="1200"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- users -> activity_logs (1:N) -->
+        <mxCell id="rel11" edge="1" parent="1" source="t_us" target="t_al" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#b85450;strokeWidth=2;endArrow=ERmany;endFill=0;startArrow=ERmandOne;startFill=0;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="360" y="628"/>
+              <mxPoint x="400" y="628"/>
+              <mxPoint x="400" y="1272"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- users -> user_sessions (1:N) -->
+        <mxCell id="rel12" edge="1" parent="1" source="t_us" target="t_usess" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#b85450;strokeWidth=2;endArrow=ERmany;endFill=0;startArrow=ERmandOne;startFill=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="360" y="560"/>
+              <mxPoint x="760" y="560"/>
+              <mxPoint x="760" y="1330"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- users -> user_permissions (1:N) -->
+        <mxCell id="rel13" edge="1" parent="1" source="t_us" target="t_up" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#b85450;strokeWidth=2;endArrow=ERmany;endFill=0;startArrow=ERmandOne;startFill=0;exitX=1;exitY=0.35;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="360" y="599"/>
+              <mxPoint x="1120" y="599"/>
+              <mxPoint x="1120" y="1305"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- users -> password_resets (indirect via email - optional) -->
+        <mxCell id="rel14" edge="1" parent="1" source="t_us" target="t_prst" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#b85450;strokeWidth=2;endArrow=ERmany;endFill=0;startArrow=ERmandOne;startFill=0;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="110" y="800"/>
+              <mxPoint x="110" y="1000"/>
+              <mxPoint x="1520" y="1000"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- products -> koch_quotations (1:N) -->
+        <mxCell id="rel15" edge="1" parent="1" source="t_pr" target="t_kq" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#b85450;strokeWidth=2;endArrow=ERmany;endFill=0;startArrow=ERmandOne;startFill=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.35;entryDx=0;entryDy=0;" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1520" y="500"/>
+              <mxPoint x="760" y="500"/>
+              <mxPoint x="760" y="922"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- users -> koch_quotations (quoted_by) (1:N) -->
+        <mxCell id="rel16" edge="1" parent="1" source="t_us" target="t_kq" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#b85450;strokeWidth=2;endArrow=ERmany;endFill=0;startArrow=ERmandOne;startFill=0;exitX=0.8;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.4;entryDx=0;entryDy=0;" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="264" y="800"/>
+              <mxPoint x="264" y="948"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ==================== LEGEND ==================== -->
+        <mxCell id="legend" value="Legend - Physical Data Model" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#f5f5f5;strokeColor=#666666;fontFamily=Helvetica;fontSize=12;fontWeight=bold;swimlaneLine=1;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1560" y="1380" width="280" height="160" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg_pk" value="PK = Primary Key" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;fillColor=#ffebee;strokeColor=#b85450;fontWeight=bold;" vertex="1" parent="legend">
+          <mxGeometry y="30" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg_fk" value="FK = Foreign Key" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;fillColor=#ffcdd2;strokeColor=#b85450;fontWeight=bold;" vertex="1" parent="legend">
+          <mxGeometry y="56" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg_uk" value="UK = Unique Key" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;fillColor=#ffcdd2;fontWeight=bold;" vertex="1" parent="legend">
+          <mxGeometry y="82" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg_crow" value="|o---||&lt; = Crow's Foot Notation (1:N)" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="legend">
+          <mxGeometry y="108" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg_info" value="KOCH CI: #f8cecc / #b85450" style="text;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="legend">
+          <mxGeometry y="134" width="280" height="26" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

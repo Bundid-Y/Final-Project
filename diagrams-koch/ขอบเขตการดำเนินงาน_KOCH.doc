@@ -1,0 +1,251 @@
+<html xmlns:o="urn:schemas-microsoft-com:office:office"
+      xmlns:w="urn:schemas-microsoft-com:office:word"
+      xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!--[if gte mso 9]>
+<xml>
+<w:WordDocument>
+<w:View>Print</w:View>
+<w:Zoom>100</w:Zoom>
+<w:DoNotOptimizeForBrowser/>
+</w:WordDocument>
+</xml>
+<![endif]-->
+<style>
+  @page {
+    size: A4;
+    margin: 2.54cm 2.54cm 2.54cm 2.54cm;
+  }
+  body {
+    font-family: 'TH SarabunPSK', 'TH Sarabun New', 'Sarabun', sans-serif;
+    font-size: 16pt;
+    line-height: 1.5;
+    color: #000000;
+  }
+  h1 {
+    font-family: 'TH SarabunPSK', 'TH Sarabun New', 'Sarabun', sans-serif;
+    font-size: 20pt;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 24pt;
+  }
+  h2 {
+    font-family: 'TH SarabunPSK', 'TH Sarabun New', 'Sarabun', sans-serif;
+    font-size: 18pt;
+    font-weight: bold;
+    margin-top: 18pt;
+    margin-bottom: 6pt;
+  }
+  h3 {
+    font-family: 'TH SarabunPSK', 'TH Sarabun New', 'Sarabun', sans-serif;
+    font-size: 16pt;
+    font-weight: bold;
+    margin-top: 12pt;
+    margin-bottom: 6pt;
+  }
+  p {
+    font-family: 'TH SarabunPSK', 'TH Sarabun New', 'Sarabun', sans-serif;
+    font-size: 16pt;
+    margin-top: 3pt;
+    margin-bottom: 3pt;
+    text-indent: 36pt;
+  }
+  ul {
+    margin-top: 3pt;
+    margin-bottom: 6pt;
+  }
+  li {
+    font-family: 'TH SarabunPSK', 'TH Sarabun New', 'Sarabun', sans-serif;
+    font-size: 16pt;
+    margin-bottom: 3pt;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 12pt;
+    margin-bottom: 12pt;
+  }
+  th, td {
+    font-family: 'TH SarabunPSK', 'TH Sarabun New', 'Sarabun', sans-serif;
+    font-size: 16pt;
+    border: 1pt solid #000000;
+    padding: 6pt 8pt;
+    vertical-align: top;
+  }
+  th {
+    background-color: #c00000;
+    color: #ffffff;
+    font-weight: bold;
+    text-align: center;
+  }
+  .section-num {
+    font-weight: bold;
+  }
+  .indent {
+    padding-left: 36pt;
+  }
+  .note {
+    font-size: 14pt;
+    color: #555555;
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+
+<h1>ขอบเขตการดำเนินงาน<br>ระบบจัดการ KOCH (KOCH Management System)</h1>
+
+<p>ขอบเขตการดำเนินงานของระบบจัดการ KOCH ครอบคลุมการทำงานดังต่อไปนี้</p>
+
+<!-- ============================================================ -->
+<h2>1. การจัดการข้อมูลขั้นพื้นฐาน</h2>
+<!-- ============================================================ -->
+
+<ul>
+  <li><b>ข้อมูลผู้ดูแลระบบ (Super Admin / Admin KOCH)</b>
+    <br>จัดการข้อมูลผู้ดูแลระบบ ได้แก่ Super Admin ที่สามารถจัดการข้อมูลได้ทั้งระบบ (KOCH และ TNB) และ Admin KOCH ที่จัดการข้อมูลได้เฉพาะบริษัท KOCH</li>
+  <li><b>ข้อมูลบริษัท (Companies)</b>
+    <br>จัดการข้อมูลบริษัทในระบบ ได้แก่ รหัสบริษัท ชื่อบริษัท โลโก้ เว็บไซต์ และสถานะการใช้งาน</li>
+  <li><b>ข้อมูลสินค้า (Products)</b>
+    <br>จัดการข้อมูลสินค้าของ KOCH ได้แก่ ชื่อสินค้า รายละเอียด หมวดหมู่ รูปภาพ ลำดับการแสดงผล และสถานะการใช้งาน</li>
+  <li><b>ข้อมูลผู้ใช้งาน / ลูกค้า (Users / Customers)</b>
+    <br>จัดการข้อมูลผู้ใช้งานในระบบ ได้แก่ ชื่อผู้ใช้ อีเมล ชื่อ-นามสกุล ชื่อเล่น เบอร์โทรศัพท์ บทบาท (Role) แผนก ตำแหน่ง และสถานะการใช้งาน</li>
+  <li><b>ข้อมูลประเภทสินค้า (Product Categories)</b>
+    <br>จัดการข้อมูลหมวดหมู่สินค้าของ KOCH เพื่อใช้ในการจำแนกประเภทสินค้า</li>
+</ul>
+
+<!-- ============================================================ -->
+<h2>2. การจัดการเนื้อหาเว็บไซต์ KOCH</h2>
+<!-- ============================================================ -->
+
+<ul>
+  <li><b>จัดการสไลเดอร์หน้าเว็บไซต์ (Sliders)</b>
+    <br>จัดการรูปภาพสไลเดอร์ที่แสดงบนหน้าเว็บไซต์ KOCH ได้แก่ การเพิ่ม แก้ไข ลบ และจัดลำดับการแสดงผล</li>
+  <li><b>จัดการข้อมูลพันธมิตร (Partners)</b>
+    <br>จัดการข้อมูลพันธมิตรทางธุรกิจของ KOCH ได้แก่ ชื่อ โลโก้ ลิงก์เว็บไซต์ และลำดับการแสดงผล</li>
+  <li><b>จัดการข้อมูลสินค้าที่แสดงบนเว็บไซต์ (Product Display)</b>
+    <br>จัดการการแสดงผลสินค้าบนหน้าเว็บไซต์ KOCH ได้แก่ รูปภาพ รายละเอียด และการจัดลำดับ</li>
+</ul>
+
+<!-- ============================================================ -->
+<h2>3. การจัดการใบเสนอราคา KOCH</h2>
+<!-- ============================================================ -->
+
+<ul>
+  <li><b>จัดการข้อมูลใบเสนอราคา (KOCH Quotations)</b>
+    <br>จัดการใบเสนอราคาของ KOCH ได้แก่ เลขที่ใบเสนอราคา ประเภทสินค้า ราคาที่เสนอ สถานะ หมายเหตุ และไฟล์แนบ</li>
+  <li><b>การติดตามสถานะใบเสนอราคา</b>
+    <br>ติดตามสถานะใบเสนอราคาตั้งแต่การส่งคำขอจนถึงการอนุมัติหรือปฏิเสธ โดยบันทึกผู้อนุมัติและเวลาที่อนุมัติ</li>
+</ul>
+
+<!-- ============================================================ -->
+<h2>4. การจัดการการแจ้งเตือนและบันทึกกิจกรรม</h2>
+<!-- ============================================================ -->
+
+<ul>
+  <li><b>จัดการการแจ้งเตือน (Notifications)</b>
+    <br>จัดการการแจ้งเตือนในระบบ KOCH ได้แก่ การแจ้งเตือนใบเสนอราคาใหม่ การเปลี่ยนแปลงสถานะ และข้อความจากผู้ดูแลระบบ</li>
+  <li><b>บันทึกกิจกรรมการใช้งาน (Activity Log)</b>
+    <br>บันทึกและแสดงประวัติการใช้งานระบบ ได้แก่ การเข้าสู่ระบบ การแก้ไขข้อมูล การสร้างใบเสนอราคา และการดำเนินการต่าง ๆ ในระบบ</li>
+</ul>
+
+<!-- ============================================================ -->
+<h2>5. การวิเคราะห์และออกรายงาน</h2>
+<!-- ============================================================ -->
+
+<ul>
+  <li><b>รายงานจำนวนใบเสนอราคาตามประเภทสินค้า (รายวัน / เดือน / ปี)</b>
+    <br>แสดงรายงานสรุปจำนวนใบเสนอราคา KOCH จำแนกตามประเภทสินค้า โดยสามารถกรองข้อมูลเป็นรายวัน รายเดือน หรือรายปี</li>
+  <li><b>รายงานสรุปยอดใบเสนอราคาตามสถานะ (รายวัน / เดือน / ปี)</b>
+    <br>แสดงรายงานสรุปจำนวนและมูลค่าใบเสนอราคา จำแนกตามสถานะ (รอดำเนินการ / อนุมัติ / ปฏิเสธ) โดยสามารถกรองข้อมูลเป็นรายวัน รายเดือน หรือรายปี</li>
+</ul>
+
+<br>
+<hr>
+
+<!-- ============================================================ -->
+<h2>ตารางสรุปขอบเขตการดำเนินงานระบบ KOCH</h2>
+<!-- ============================================================ -->
+
+<table>
+  <tr>
+    <th style="width:5%;">ลำดับ</th>
+    <th style="width:30%;">ขอบเขตการดำเนินงาน</th>
+    <th style="width:40%;">รายละเอียด</th>
+    <th style="width:25%;">ผู้ใช้งาน</th>
+  </tr>
+  <tr>
+    <td style="text-align:center;" rowspan="5">1</td>
+    <td rowspan="5"><b>การจัดการข้อมูลขั้นพื้นฐาน</b></td>
+    <td>ข้อมูลผู้ดูแลระบบ (Super Admin / Admin KOCH)</td>
+    <td>Super Admin, Admin KOCH</td>
+  </tr>
+  <tr>
+    <td>ข้อมูลบริษัท (Companies)</td>
+    <td>Super Admin</td>
+  </tr>
+  <tr>
+    <td>ข้อมูลสินค้า (Products)</td>
+    <td>Super Admin, Admin KOCH</td>
+  </tr>
+  <tr>
+    <td>ข้อมูลผู้ใช้งาน / ลูกค้า (Users)</td>
+    <td>Super Admin, Admin KOCH</td>
+  </tr>
+  <tr>
+    <td>ข้อมูลประเภทสินค้า (Product Categories)</td>
+    <td>Super Admin, Admin KOCH</td>
+  </tr>
+  <tr>
+    <td style="text-align:center;" rowspan="3">2</td>
+    <td rowspan="3"><b>การจัดการเนื้อหาเว็บไซต์ KOCH</b></td>
+    <td>จัดการสไลเดอร์หน้าเว็บไซต์ (Sliders)</td>
+    <td>Super Admin, Admin KOCH</td>
+  </tr>
+  <tr>
+    <td>จัดการข้อมูลพันธมิตร (Partners)</td>
+    <td>Super Admin, Admin KOCH</td>
+  </tr>
+  <tr>
+    <td>จัดการข้อมูลสินค้าที่แสดงบนเว็บไซต์</td>
+    <td>Super Admin, Admin KOCH</td>
+  </tr>
+  <tr>
+    <td style="text-align:center;" rowspan="2">3</td>
+    <td rowspan="2"><b>การจัดการใบเสนอราคา KOCH</b></td>
+    <td>จัดการข้อมูลใบเสนอราคา (KOCH Quotations)</td>
+    <td>Super Admin, Admin KOCH</td>
+  </tr>
+  <tr>
+    <td>การติดตามสถานะใบเสนอราคา</td>
+    <td>Super Admin, Admin KOCH</td>
+  </tr>
+  <tr>
+    <td style="text-align:center;" rowspan="2">4</td>
+    <td rowspan="2"><b>การจัดการการแจ้งเตือนและบันทึกกิจกรรม</b></td>
+    <td>จัดการการแจ้งเตือน (Notifications)</td>
+    <td>Super Admin, Admin KOCH</td>
+  </tr>
+  <tr>
+    <td>บันทึกกิจกรรมการใช้งาน (Activity Log)</td>
+    <td>Super Admin, Admin KOCH</td>
+  </tr>
+  <tr>
+    <td style="text-align:center;" rowspan="2">5</td>
+    <td rowspan="2"><b>การวิเคราะห์และออกรายงาน</b></td>
+    <td>รายงานจำนวนใบเสนอราคาตามประเภทสินค้า (รายวัน / เดือน / ปี)</td>
+    <td>Super Admin, Admin KOCH</td>
+  </tr>
+  <tr>
+    <td>รายงานสรุปยอดใบเสนอราคาตามสถานะ (รายวัน / เดือน / ปี)</td>
+    <td>Super Admin, Admin KOCH</td>
+  </tr>
+</table>
+
+<br>
+<p class="note">หมายเหตุ: Super Admin สามารถจัดการข้อมูลได้ทั้งระบบ (KOCH และ TNB) ส่วน Admin KOCH สามารถจัดการข้อมูลได้เฉพาะบริษัท KOCH เท่านั้น</p>
+
+</body>
+</html>
