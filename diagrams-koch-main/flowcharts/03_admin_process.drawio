@@ -1,0 +1,139 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36" version="29.6.6">
+  <diagram name="ผังงานกระบวนการทำงานของผู้ดูแลระบบ" id="fc-admin">
+    <mxGraphModel dx="1422" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="900" pageHeight="1650" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="n1" value="เริ่มต้น" parent="1" vertex="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;fontSize=14;">
+          <mxGeometry x="234" y="30" width="120" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="cn1" value="" parent="1" vertex="1" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=none;strokeColor=#000000;">
+          <mxGeometry x="282" y="110" width="24" height="24" as="geometry" />
+        </mxCell>
+
+        <mxCell id="n2" value="เลือกเมนู&#xa;รายการ" parent="1" vertex="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;fontSize=14;">
+          <mxGeometry x="209" y="164" width="170" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Dashboard -->
+        <mxCell id="d1" value="Dashboard?" parent="1" vertex="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;fontSize=14;">
+          <mxGeometry x="214" y="254" width="160" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="d1a" value="แสดงรายงาน&#xa;และสรุปข้อมูล" parent="1" vertex="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;fontSize=14;">
+          <mxGeometry x="460" y="279" width="160" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- ใบเสนอราคา -->
+        <mxCell id="d2" value="ใบเสนอราคา&#xa;KOCH?" parent="1" vertex="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;fontSize=14;">
+          <mxGeometry x="214" y="404" width="160" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="d2a" value="จัดการและอนุมัติ&#xa;ข้อมูลใบเสนอราคา" parent="1" vertex="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;fontSize=14;">
+          <mxGeometry x="460" y="429" width="160" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- แจ้งเตือน -->
+        <mxCell id="d3" value="ข้อมูลการ&#xa;แจ้งเตือน?" parent="1" vertex="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;fontSize=14;">
+          <mxGeometry x="214" y="554" width="160" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="d3a" value="แสดงและจัดการ&#xa;ข้อมูลการแจ้งเตือน" parent="1" vertex="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;fontSize=14;">
+          <mxGeometry x="460" y="579" width="160" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Export -->
+        <mxCell id="d4" value="Export&#xa;รายงาน?" parent="1" vertex="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;fontSize=14;">
+          <mxGeometry x="214" y="704" width="160" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="d4a" value="แสดงข้อมูล&#xa;การออกรายงาน" parent="1" vertex="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;fontSize=14;">
+          <mxGeometry x="460" y="729" width="160" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- จัดการผู้ใช้ -->
+        <mxCell id="d5" value="จัดการ&#xa;ผู้ใช้งาน?" parent="1" vertex="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;fontSize=14;">
+          <mxGeometry x="214" y="854" width="160" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="d5a" value="แสดงข้อมูล&#xa;จัดการผู้ใช้งาน" parent="1" vertex="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;fontSize=14;">
+          <mxGeometry x="460" y="879" width="160" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- ออกจากระบบ — DIAMOND decision -->
+        <mxCell id="d6" value="ออกจากระบบ?" parent="1" vertex="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;fontSize=14;">
+          <mxGeometry x="214" y="1004" width="160" height="100" as="geometry" />
+        </mxCell>
+
+        <!-- จบการทำงาน -->
+        <mxCell id="n4" value="จบการทำงาน" parent="1" vertex="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;fontFamily=Sarabun;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DSarabun;fontSize=14;">
+          <mxGeometry x="234" y="1154" width="120" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- === MAIN FLOW === -->
+        <mxCell id="e1" value="" parent="1" edge="1" source="n1" target="cn1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;endArrow=block;endFill=1;"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e2" value="" parent="1" edge="1" source="cn1" target="n2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;endArrow=block;endFill=1;"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e3" value="" parent="1" edge="1" source="n2" target="d1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;endArrow=block;endFill=1;"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- Dashboard: ใช่/ไม่ใช่ -->
+        <mxCell id="e4" value="ใช่" parent="1" edge="1" source="d1" target="d1a" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;endArrow=block;endFill=1;fontFamily=Sarabun;fontSize=13;exitX=1;exitY=0.5;exitDx=0;exitDy=0;"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e5" value="ไม่ใช่" parent="1" edge="1" source="d1" target="d2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;endArrow=block;endFill=1;fontFamily=Sarabun;fontSize=13;"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- ใบเสนอราคา: ใช่/ไม่ใช่ -->
+        <mxCell id="e6" value="ใช่" parent="1" edge="1" source="d2" target="d2a" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;endArrow=block;endFill=1;fontFamily=Sarabun;fontSize=13;exitX=1;exitY=0.5;exitDx=0;exitDy=0;"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e7" value="ไม่ใช่" parent="1" edge="1" source="d2" target="d3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;endArrow=block;endFill=1;fontFamily=Sarabun;fontSize=13;"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- แจ้งเตือน: ใช่/ไม่ใช่ -->
+        <mxCell id="e8" value="ใช่" parent="1" edge="1" source="d3" target="d3a" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;endArrow=block;endFill=1;fontFamily=Sarabun;fontSize=13;exitX=1;exitY=0.5;exitDx=0;exitDy=0;"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e9" value="ไม่ใช่" parent="1" edge="1" source="d3" target="d4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;endArrow=block;endFill=1;fontFamily=Sarabun;fontSize=13;"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- Export: ใช่/ไม่ใช่ -->
+        <mxCell id="e10" value="ใช่" parent="1" edge="1" source="d4" target="d4a" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;endArrow=block;endFill=1;fontFamily=Sarabun;fontSize=13;exitX=1;exitY=0.5;exitDx=0;exitDy=0;"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e11" value="ไม่ใช่" parent="1" edge="1" source="d4" target="d5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;endArrow=block;endFill=1;fontFamily=Sarabun;fontSize=13;"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- จัดการผู้ใช้: ใช่/ไม่ใช่ -->
+        <mxCell id="e12" value="ใช่" parent="1" edge="1" source="d5" target="d5a" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;endArrow=block;endFill=1;fontFamily=Sarabun;fontSize=13;exitX=1;exitY=0.5;exitDx=0;exitDy=0;"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e13" value="ไม่ใช่" parent="1" edge="1" source="d5" target="d6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;endArrow=block;endFill=1;fontFamily=Sarabun;fontSize=13;"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- ออกจากระบบ: ใช่ → จบ -->
+        <mxCell id="e14" value="ใช่" parent="1" edge="1" source="d6" target="n4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;endArrow=block;endFill=1;fontFamily=Sarabun;fontSize=13;"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- ออกจากระบบ: ไม่ใช่ → กลับ connector (ทางซ้าย) -->
+        <mxCell id="e15" value="ไม่ใช่" parent="1" edge="1" source="d6" target="cn1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;strokeColor=#000000;endArrow=block;endFill=1;fontFamily=Sarabun;fontSize=13;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="100" y="1054" /><mxPoint x="100" y="122" /></Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- === RETURN ARROWS: process boxes → connector (ทางขวา) === -->
+        <mxCell id="r1" value="" parent="1" edge="1" source="d1a" target="cn1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;strokeColor=#000000;endArrow=block;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="700" y="304" /><mxPoint x="700" y="122" /></Array>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="r2" value="" parent="1" edge="1" source="d2a" target="cn1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;strokeColor=#000000;endArrow=block;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="700" y="454" /><mxPoint x="700" y="122" /></Array>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="r3" value="" parent="1" edge="1" source="d3a" target="cn1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;strokeColor=#000000;endArrow=block;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="700" y="604" /><mxPoint x="700" y="122" /></Array>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="r4" value="" parent="1" edge="1" source="d4a" target="cn1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;strokeColor=#000000;endArrow=block;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="700" y="754" /><mxPoint x="700" y="122" /></Array>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="r5" value="" parent="1" edge="1" source="d5a" target="cn1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;html=1;strokeColor=#000000;endArrow=block;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="700" y="904" /><mxPoint x="700" y="122" /></Array>
+          </mxGeometry>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
